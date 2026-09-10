@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+
+# Python tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# IDE
+.idea/
+.vscode/
+
+# Environment variables and credentials
+.env
+.env.*
+!.env.example
+kaggle.json
+.kaggle/
+
+# Raw and derived datasets
+data/
+
+# Training outputs and generated artifacts
+runs/
+outputs/
+checkpoints/
+
+# Model files
+*.pt
+*.pth
+*.onnx
+*.engine
+
+# Local Codex / thesis context
+/AGENTS.md
+/docs/THESIS.md
+/docs/ROADMAP.md
+/docs/DECISIONS.md
+
+# OS files
+.DS_Store
+Thumbs.db

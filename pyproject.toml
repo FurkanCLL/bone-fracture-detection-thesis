@@ -1,0 +1,7 @@
+[project]
+name = "bone-fracture-detection-thesis"
+version = "0.1.0"
+description = "Deep learning-based object detection pipeline for bone fracture localization in X-ray images."
+requires-python = ">=3.11"
+
+dependencies = []
