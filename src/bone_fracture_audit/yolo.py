@@ -40,8 +40,8 @@ class ParsedLabel:
     is_empty: bool
 
 
+# Parses one YOLO label without changing or correcting its contents.
 def parse_yolo_label(path: Path, valid_class_ids: set[int]) -> ParsedLabel:
-    """Parses one YOLO label without changing or correcting its contents."""
     text = path.read_text(encoding="utf-8-sig")
     if not text.strip():
         return ParsedLabel(annotations=(), issues=(), is_empty=True)
@@ -98,6 +98,7 @@ def parse_yolo_label(path: Path, valid_class_ids: set[int]) -> ParsedLabel:
         if is_box:
             x_center, y_center, width, height = coordinates
         else:
+            # Phase 1 uses a polygon's outer bounds only for audit statistics.
             polygon_points = tuple(zip(coordinates[::2], coordinates[1::2]))
             x_values = [point[0] for point in polygon_points]
             y_values = [point[1] for point in polygon_points]

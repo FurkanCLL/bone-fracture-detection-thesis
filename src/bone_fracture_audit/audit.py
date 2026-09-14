@@ -37,6 +37,7 @@ class DatasetCandidate:
     class_names: tuple[str, ...]
 
 
+# Builds a readable ID that stays unique when export folders share a name.
 def _candidate_id(root: Path, raw_root: Path) -> str:
     safe = re.sub(r"[^a-z0-9]+", "-", root.name.lower()).strip("-")
     relative_root = root.relative_to(raw_root).as_posix().casefold()
@@ -44,8 +45,8 @@ def _candidate_id(root: Path, raw_root: Path) -> str:
     return f"{safe}-{digest}"
 
 
+# Reads the class list from the small Roboflow-style YOLO configuration.
 def _read_dataset_config(path: Path) -> tuple[str, ...]:
-    """Reads the class list used by the local Roboflow-style YOLO export."""
     lines = path.read_text(encoding="utf-8-sig").splitlines()
     class_count: int | None = None
     names: tuple[str, ...] | None = None
@@ -82,6 +83,7 @@ def _read_dataset_config(path: Path) -> tuple[str, ...]:
     return names
 
 
+# Finds complete YOLO exports instead of assuming one fixed raw folder layout.
 def discover_dataset_candidates(raw_root: Path) -> list[DatasetCandidate]:
     candidates: list[DatasetCandidate] = []
     for config_path in sorted(raw_root.rglob("data.yaml"), key=lambda value: str(value).lower()):
@@ -97,6 +99,7 @@ def discover_dataset_candidates(raw_root: Path) -> list[DatasetCandidate]:
     return candidates
 
 
+# Matches files by case-insensitive stem and keeps ambiguous names visible.
 def match_images_and_labels(image_dir: Path, label_dir: Path) -> dict[str, Any]:
     images = [path for path in image_dir.iterdir() if path.is_file() and path.suffix.lower() in IMAGE_EXTENSIONS]
     labels = [path for path in label_dir.iterdir() if path.is_file() and path.suffix.lower() == ".txt"]
@@ -125,6 +128,7 @@ def match_images_and_labels(image_dir: Path, label_dir: Path) -> dict[str, Any]:
     }
 
 
+# Streams large files so exact hashing does not load them fully into memory.
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as source:
@@ -133,6 +137,7 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+# Creates a compact perceptual hash for cautious near-duplicate screening.
 def difference_hash(image: Image.Image) -> str:
     grayscale = ImageOps.grayscale(image).resize((9, 8), Image.Resampling.LANCZOS)
     pixels = list(grayscale.tobytes())
@@ -147,8 +152,8 @@ def hamming_distance(first: str, second: str) -> int:
     return (int(first, 16) ^ int(second, 16)).bit_count()
 
 
+# Ranks dHash candidates using a small contrast-normalized grayscale comparison.
 def normalized_pixel_difference(first_path: Path, second_path: Path) -> float:
-    """Ranks dHash candidates using a small contrast-normalized grayscale comparison."""
     fingerprints: list[bytes] = []
     for path in (first_path, second_path):
         with Image.open(path) as source:
@@ -158,6 +163,7 @@ def normalized_pixel_difference(first_path: Path, second_path: Path) -> float:
     return total_difference / (32 * 32 * 255)
 
 
+# Indexes hashes by Hamming distance without comparing every possible image pair.
 class _BKTree:
     def __init__(self) -> None:
         self.root: tuple[str, dict[int, Any]] | None = None
@@ -203,6 +209,7 @@ def _quantile(values: list[float], fraction: float) -> float | None:
     return ordered[lower] + (ordered[upper] - ordered[lower]) * (position - lower)
 
 
+# Produces the same descriptive statistics for images, boxes, and classes.
 def _describe(values: Iterable[float]) -> dict[str, float | int | None]:
     collected = list(values)
     return {
@@ -222,6 +229,7 @@ def _source_key(path: Path) -> str:
     return ROBOFLOW_SUFFIX.sub("", path.stem).casefold()
 
 
+# Writes inspectable tables even when a check produces no rows.
 def _write_csv(path: Path, rows: list[dict[str, Any]], fieldnames: list[str] | None = None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     columns = fieldnames or (list(rows[0]) if rows else [])
@@ -237,6 +245,7 @@ def _relative(path: Path, base: Path) -> str:
     return path.relative_to(base).as_posix()
 
 
+# Audits one complete export while leaving every raw image and label untouched.
 def _audit_candidate(candidate: DatasetCandidate, raw_root: Path) -> dict[str, Any]:
     split_rows: list[dict[str, Any]] = []
     image_rows: list[dict[str, Any]] = []
@@ -298,6 +307,7 @@ def _audit_candidate(candidate: DatasetCandidate, raw_root: Path) -> dict[str, A
                 )
 
             image_relative = _relative(image_path, raw_root)
+            # Image decoding is checked before dimensions, hashes, or pixel box sizes are trusted.
             try:
                 with Image.open(image_path) as image:
                     image.load()
@@ -397,6 +407,7 @@ def _audit_candidate(candidate: DatasetCandidate, raw_root: Path) -> dict[str, A
     }
 
 
+# Summarizes annotation counts for each class and split.
 def _aggregate_class_rows(candidate_result: dict[str, Any]) -> list[dict[str, Any]]:
     candidate = candidate_result["candidate"]
     counts = Counter((row["split"], row["class_id"]) for row in candidate_result["box_rows"])
@@ -417,6 +428,7 @@ def _aggregate_class_rows(candidate_result: dict[str, Any]) -> list[dict[str, An
     return rows
 
 
+# Describes image dimensions and storage properties for each split.
 def _aggregate_image_statistics(candidate_result: dict[str, Any]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     candidate_id = candidate_result["candidate"].candidate_id
@@ -429,6 +441,7 @@ def _aggregate_image_statistics(candidate_result: dict[str, Any]) -> list[dict[s
     return rows
 
 
+# Describes derived box sizes by split and class.
 def _aggregate_box_statistics(candidate_result: dict[str, Any]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     candidate = candidate_result["candidate"]
@@ -447,6 +460,7 @@ def _aggregate_box_statistics(candidate_result: dict[str, Any]) -> list[dict[str
     return rows
 
 
+# Groups byte-identical images and separates raw-copy overlap from split leakage.
 def _exact_duplicate_rows(image_rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, int]]:
     groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in image_rows:
@@ -490,6 +504,7 @@ def _exact_duplicate_rows(image_rows: list[dict[str, Any]]) -> tuple[list[dict[s
     }
 
 
+# Screens perceptually similar images and stops at a documented safety limit.
 def _near_duplicate_rows(image_rows: list[dict[str, Any]], raw_root: Path) -> tuple[list[dict[str, Any]], bool]:
     hashes: dict[str, list[dict[str, Any]]] = defaultdict(list)
     tree = _BKTree()
@@ -526,6 +541,7 @@ def _near_duplicate_rows(image_rows: list[dict[str, Any]], raw_root: Path) -> tu
     return output, truncated
 
 
+# Groups Roboflow filenames after removing the generated hash suffix.
 def _source_group_rows(image_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in image_rows:
@@ -553,6 +569,7 @@ def _source_group_rows(image_rows: list[dict[str, Any]]) -> list[dict[str, Any]]
     return output
 
 
+# Records every raw file so later runs can detect accidental source changes.
 def _manifest_rows(raw_root: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for path in sorted((value for value in raw_root.rglob("*") if value.is_file()), key=lambda value: str(value).lower()):
@@ -566,6 +583,7 @@ def _manifest_rows(raw_root: Path) -> list[dict[str, Any]]:
     return rows
 
 
+# Checks whether multiple discovered exports contain the same relative files.
 def _compare_candidates(candidate_results: list[dict[str, Any]], raw_root: Path) -> list[dict[str, Any]]:
     if len(candidate_results) < 2:
         return []
@@ -604,6 +622,7 @@ def _compare_candidates(candidate_results: list[dict[str, Any]], raw_root: Path)
     return comparisons
 
 
+# Prefers the explicitly versioned export as the reporting reference.
 def _select_primary(candidate_results: list[dict[str, Any]]) -> dict[str, Any]:
     # Prefer the versioned Roboflow export name when equivalent copies exist.
     return sorted(
@@ -612,6 +631,7 @@ def _select_primary(candidate_results: list[dict[str, Any]]) -> dict[str, Any]:
     )[0]
 
 
+# Creates review copies with overlays; it never edits source X-rays.
 def _draw_visual_samples(
     primary: dict[str, Any],
     raw_root: Path,
@@ -753,6 +773,7 @@ def _draw_visual_samples(
     return output_rows
 
 
+# Reads earlier thesis figures only for a transparent comparison table.
 def _load_previous_statistics(path: Path | None) -> dict[str, Any]:
     result: dict[str, Any] = {"splits": {}, "classes": {}}
     if path is None or not path.exists():
@@ -782,6 +803,7 @@ def _format_number(value: Any, digits: int = 4) -> str:
     return str(value)
 
 
+# Turns verified audit outputs into the Phase 1 Markdown report.
 def _render_report(summary: dict[str, Any], primary: dict[str, Any], previous: dict[str, Any], output_dir: Path) -> str:
     candidate = primary["candidate"]
     splits = {row["split"]: row for row in primary["split_rows"]}
@@ -1003,6 +1025,7 @@ def _render_report(summary: dict[str, Any], primary: dict[str, Any], previous: d
     return "\n".join(lines)
 
 
+# Coordinates the full read-only audit and writes reproducible evidence files.
 def run_audit(raw_root: Path, output_dir: Path, report_path: Path, thesis_context: Path | None = None) -> dict[str, Any]:
     raw_root = raw_root.resolve()
     output_dir = output_dir.resolve()

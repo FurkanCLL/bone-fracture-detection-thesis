@@ -8,11 +8,15 @@ version = "0.1.0"
 description = "Deep learning-based object detection pipeline for bone fracture localization in X-ray images."
 requires-python = ">=3.11"
 dependencies = [
+    "numpy>=2.0,<3.0",
+    "opencv-python-headless>=4.10,<5.0",
     "Pillow>=11.0,<13.0",
 ]
 
 [project.scripts]
 audit-dataset = "bone_fracture_audit.cli:main"
+analyze-dataset-provenance = "bone_fracture_audit.provenance:main"
+prepare-empty-label-review = "bone_fracture_audit.review:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

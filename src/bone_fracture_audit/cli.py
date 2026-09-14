@@ -7,6 +7,7 @@ from pathlib import Path
 from .audit import run_audit
 
 
+# Defines the paths used by the read-only Phase 1 audit.
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Audit a raw YOLO object-detection dataset without modifying it.")
     parser.add_argument("--raw-root", type=Path, default=Path("data/raw"), help="Directory containing raw dataset exports.")
