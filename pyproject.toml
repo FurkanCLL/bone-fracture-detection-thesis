@@ -17,6 +17,7 @@ dependencies = [
 audit-dataset = "bone_fracture_audit.cli:main"
 analyze-dataset-provenance = "bone_fracture_audit.provenance:main"
 prepare-empty-label-review = "bone_fracture_audit.review:main"
+compare-dataset-versions = "bone_fracture_audit.comparison:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

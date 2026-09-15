@@ -7,6 +7,7 @@ from pathlib import Path
 from PIL import Image
 
 from bone_fracture_audit.audit import (
+    _read_dataset_config,
     difference_hash,
     hamming_distance,
     match_images_and_labels,
@@ -17,6 +18,16 @@ from bone_fracture_audit.audit import (
 
 
 class AuditCoreTests(unittest.TestCase):
+    def test_reads_yaml_class_sequence(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            config_path = Path(temporary_directory) / "data.yaml"
+            config_path.write_text(
+                "names:\n- elbow positive\n- wrist positive\nnc: 2\n",
+                encoding="utf-8",
+            )
+
+            self.assertEqual(_read_dataset_config(config_path), ("elbow positive", "wrist positive"))
+
     def test_matches_images_and_labels_by_stem(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)

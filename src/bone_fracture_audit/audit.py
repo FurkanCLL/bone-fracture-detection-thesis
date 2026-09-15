@@ -67,13 +67,20 @@ def _read_dataset_config(path: Path) -> tuple[str, ...]:
                 names = tuple(str(parsed[key]) for key in sorted(parsed, key=int))
         else:
             mapping: dict[int, str] = {}
+            sequence: list[str] = []
             for nested in lines[index + 1 :]:
+                nested_value = nested.strip()
+                if nested_value.startswith("- "):
+                    sequence.append(nested_value[2:].strip("'\""))
+                    continue
                 if not nested.startswith((" ", "\t")):
                     break
                 match = re.match(r"\s*(\d+)\s*:\s*(.+?)\s*$", nested)
                 if match:
                     mapping[int(match.group(1))] = match.group(2).strip("'\"")
-            if mapping:
+            if sequence:
+                names = tuple(sequence)
+            elif mapping:
                 names = tuple(mapping[key] for key in sorted(mapping))
 
     if names is None:
@@ -823,6 +830,12 @@ def _render_report(summary: dict[str, Any], primary: dict[str, Any], previous: d
     exact = summary["exact_duplicates"]
     near = summary["near_duplicates"]
     source_groups = summary["source_name_groups"]
+    candidate_count = len(summary["candidates"])
+    candidate_relative_root = candidate.root.relative_to(summary["raw_root"]).as_posix()
+    candidate_label = "tree" if candidate_count == 1 else "trees"
+    class_list = ", ".join(f"`{name}`" for name in candidate.class_names)
+    humerus_rows = [row for row in primary["box_rows"] if row["class_name"] == "humerus fracture"]
+    humerus_images = {row["image_path"] for row in humerus_rows}
 
     lines = [
         "# Dataset Audit Report",
@@ -837,25 +850,26 @@ def _render_report(summary: dict[str, Any], primary: dict[str, Any], previous: d
         "",
         "## 2. Dataset structure discovered",
         "",
-        f"The raw directory contains **{len(summary['candidates'])} complete YOLO dataset trees**. The reporting reference is `{candidate.root.relative_to(summary['raw_root']).as_posix()}` because its directory name identifies the versioned YOLOv8 export. This is an operational reporting choice, not a class, split, or training decision.",
+        f"The raw directory contains **{candidate_count} complete YOLO dataset {candidate_label}**. The reporting reference is `{candidate_relative_root}`. This is an operational reporting choice, not a class, split, or training decision.",
         "",
     ]
     for item in summary["candidates"]:
         lines.append(f"- `{item['relative_root']}` (`{item['candidate_id']}`)")
-    lines.extend(["", "Candidate equivalence checks:", ""])
-    for comparison in summary["candidate_comparisons"]:
-        lines.append(
-            f"- `{comparison['first_candidate_id']}` vs `{comparison['second_candidate_id']}`: "
-            f"{comparison['byte_identical_shared_files']}/{comparison['shared_relative_paths']} shared relative paths are byte-identical; "
-            f"complete equivalence = **{comparison['all_files_equivalent']}**; differing path(s): "
-            f"`{comparison['differing_relative_paths'] or 'none'}`."
-        )
+    if summary["candidate_comparisons"]:
+        lines.extend(["", "Candidate equivalence checks:", ""])
+        for comparison in summary["candidate_comparisons"]:
+            lines.append(
+                f"- `{comparison['first_candidate_id']}` vs `{comparison['second_candidate_id']}`: "
+                f"{comparison['byte_identical_shared_files']}/{comparison['shared_relative_paths']} shared relative paths are byte-identical; "
+                f"complete equivalence = **{comparison['all_files_equivalent']}**; differing path(s): "
+                f"`{comparison['differing_relative_paths'] or 'none'}`."
+            )
 
     lines.extend([
         "",
         "## 3. Image and label counts by split",
         "",
-        "Counts below are for the single reporting-reference export and therefore avoid double-counting the second raw copy.",
+        "Counts below are for the reporting-reference export and do not combine separate candidate trees.",
         "",
         "| Split | Images | Labels | Matched pairs | Images without labels | Labels without images | Boxes |",
         "|---|---:|---:|---:|---:|---:|---:|",
@@ -912,7 +926,7 @@ def _render_report(summary: dict[str, Any], primary: dict[str, Any], previous: d
         lines.append(f"| {class_id} | {class_name} | {per_split['train']} | {per_split['valid']} | {per_split['test']} | {count} | {count / total_boxes:.2%} |")
     positive_counts = [count for count in class_counts.values() if count]
     imbalance_ratio = max(positive_counts) / min(positive_counts) if positive_counts else 0
-    lines.extend(["", f"The largest-to-smallest non-zero class ratio is **{imbalance_ratio:.1f}:1**. This is severe imbalance; it is a finding, not a decision to remove or merge any class."])
+    lines.extend(["", f"The largest-to-smallest non-zero class ratio is **{imbalance_ratio:.1f}:1**. This describes annotation frequency only; it is not a decision to remove, merge, or rebalance any class."])
 
     extreme_images = [row for row in primary["image_rows"] if row["aspect_ratio"] < EXTREME_ASPECT_RATIO_LOW or row["aspect_ratio"] > EXTREME_ASPECT_RATIO_HIGH]
     format_counts = Counter((row["extension"], row["decoded_format"]) for row in primary["image_rows"])
@@ -942,7 +956,7 @@ def _render_report(summary: dict[str, Any], primary: dict[str, Any], previous: d
         "",
         "## 9. Duplicate and possible leakage findings",
         "",
-        f"SHA-256 found **{exact['within_candidate_within_split_groups']} exact duplicate groups within a reference-export split** and **{exact['within_candidate_cross_split_groups']} exact duplicate groups crossing splits within a candidate export**. It also found **{exact['cross_candidate_groups']} cross-candidate groups**, expected when checking the two raw trees together.",
+        f"SHA-256 found **{exact['within_candidate_within_split_groups']} exact duplicate groups within a reference-export split** and **{exact['within_candidate_cross_split_groups']} exact duplicate groups crossing splits within a candidate export**. It found **{exact['cross_candidate_groups']} cross-candidate groups** across the discovered candidate trees.",
         "",
         f"Within the reference export, dHash produced **{near['pairs']} non-byte-identical near-duplicate candidates**, of which **{near['cross_split_pairs']} cross splits**; **{near['cross_split_same_source_pairs']}** of those also share the stripped source name. The list was truncated at the safety cap: **{near['truncated']}**. Side-by-side review showed that low-distance X-ray hashes can still represent different anatomy, so every candidate requires stronger visual or provenance evidence before being called a duplicate.",
         "",
@@ -950,9 +964,9 @@ def _render_report(summary: dict[str, Any], primary: dict[str, Any], previous: d
         "",
         "## 10. Visual inspection findings",
         "",
-        f"The audit generated **{summary['visual_sample_count']} review images** covering all represented classes, every `humerus fracture` annotation, the smallest boxes, available issue cases, empty-label examples, and selected cross-split perceptual/source-name pairs. These are copies with overlays under `visual_samples/`; source images were not edited.",
+        f"The audit generated **{summary['visual_sample_count']} review images** covering represented classes, the smallest boxes, available issue cases, empty-label examples, and selected cross-split perceptual/source-name pairs. These are copies with overlays under `visual_samples/`; source images were not edited.",
         "",
-        "The three `humerus fracture` polygons share the same pre-suffix source name, appear visually as transformed variants, are all in training, and each co-occurs with a separate `humerus` polygon. This indicates extreme effective-sample scarcity and a semantic overlap worth investigating; it does not establish that either label is incorrect. The highest-ranked cross-split candidates include very similar wrist, forearm, and hand radiographs with crop, orientation, or marker differences and deserve provenance review. Other hash/name pairs are visibly different, demonstrating that neither screening method is proof of leakage. Empty-label examples look like valid X-rays but still require source/domain verification before being treated as confirmed negatives.",
+        f"The local files contain **{len(humerus_rows)} `humerus fracture` annotations across {len(humerus_images)} images**. Perceptual-hash and repeated-name candidates remain screening evidence rather than proof of common source images or split leakage. Empty-label examples can look like valid X-rays but still require source/domain verification before being treated as confirmed negatives.",
         "",
         "## 11. Comparison with previously reported statistics",
         "",
@@ -976,24 +990,22 @@ def _render_report(summary: dict[str, Any], primary: dict[str, Any], previous: d
         lines.append(f"| class: {class_name} | {current_value} | {_format_number(old_value)} | {difference} |")
     lines.extend([
         "",
-        "The comparison uses one export. Counting both raw directory copies would double every image, label, empty-label, and box figure and would not represent an independent larger dataset.",
+        "The comparison uses only the reporting-reference export, so additional candidate trees are not silently combined with its counts.",
         "",
         "## 12. Dataset semantics that were verified",
         "",
-        "- The configuration declares seven labels: `elbow positive`, `fingers positive`, `forearm fracture`, `humerus fracture`, `humerus`, `shoulder fracture`, and `wrist positive`.",
-        "- Both configurations identify Roboflow workspace `veda`, project `bone-fracture-detection-daoon`, version 4, with CC BY 4.0 metadata.",
+        f"- The configuration declares {len(candidate.class_names)} labels: {class_list}.",
+        f"- The audited configuration is `{candidate.config_path.relative_to(summary['raw_root']).as_posix()}`.",
         "- Every image filename in the reference export has a Roboflow `.rf.<hex>` suffix. Repeated pre-suffix names show that multiple exported derivatives or records share a source-style name; the filenames alone do not reveal the transformation used.",
-        "- The local evidence does not define the clinical/annotation distinction among `positive`, `fracture`, and bare `humerus`.",
+        "- The local class names alone do not define the clinical or annotation-policy distinction among labels containing `positive`, labels containing `fracture`, and any anatomy-only labels.",
         "",
         "## 13. Unresolved questions and risks",
         "",
-        "- The intended semantics and annotation policy for `positive`, `fracture`, and `humerus` remain unresolved.",
+        "- The intended semantics and annotation policy for the configured class names remain unresolved.",
         "- Empty labels cannot be verified locally as reviewed negative images.",
         "- Roboflow-style derivatives and repeated source names need provenance review, especially where groups cross train/validation/test.",
         "- Patient/study identifiers are not present in the YOLO configuration or obvious export paths, so patient/study-level independence cannot be established from this export alone.",
-        "- The second raw tree has byte-identical images and labels but a byte-different `README.dataset.txt`; it still creates an operational double-counting risk.",
         "- The raw annotations are segmentation polygons. Detection training requires a documented derived-label conversion rather than direct use as five-value box labels.",
-        "- The severely underrepresented class must not be evaluated or handled as though its sample size were adequate without an explicit Phase 2 decision.",
         "",
         "## 14. Recommended decisions for the next phase",
         "",
@@ -1001,10 +1013,8 @@ def _render_report(summary: dict[str, Any], primary: dict[str, Any], previous: d
         "",
         "1. Confirm with the dataset source or supervisor what each class name and empty label means.",
         "2. Review all cross-split exact, perceptual, and source-name candidates before accepting the current split.",
-        "3. Decide which duplicate raw tree is the canonical input path for future commands while retaining the raw source unchanged.",
-        "4. Define and test a traceable polygon-to-box conversion for the derived detection dataset.",
-        "5. Decide how to handle the severely underrepresented class only after semantics and provenance are clear.",
-        "6. Establish a patient/study grouping source if one exists before any split redesign.",
+        "3. Define and test a traceable polygon-to-box conversion for the derived detection dataset.",
+        "4. Establish a patient/study grouping source if one exists before any split redesign.",
         "",
         "## 15. Generated audit artifacts",
         "",

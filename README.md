@@ -26,4 +26,10 @@ Analyze source-name and Phase 1 similarity candidates using feature matching and
 python -m bone_fracture_audit.provenance
 ```
 
-Both commands use the versioned YOLOv8 export as the canonical read-only source and write generated evidence below `outputs/`. See `docs/DATASET_FOLLOWUP_REPORT.md` for the source-backed findings and remaining questions before Phase 2.
+Compare the independently audited v3 and v4 exports, including held-out files and v3-to-v4 training derivatives:
+
+```powershell
+python -m bone_fracture_audit.comparison
+```
+
+These commands accept explicit read-only dataset/audit roots and write generated evidence below `outputs/`. See `docs/DATASET_FOLLOWUP_REPORT.md` and `docs/DATASET_V3_V4_COMPARISON_REPORT.md` for the source-backed findings and remaining questions before Phase 2.

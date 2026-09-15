@@ -503,7 +503,7 @@ def analyze_provenance(audit_dir: Path, output_dir: Path) -> dict[str, Any]:
         )
 
     group_rows = _derivative_groups(records, pair_rows)
-    # The rare humerus-fracture label is checked separately because three files may represent one source image.
+    # Keep the humerus-fracture evidence separate so version-specific scarcity can be inspected.
     humerus_paths: set[str] = set()
     with (audit_dir / "bounding_boxes.csv").open(encoding="utf-8", newline="") as source:
         for row in csv.DictReader(source):
@@ -536,6 +536,25 @@ def analyze_provenance(audit_dir: Path, output_dir: Path) -> dict[str, Any]:
         _draw_pair(raw_root / Path(row["first_image"]), raw_root / Path(row["second_image"]), title, review_dir / filename)
         review_rows.append({"review_image": filename, **row})
     _write_csv(review_dir / "index.csv", review_rows)
+
+    # Preserve every borderline pair as a compact visual-review artifact.
+    inconclusive_dir = output_dir / "inconclusive_review"
+    inconclusive_dir.mkdir()
+    inconclusive_rows: list[dict[str, Any]] = []
+    for index, row in enumerate((row for row in pair_rows if row["classification"] == "inconclusive"), start=1):
+        filename = f"pair_{index:02d}.jpg"
+        title = (
+            f"inconclusive | r={row['aligned_correlation']:.3f} | "
+            f"angle={row['rotation_degrees'] if row['rotation_degrees'] is not None else 0:.1f}"
+        )
+        _draw_pair(
+            raw_root / Path(row["first_image"]),
+            raw_root / Path(row["second_image"]),
+            title,
+            inconclusive_dir / filename,
+        )
+        inconclusive_rows.append({"review_image": filename, **row})
+    _write_csv(inconclusive_dir / "index.csv", inconclusive_rows)
     return summary
 
 
