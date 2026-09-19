@@ -46,4 +46,16 @@ The command copies every image byte-for-byte, preserves the original train/valid
 
 The prepared dataset is written to `data/prepared/v3_detection`. Traceability outputs are written to `outputs/phase2a/v3_detection`, including per-file hashes, one-to-one annotation conversions, the source fingerprint, and the preparation summary. Both locations are intentionally ignored by Git. The raw v3 export is read-only and remains unchanged.
 
-Phase 2A provides a technically validated format conversion. Phase 2B visual QA and independent conversion analysis are still required before official model training.
+Phase 2A provides the deterministic format conversion. Phase 2B independently validates its geometry, visual overlays, and reproducibility as described below.
+
+## Phase 2B conversion validation
+
+Run the independent conversion and reproducibility checks with:
+
+```powershell
+python -m bone_fracture_pipeline.validate_conversion
+```
+
+The command re-checks every polygon and prepared box, calculates occupancy statistics, generates ranked review candidates and train/validation-only overlays, and rebuilds Phase 2A in temporary locations for hash comparison. It writes generated evidence to `outputs/phase2b/v3_detection` and does not modify either dataset. Existing Phase 2B output is protected unless `--overwrite` is supplied.
+
+See `docs/PHASE_2B_VALIDATION_REPORT.md` for the validated results and remaining limitations. Phase 2B technically passed; preprocessing, augmentation, and training remain out of scope until their later planned phases.
