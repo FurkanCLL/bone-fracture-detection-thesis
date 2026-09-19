@@ -1,0 +1,54 @@
+{
+  "batch_size_status": "planned_not_smoke_tested",
+  "collected_at_utc": "2026-09-19T16:57:48.746797+00:00",
+  "cuda": {
+    "available": true,
+    "cudnn_enabled": true,
+    "cudnn_version": 90501,
+    "runtime_version": "12.6"
+  },
+  "determinism": {
+    "cudnn_benchmark_currently_enabled": false,
+    "cudnn_deterministic_currently_enabled": false,
+    "protocol_enabled": true,
+    "seed": 42,
+    "torch_deterministic_algorithms_currently_enabled": false
+  },
+  "gpu": {
+    "compute_capability": [
+      8,
+      9
+    ],
+    "driver_version": "560.94",
+    "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "vram_bytes": 6438780928,
+    "vram_gib": 5.997
+  },
+  "libraries": {
+    "numpy": "2.5.2",
+    "opencv": "4.14.0",
+    "pillow": "12.3.0",
+    "pytorch": "2.6.0+cu126",
+    "pyyaml": "6.0.3",
+    "torchvision": "0.21.0+cu126",
+    "ultralytics": "8.4.155"
+  },
+  "os": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "release": "11",
+    "system": "Windows",
+    "version": "10.0.26200"
+  },
+  "planned_batch_size": 8,
+  "python": {
+    "implementation": "CPython",
+    "version": "3.12.14"
+  },
+  "schema_version": 1,
+  "weights": {
+    "filename": "yolov8s.pt",
+    "path": "yolov8s.pt",
+    "sha256": "1f47a78bf100391c2a140b7ac73a1caae18c32779be7d310658112f7ac9aa78a",
+    "size_bytes": 22588772
+  }
+}

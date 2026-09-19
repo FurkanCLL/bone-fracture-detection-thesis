@@ -37,7 +37,7 @@ class PrepareDatasetTests(unittest.TestCase):
         self.root = Path(self.temporary_directory.name)
         self.source = self.root / "data" / "raw" / "canonical-v3"
         self.output = self.root / "data" / "prepared" / "v3_detection"
-        self.artifacts = self.root / "outputs" / "phase2a" / "v3_detection"
+        self.artifacts = self.root / "outputs" / "phase2" / "phase2a" / "v3_detection"
         self._create_source()
 
     def tearDown(self) -> None:

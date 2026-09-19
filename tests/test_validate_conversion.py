@@ -137,8 +137,8 @@ class Phase2BIntegrationTests(unittest.TestCase):
         self.root = Path(self.temporary_directory.name)
         self.source = self.root / "data" / "raw" / "canonical-v3"
         self.prepared = self.root / "data" / "prepared" / "v3_detection"
-        self.phase2a_artifacts = self.root / "outputs" / "phase2a" / "v3_detection"
-        self.phase2b_output = self.root / "outputs" / "phase2b" / "v3_detection"
+        self.phase2a_artifacts = self.root / "outputs" / "phase2" / "phase2a" / "v3_detection"
+        self.phase2b_output = self.root / "outputs" / "phase2" / "phase2b" / "v3_detection"
         self._create_source()
         prepare_dataset(
             self.source,

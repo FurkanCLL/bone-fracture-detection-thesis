@@ -1,0 +1,95 @@
+protocol_version: 1
+
+dataset:
+  root: data/prepared/v3_detection
+  data_yaml: data/prepared/v3_detection/data.yaml
+  expected_fingerprint: c5031d9937e2a1d917a2369f327b38a59a4b5e8bd40ae2da659451840c7d41b1
+  expected_classes:
+    - elbow positive
+    - fingers positive
+    - forearm fracture
+    - humerus fracture
+    - shoulder fracture
+    - wrist positive
+  split_policy:
+    training: train
+    validation: valid
+    checkpoint_selection: valid
+    test: test
+    test_usage: final_evaluation_only
+
+model:
+  architecture: yolov8s
+  weights: yolov8s.pt
+  initialization: coco_pretrained
+  task: detect
+
+training:
+  imgsz: 640
+  epochs: 100
+  batch: 8
+  optimizer: AdamW
+  lr0: 0.001
+  weight_decay: 0.0005
+  seed: 42
+  deterministic: true
+  amp: true
+  patience: 0
+  val: true
+  pretrained: true
+  device: 0
+  workers: 8
+  cache: false
+  rect: false
+  multi_scale: 0.0
+  cos_lr: false
+  save: true
+  save_period: -1
+  plots: true
+  project: outputs/training
+
+# Every supported stochastic image transform is disabled for the common baseline.
+augmentation:
+  augment: false
+  hsv_h: 0.0
+  hsv_s: 0.0
+  hsv_v: 0.0
+  degrees: 0.0
+  translate: 0.0
+  scale: 0.0
+  shear: 0.0
+  perspective: 0.0
+  flipud: 0.0
+  fliplr: 0.0
+  bgr: 0.0
+  mosaic: 0.0
+  mixup: 0.0
+  cutmix: 0.0
+  copy_paste: 0.0
+  close_mosaic: 0
+  auto_augment: null
+  erasing: 0.0
+
+evaluation:
+  primary_metric: metrics/mAP50-95(B)
+  additional_metrics:
+    - metrics/mAP50(B)
+    - metrics/precision(B)
+    - metrics/recall(B)
+    - per_class_ap50_95
+  checkpoint_selection:
+    split: valid
+    mode: max
+    artifact: best.pt
+    requires_framework_fitness_verification: true
+
+seed_policy:
+  primary: 42
+  conditional_final_seeds:
+    - 42
+    - 43
+    - 44
+
+framework:
+  ultralytics_version: 8.4.155
+  pytorch_version: 2.6.0

@@ -13,11 +13,13 @@ python -m bone_fracture_audit.cli --raw-root data/raw --output outputs/data_qual
 Create or activate the project virtual environment, install the dependencies, and install the project in editable mode:
 
 ```powershell
+# Reproduce the Phase 2C NVIDIA/CUDA environment before installing the remaining dependencies.
+python -m pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu126
 python -m pip install -r requirements.txt
 python -m pip install -e .
 ```
 
-The editable install makes the `src/` packages and command-line entry points available without setting `PYTHONPATH` manually. In PyCharm, select this environment as the project interpreter. Marking `src` as a Sources Root is optional if the IDE still needs an additional navigation hint; do not commit `.idea` metadata. Generated audit artifacts belong under `outputs/` and are intentionally excluded from Git.
+The first command selects the CUDA 12.6 PyTorch wheels used by the recorded training environment. A non-training CPU environment may use the platform-appropriate PyTorch build instead. The editable install makes the `src/` packages and command-line entry points available without setting `PYTHONPATH` manually. In PyCharm, select this environment as the project interpreter. Marking `src` as a Sources Root is optional if the IDE still needs an additional navigation hint; do not commit `.idea` metadata. Generated audit artifacts belong under `outputs/` and are intentionally excluded from Git.
 
 ## Dataset follow-up tools
 
@@ -66,3 +68,13 @@ python -m bone_fracture_pipeline.validate_conversion
 The command re-checks every polygon and prepared box, calculates occupancy statistics, generates ranked review candidates and train/validation-only overlays, and rebuilds Phase 2A in temporary locations for hash comparison. It writes generated evidence to `outputs/phase2/phase2b/v3_detection` and does not modify either dataset. Existing Phase 2B output is protected unless `--overwrite` is supplied.
 
 See `docs/PHASE_2B_VALIDATION_REPORT.md` for the validated results and remaining limitations. Phase 2B technically passed; preprocessing, augmentation, and training remain out of scope until their later planned phases.
+
+## Phase 2C baseline protocol
+
+Validate the frozen training protocol, prepared-dataset fingerprint, installed framework semantics, pretrained YOLOv8s weights, and local environment with:
+
+```powershell
+python -m bone_fracture_pipeline.training_protocol
+```
+
+This command performs no training. It writes full local evidence to `outputs/phase2/phase2c` and compact tracked evidence to `docs/evidence/phase2c`. The baseline itself is defined in `configs/training/baseline.yaml`; later controlled experiments must derive their common training values from it. See `docs/PHASE_2C_BASELINE_PROTOCOL.md` for the frozen settings, checkpoint rule, test-isolation policy, and remaining Phase 2F checks.

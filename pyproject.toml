@@ -9,8 +9,12 @@ description = "Deep learning-based object detection pipeline for bone fracture l
 requires-python = ">=3.11"
 dependencies = [
     "numpy>=2.0,<3.0",
-    "opencv-python-headless>=4.10,<5.0",
+    "opencv-python>=4.10,<5.0",
     "Pillow>=11.0,<13.0",
+    "PyYAML>=6.0,<7.0",
+    "torch==2.6.0",
+    "torchvision==0.21.0",
+    "ultralytics==8.4.155",
 ]
 
 [project.scripts]
@@ -20,6 +24,7 @@ prepare-empty-label-review = "bone_fracture_audit.review:main"
 compare-dataset-versions = "bone_fracture_audit.comparison:main"
 prepare-detection-dataset = "bone_fracture_pipeline.prepare_dataset:main"
 validate-detection-conversion = "bone_fracture_pipeline.validate_conversion:main"
+validate-training-protocol = "bone_fracture_pipeline.training_protocol:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

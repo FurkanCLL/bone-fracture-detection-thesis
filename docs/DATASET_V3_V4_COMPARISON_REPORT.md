@@ -64,7 +64,7 @@ The actual v3 `data.yaml` declares six classes. Bare `humerus` does not exist.
 
 **Unresolved:** an empty label proves only that the file contains no annotation row. It does not prove that the radiograph was reviewed and contains no visible fracture.
 
-A reproducible sanity-check package was created at `outputs/data_quality/radiologist_empty_label_review_v3/` with seed `20260915`: 16 train images, four validation images, and no test images. All 20 have distinct source keys and byte-identical source/copy SHA-256 values. Pairwise conservative matching found no exact, high-confidence, or probable derivative pair in the sample; the five borderline pairs were visually different radiographs. All 20 images were visually checked for a varied mix of anatomy and projections. This review package cannot validate all 868 empty labels.
+A reproducible sanity-check package was created at `outputs/data_quality/radiologist_empty_label_review/` with seed `20260915`: 16 train images, four validation images, and no test images. All 20 have distinct source keys and byte-identical source/copy SHA-256 values. Pairwise conservative matching found no exact, high-confidence, or probable derivative pair in the sample; the five borderline pairs were visually different radiographs. All 20 images were visually checked for a varied mix of anatomy and projections. This review package cannot validate all 868 empty labels.
 
 ## 6. v3 augmentation/provenance check
 
@@ -245,4 +245,4 @@ This recommendation is based on the independently verified v3 audit, the direct 
 5. Approve a traceable polygon-to-box conversion and correction policy for derived data.
 6. Define the controlled augmentation methods, ranges, seeds, and logging only after the above decisions.
 
-Machine-readable evidence is separated under `outputs/data_quality/dataset_versions/v3/`, `outputs/data_quality/dataset_comparison/v3_vs_v4/`, and `outputs/data_quality/radiologist_empty_label_review_v3/`. The key files are `audit_summary.json`, `summary.json`, `comparison_summary.json`, `held_out_file_comparison.csv`, `training_v3_to_v4_mapping.csv`, `training_exact_annotation_comparison.csv`, `class_comparison.csv`, and `review_index.csv`.
+Machine-readable evidence is separated under `outputs/data_quality/dataset_versions/v3/`, `outputs/data_quality/dataset_comparison/v3_vs_v4/`, and `outputs/data_quality/radiologist_empty_label_review/`. The key files are `audit_summary.json`, `summary.json`, `comparison_summary.json`, `held_out_file_comparison.csv`, `training_v3_to_v4_mapping.csv`, `training_exact_annotation_comparison.csv`, `class_comparison.csv`, and `review_index.csv`.

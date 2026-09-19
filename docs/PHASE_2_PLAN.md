@@ -520,11 +520,11 @@ Keep all unrelated training conditions constant.
 
 ---
 
-## 6.2 Proposed baseline configuration
+## 6.2 Frozen baseline configuration
 
-The currently approved high-level proposal is:
+Phase 2C validated and froze the following configuration:
 
-| Parameter | Planned value |
+| Parameter | Frozen value |
 |---|---|
 | Model | YOLOv8s |
 | Initialization | COCO pretrained weights |
@@ -541,7 +541,7 @@ The currently approved high-level proposal is:
 | Primary metric | mAP50-95 |
 | Additional metrics | mAP50, Precision, Recall, per-class AP |
 
-These values should be rechecked against the actual software environment and available GPU memory before Phase 2C is frozen.
+The software environment, framework semantics, prepared-dataset fingerprint, and pretrained weights were validated in Phase 2C. Batch 8 remains the fixed planned value, but its VRAM stability must still be confirmed by the Phase 2F smoke check before official training.
 
 The goal is stability and reproducibility, not aggressive hyperparameter optimization.
 
@@ -585,9 +585,7 @@ Official A/B/C/D comparisons should use the same maximum training budget.
 
 The main comparison should not intentionally give one experiment substantially more training opportunity than another.
 
-The best checkpoint should be selected using validation performance according to one fixed rule.
-
-The exact checkpoint-selection rule should be written into the final Phase 2C configuration.
+The selected checkpoint is the checkpoint with maximum validation mAP50-95. Under pinned Ultralytics 8.4.155, detection fitness is exactly mAP50-95, so `best.pt` implements this rule. The Phase 2C validation tool checks that equivalence and must fail rather than silently accept changed framework semantics.
 
 ---
 
