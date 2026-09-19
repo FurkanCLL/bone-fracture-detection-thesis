@@ -200,14 +200,20 @@ def select_review_candidates(
         if annotation.image_key in multi_image_keys:
             reasons[annotation.key].add("multi_annotation_image")
 
-    for class_id in sorted({annotation.class_id for annotation in eligible}):
-        class_annotations = [annotation for annotation in eligible if annotation.class_id == class_id]
-        class_median = median(annotation.occupancy_ratio for annotation in class_annotations)
-        representative = min(
-            class_annotations,
-            key=lambda item: (abs(item.occupancy_ratio - class_median), stable_key(item)),
-        )
-        reasons[representative.key].add("representative_class")
+    # Each class receives a representative from both allowed review splits.
+    for split in ("train", "valid"):
+        for class_id in sorted({annotation.class_id for annotation in eligible if annotation.split == split}):
+            class_annotations = [
+                annotation
+                for annotation in eligible
+                if annotation.split == split and annotation.class_id == class_id
+            ]
+            class_median = median(annotation.occupancy_ratio for annotation in class_annotations)
+            representative = min(
+                class_annotations,
+                key=lambda item: (abs(item.occupancy_ratio - class_median), stable_key(item)),
+            )
+            reasons[representative.key].add("representative_class")
 
     by_key = {annotation.key: annotation for annotation in eligible}
     return [
@@ -227,7 +233,7 @@ def select_visual_review_images(
     representatives = [candidate for candidate in candidates if "representative_class" in candidate.reasons]
     for candidate in sorted(representatives, key=lambda item: (item.annotation.class_id, item.annotation.key)):
         selected_reasons[candidate.annotation.image_key].add(
-            f"representative_class_{candidate.annotation.class_id}"
+            f"representative_{candidate.annotation.split}_class_{candidate.annotation.class_id}"
         )
 
     categories = (
@@ -238,8 +244,19 @@ def select_visual_review_images(
         "multi_annotation_image",
         "unusual_image_aspect_ratio",
     )
+    category_sort_keys = {
+        "lowest_occupancy": lambda item: (item.annotation.occupancy_ratio, item.annotation.key),
+        "smallest_box": lambda item: (item.annotation.box_area, item.annotation.key),
+        "largest_box": lambda item: (-item.annotation.box_area, item.annotation.key),
+        "closest_to_boundary": lambda item: (item.annotation.border_distance, item.annotation.key),
+        "multi_annotation_image": lambda item: (-item.annotation.image_annotation_count, item.annotation.key),
+        "unusual_image_aspect_ratio": lambda item: (-item.annotation.aspect_extremeness, item.annotation.key),
+    }
     for reason in categories:
-        reason_candidates = [candidate for candidate in candidates if reason in candidate.reasons]
+        reason_candidates = sorted(
+            (candidate for candidate in candidates if reason in candidate.reasons),
+            key=category_sort_keys[reason],
+        )
         unique_images: list[tuple[str, str]] = []
         for candidate in reason_candidates:
             if candidate.annotation.image_key not in unique_images:
@@ -447,7 +464,8 @@ def run_validation(
             "review_selection_policy": {
                 "ranked_annotations_per_category": REVIEW_RANK_COUNT,
                 "visual_images_per_diagnostic_category": VISUAL_CATEGORY_LIMIT,
-                "mandatory_class_representatives": len(expectations.class_names),
+                "mandatory_class_representatives_per_split": len(expectations.class_names),
+                "mandatory_class_representatives_total": 2 * len(expectations.class_names),
                 "categories": [
                     "lowest occupancy",
                     "smallest box",

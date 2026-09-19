@@ -12,6 +12,7 @@ from bone_fracture_audit.yolo import Annotation
 from bone_fracture_pipeline.prepare_dataset import DatasetExpectations, SplitExpectation, prepare_dataset
 from bone_fracture_pipeline.validate_conversion import (
     SERIALIZATION_TOLERANCE,
+    ReviewCandidate,
     ValidatedAnnotation,
     ValidationError,
     compare_reproduced_datasets,
@@ -21,6 +22,7 @@ from bone_fracture_pipeline.validate_conversion import (
     polygon_area,
     run_validation,
     select_review_candidates,
+    select_visual_review_images,
     validate_annotation_geometry,
     vertices_are_contained,
 )
@@ -89,6 +91,16 @@ class ConversionGeometryTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertEqual({candidate.annotation.split for candidate in first}, {"train", "valid"})
         self.assertEqual({candidate.annotation.class_id for candidate in first}, {0, 1})
+
+    def test_visual_selection_uses_metric_rank_not_filename_order(self) -> None:
+        candidates = [
+            ReviewCandidate(self._record("train", "a.jpg", 1, 0, 0.8, 0.02), ("lowest_occupancy",)),
+            ReviewCandidate(self._record("train", "z.jpg", 1, 0, 0.2, 0.02), ("lowest_occupancy",)),
+        ]
+
+        selected = select_visual_review_images(candidates, category_limit=1)
+
+        self.assertEqual(selected, [(('train', 'z.jpg'), ('lowest_occupancy',))])
 
     @staticmethod
     def _record(
