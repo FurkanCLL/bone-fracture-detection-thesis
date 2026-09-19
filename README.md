@@ -33,3 +33,17 @@ python -m bone_fracture_audit.comparison
 ```
 
 These commands accept explicit read-only dataset/audit roots and write generated evidence below `outputs/`. See `docs/DATASET_FOLLOWUP_REPORT.md` and `docs/DATASET_V3_V4_COMPARISON_REPORT.md` for the source-backed findings and remaining questions before Phase 2.
+
+## Phase 2A dataset preparation
+
+Version 3 is the canonical Phase 2 source dataset. Prepare its polygon labels as standard YOLO detection boxes with:
+
+```powershell
+python -m bone_fracture_pipeline.prepare_dataset
+```
+
+The command copies every image byte-for-byte, preserves the original train/validation/test membership and six-class mapping, converts each polygon to its minimum enclosing axis-aligned box, and keeps empty labels as zero-byte files. It builds atomically and refuses to replace an existing prepared dataset unless `--overwrite` is supplied. Use `--source`, `--output`, and `--artifacts` to override the defaults.
+
+The prepared dataset is written to `data/prepared/v3_detection`. Traceability outputs are written to `outputs/phase2a/v3_detection`, including per-file hashes, one-to-one annotation conversions, the source fingerprint, and the preparation summary. Both locations are intentionally ignored by Git. The raw v3 export is read-only and remains unchanged.
+
+Phase 2A provides a technically validated format conversion. Phase 2B visual QA and independent conversion analysis are still required before official model training.
