@@ -928,8 +928,8 @@ def _build_parser() -> argparse.ArgumentParser:
         default=Path("data/raw/bone-fracture-detection/bone-fracture-detection-v3-yolov8"),
     )
     parser.add_argument("--prepared", type=Path, default=Path("data/prepared/v3_detection"))
-    parser.add_argument("--phase2a-artifacts", type=Path, default=Path("outputs/phase2a/v3_detection"))
-    parser.add_argument("--output", type=Path, default=Path("outputs/phase2b/v3_detection"))
+    parser.add_argument("--phase2a-artifacts", type=Path, default=Path("outputs/phase2/phase2a/v3_detection"))
+    parser.add_argument("--output", type=Path, default=Path("outputs/phase2/phase2b/v3_detection"))
     parser.add_argument("--overwrite", action="store_true")
     return parser
 

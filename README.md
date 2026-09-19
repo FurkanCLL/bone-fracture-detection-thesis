@@ -7,10 +7,17 @@ Implementation workspace for an RTU bachelor thesis on object detection for susp
 The Phase 1 audit discovers YOLOv8 exports below `data/raw/`, validates their labels, calculates image and bounding-box statistics, checks exact and cautious perceptual duplicates, and creates review images without changing the source dataset.
 
 ```powershell
-python -m bone_fracture_audit.cli --raw-root data/raw --output outputs/dataset_audit --report docs/DATASET_AUDIT_REPORT.md --thesis-context docs/THESIS.md
+python -m bone_fracture_audit.cli --raw-root data/raw --output outputs/data_quality/dataset_audit --report docs/DATASET_AUDIT_REPORT.md --thesis-context docs/THESIS.md
 ```
 
-Install the dependency from `requirements.txt` first. If the package has not been installed in editable mode, set `PYTHONPATH=src` for the command. Generated audit artifacts belong under `outputs/` and are intentionally excluded from Git.
+Create or activate the project virtual environment, install the dependencies, and install the project in editable mode:
+
+```powershell
+python -m pip install -r requirements.txt
+python -m pip install -e .
+```
+
+The editable install makes the `src/` packages and command-line entry points available without setting `PYTHONPATH` manually. In PyCharm, select this environment as the project interpreter. Marking `src` as a Sources Root is optional if the IDE still needs an additional navigation hint; do not commit `.idea` metadata. Generated audit artifacts belong under `outputs/` and are intentionally excluded from Git.
 
 ## Dataset follow-up tools
 
@@ -44,7 +51,7 @@ python -m bone_fracture_pipeline.prepare_dataset
 
 The command copies every image byte-for-byte, preserves the original train/validation/test membership and six-class mapping, converts each polygon to its minimum enclosing axis-aligned box, and keeps empty labels as zero-byte files. It builds atomically and refuses to replace an existing prepared dataset unless `--overwrite` is supplied. Use `--source`, `--output`, and `--artifacts` to override the defaults.
 
-The prepared dataset is written to `data/prepared/v3_detection`. Traceability outputs are written to `outputs/phase2a/v3_detection`, including per-file hashes, one-to-one annotation conversions, the source fingerprint, and the preparation summary. Both locations are intentionally ignored by Git. The raw v3 export is read-only and remains unchanged.
+The prepared dataset is written to `data/prepared/v3_detection`. Traceability outputs are written to `outputs/phase2/phase2a/v3_detection`, including per-file hashes, one-to-one annotation conversions, the source fingerprint, and the preparation summary. Both locations are intentionally ignored by Git. The raw v3 export is read-only and remains unchanged.
 
 Phase 2A provides the deterministic format conversion. Phase 2B independently validates its geometry, visual overlays, and reproducibility as described below.
 
@@ -56,6 +63,6 @@ Run the independent conversion and reproducibility checks with:
 python -m bone_fracture_pipeline.validate_conversion
 ```
 
-The command re-checks every polygon and prepared box, calculates occupancy statistics, generates ranked review candidates and train/validation-only overlays, and rebuilds Phase 2A in temporary locations for hash comparison. It writes generated evidence to `outputs/phase2b/v3_detection` and does not modify either dataset. Existing Phase 2B output is protected unless `--overwrite` is supplied.
+The command re-checks every polygon and prepared box, calculates occupancy statistics, generates ranked review candidates and train/validation-only overlays, and rebuilds Phase 2A in temporary locations for hash comparison. It writes generated evidence to `outputs/phase2/phase2b/v3_detection` and does not modify either dataset. Existing Phase 2B output is protected unless `--overwrite` is supplied.
 
 See `docs/PHASE_2B_VALIDATION_REPORT.md` for the validated results and remaining limitations. Phase 2B technically passed; preprocessing, augmentation, and training remain out of scope until their later planned phases.

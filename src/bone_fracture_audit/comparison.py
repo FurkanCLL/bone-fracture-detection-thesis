@@ -16,9 +16,9 @@ from .provenance import compare_image_pair, extract_features
 
 DEFAULT_V3_ROOT = Path("data/raw/bone-fracture-detection/bone-fracture-detection-v3-yolov8")
 DEFAULT_V4_ROOT = Path("data/raw/bone-fracture-detection/bone fracture detection.v4-v4.yolov8")
-DEFAULT_V3_AUDIT = Path("outputs/dataset_versions/v3/audit")
-DEFAULT_V4_AUDIT = Path("outputs/dataset_audit")
-DEFAULT_OUTPUT = Path("outputs/dataset_comparison/v3_vs_v4")
+DEFAULT_V3_AUDIT = Path("outputs/data_quality/dataset_versions/v3/audit")
+DEFAULT_V4_AUDIT = Path("outputs/data_quality/dataset_audit")
+DEFAULT_OUTPUT = Path("outputs/data_quality/dataset_comparison/v3_vs_v4")
 
 
 @dataclass(frozen=True)

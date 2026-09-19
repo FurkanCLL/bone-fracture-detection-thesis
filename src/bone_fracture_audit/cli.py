@@ -11,7 +11,7 @@ from .audit import run_audit
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Audit a raw YOLO object-detection dataset without modifying it.")
     parser.add_argument("--raw-root", type=Path, default=Path("data/raw"), help="Directory containing raw dataset exports.")
-    parser.add_argument("--output", type=Path, default=Path("outputs/dataset_audit"), help="Directory for machine-readable artifacts and review images.")
+    parser.add_argument("--output", type=Path, default=Path("outputs/data_quality/dataset_audit"), help="Directory for machine-readable artifacts and review images.")
     parser.add_argument("--report", type=Path, default=Path("docs/DATASET_AUDIT_REPORT.md"), help="Markdown report path.")
     parser.add_argument("--thesis-context", type=Path, default=Path("docs/THESIS.md"), help="Project context used only for previous-statistic comparison.")
     return parser

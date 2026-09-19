@@ -105,7 +105,7 @@ The raw and approved prepared dataset fingerprints were unchanged before and aft
 
 ## Generated evidence
 
-Machine-readable evidence is stored under `outputs/phase2b/v3_detection/`:
+Machine-readable evidence is stored under `outputs/phase2/phase2b/v3_detection/`:
 
 - `geometry_validation.csv` — one row per converted annotation;
 - `occupancy_statistics.csv` — overall, split, and class summaries;

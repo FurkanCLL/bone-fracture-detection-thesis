@@ -69,7 +69,7 @@ Each candidate was checked with:
 - overlap ratio; and
 - a linear intensity fit and residual error to distinguish exposure changes from structural differences.
 
-The complete measurements are stored in `outputs/dataset_followup/provenance/pair_analysis.csv`. The classifications intentionally use conservative thresholds:
+The complete measurements are stored in `outputs/data_quality/dataset_followup/provenance/pair_analysis.csv`. The classifications intentionally use conservative thresholds:
 
 | Classification | Meaning |
 |---|---|
@@ -130,7 +130,7 @@ The stronger follow-up evaluated 756 cross-split candidate pairs:
 - 24 were machine-inconclusive; and
 - 732 were rejected as unrelated false positives.
 
-All 24 machine-inconclusive pairs were placed first in the generated side-by-side review set. Visual review found different anatomy, different projections, different implants, or clearly different radiographic studies. Repeated stripped filenames were especially misleading. The gallery and metrics are under `outputs/dataset_followup/provenance/cross_split_review/`.
+All 24 machine-inconclusive pairs were placed first in the generated side-by-side review set. Visual review found different anatomy, different projections, different implants, or clearly different radiographic studies. Repeated stripped filenames were especially misleading. The gallery and metrics are under `outputs/data_quality/dataset_followup/provenance/cross_split_review/`.
 
 **Conclusion:** there is no credible evidence of exact or offline-augmentation derivative leakage across the current splits within the methods used.
 
@@ -160,7 +160,7 @@ Sixty-two stripped source-name groups mix empty and annotated files, but only th
 A reproducible review package was created at:
 
 ```text
-outputs/radiologist_empty_label_review/
+outputs/data_quality/radiologist_empty_label_review/
 ```
 
 It contains exactly 20 source-faithful X-ray copies:
@@ -252,12 +252,12 @@ python -m unittest discover -s tests -v
 
 Generated artifacts are intentionally ignored by Git:
 
-- `outputs/radiologist_empty_label_review/`
-- `outputs/dataset_followup/provenance/pair_analysis.csv`
-- `outputs/dataset_followup/provenance/derivative_groups.csv`
-- `outputs/dataset_followup/provenance/summary.json`
-- `outputs/dataset_followup/provenance/cross_split_review/`
-- `outputs/dataset_followup/provenance/mixed_label_review/`
+- `outputs/data_quality/radiologist_empty_label_review/`
+- `outputs/data_quality/dataset_followup/provenance/pair_analysis.csv`
+- `outputs/data_quality/dataset_followup/provenance/derivative_groups.csv`
+- `outputs/data_quality/dataset_followup/provenance/summary.json`
+- `outputs/data_quality/dataset_followup/provenance/cross_split_review/`
+- `outputs/data_quality/dataset_followup/provenance/mixed_label_review/`
 
 The raw dataset was read only. Phase 1 image, label, annotation, class, and empty-label statistics were not changed.
 

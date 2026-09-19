@@ -647,7 +647,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--artifacts",
         type=Path,
-        default=Path("outputs/phase2a/v3_detection"),
+        default=Path("outputs/phase2/phase2a/v3_detection"),
         help="Traceability artifact directory.",
     )
     parser.add_argument("--overwrite", action="store_true", help="Safely rebuild and replace existing outputs.")

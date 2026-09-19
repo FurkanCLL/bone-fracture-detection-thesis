@@ -27,7 +27,7 @@ kaggle.json
 # Raw and derived datasets
 data/
 
-# Training outputs and generated artifacts
+# Generated evidence, training runs, and evaluation artifacts
 runs/
 outputs/
 checkpoints/

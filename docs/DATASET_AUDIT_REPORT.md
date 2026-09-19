@@ -152,7 +152,7 @@ These are discussion points, not decisions made by this audit:
 
 ## 15. Generated audit artifacts
 
-All machine-readable artifacts are under `C:/Users/furka/PycharmProjects/bone-fracture-detection-thesis/outputs/dataset_audit`:
+All machine-readable artifacts are under `outputs/data_quality/dataset_audit`:
 
 - `audit_summary.json`: key findings, thresholds, and run metadata
 - `dataset_candidates.csv` and `candidate_comparisons.csv`: discovered roots and equivalence checks

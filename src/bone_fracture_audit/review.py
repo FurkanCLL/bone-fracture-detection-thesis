@@ -16,7 +16,7 @@ from .audit import difference_hash, hamming_distance, sha256_file
 
 ROBOFLOW_SUFFIX = re.compile(r"\.rf\.[0-9a-f]{16,}$", re.IGNORECASE)
 DEFAULT_DATASET_ROOT = Path("data/raw/bone-fracture-detection/bone fracture detection.v4-v4.yolov8")
-DEFAULT_OUTPUT_DIR = Path("outputs/radiologist_empty_label_review")
+DEFAULT_OUTPUT_DIR = Path("outputs/data_quality/radiologist_empty_label_review")
 DEFAULT_SEED = 20260914
 
 

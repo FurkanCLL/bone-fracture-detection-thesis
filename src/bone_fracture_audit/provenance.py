@@ -17,8 +17,8 @@ import numpy as np
 
 
 DEFAULT_RAW_ROOT = Path("data/raw")
-DEFAULT_AUDIT_DIR = Path("outputs/dataset_audit")
-DEFAULT_OUTPUT_DIR = Path("outputs/dataset_followup/provenance")
+DEFAULT_AUDIT_DIR = Path("outputs/data_quality/dataset_audit")
+DEFAULT_OUTPUT_DIR = Path("outputs/data_quality/dataset_followup/provenance")
 
 
 @dataclass(frozen=True)
