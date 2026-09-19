@@ -1,0 +1,78 @@
+{
+  "annotations": 998,
+  "class_mapping": {
+    "0": "elbow positive",
+    "1": "fingers positive",
+    "2": "forearm fracture",
+    "3": "humerus fracture",
+    "4": "shoulder fracture",
+    "5": "wrist positive"
+  },
+  "conversion_method": "minimum enclosing axis-aligned box from polygon coordinate extrema",
+  "empty_labels": 868,
+  "images": 1728,
+  "labels": 1728,
+  "output_numeric_precision_decimal_places": 10,
+  "per_class_annotations": {
+    "0: elbow positive": 159,
+    "1: fingers positive": 253,
+    "2: forearm fracture": 164,
+    "3: humerus fracture": 155,
+    "4: shoulder fracture": 157,
+    "5: wrist positive": 110
+  },
+  "preparation_timestamp_utc": "2026-09-19T15:02:10.655531+00:00",
+  "prepared_dataset_path": "data/prepared/v3_detection",
+  "repository_commit_sha": "3d08508cd018fe1914b59ce98fbfafe85ca97bdd",
+  "source_data_yaml_sha256": "43bb3cbd479f23a14cbf65b02a5eaa41cd2b0f69e5080cb8c9a961333770ad4c",
+  "source_dataset_fingerprint": "7dfa20e277473b91b742875bb7dee0e6a1fbd931925071ae3e32e77057675c68",
+  "source_dataset_path": "data/raw/bone-fracture-detection/bone-fracture-detection-v3-yolov8",
+  "source_fingerprint_algorithm": "SHA-256 of UTF-8 '<relative POSIX path>\\t<file SHA-256>\\n' records, sorted by case-folded relative path with the original path as a tie-breaker",
+  "source_fingerprint_file_count": 3459,
+  "splits": {
+    "test": {
+      "annotations": 96,
+      "empty_labels": 86,
+      "images": 169,
+      "labels": 169,
+      "per_class_annotations": {
+        "0: elbow positive": 17,
+        "1: fingers positive": 27,
+        "2: forearm fracture": 14,
+        "3: humerus fracture": 15,
+        "4: shoulder fracture": 17,
+        "5: wrist positive": 6
+      }
+    },
+    "train": {
+      "annotations": 698,
+      "empty_labels": 607,
+      "images": 1211,
+      "labels": 1211,
+      "per_class_annotations": {
+        "0: elbow positive": 113,
+        "1: fingers positive": 178,
+        "2: forearm fracture": 107,
+        "3: humerus fracture": 104,
+        "4: shoulder fracture": 120,
+        "5: wrist positive": 76
+      }
+    },
+    "valid": {
+      "annotations": 204,
+      "empty_labels": 175,
+      "images": 348,
+      "labels": 348,
+      "per_class_annotations": {
+        "0: elbow positive": 29,
+        "1: fingers positive": 48,
+        "2: forearm fracture": 43,
+        "3: humerus fracture": 36,
+        "4: shoulder fracture": 20,
+        "5: wrist positive": 28
+      }
+    }
+  },
+  "tool_version": "1.0.0",
+  "traceability_artifacts_path": "outputs/phase2a/v3_detection"
+}

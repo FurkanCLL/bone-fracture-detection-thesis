@@ -1,0 +1,143 @@
+{
+  "geometry": {
+    "annotations_checked": 998,
+    "containment_errors": 0,
+    "invalid_box_errors": 0,
+    "minimum_box_errors": 0
+  },
+  "independent_consistency": {
+    "annotations": 998,
+    "class_mapping": {
+      "0": "elbow positive",
+      "1": "fingers positive",
+      "2": "forearm fracture",
+      "3": "humerus fracture",
+      "4": "shoulder fracture",
+      "5": "wrist positive"
+    },
+    "empty_labels": 868,
+    "images": 1728,
+    "labels": 1728,
+    "per_class_annotations": {
+      "0": 159,
+      "1": 253,
+      "2": 164,
+      "3": 155,
+      "4": 157,
+      "5": 110
+    },
+    "source_prepared_image_hash_mismatches": 0,
+    "splits": {
+      "test": {
+        "annotations": 96,
+        "empty_labels": 86,
+        "image_hash_mismatches": 0,
+        "images": 169,
+        "labels": 169,
+        "per_class_annotations": {
+          "0": 17,
+          "1": 27,
+          "2": 14,
+          "3": 15,
+          "4": 17,
+          "5": 6
+        }
+      },
+      "train": {
+        "annotations": 698,
+        "empty_labels": 607,
+        "image_hash_mismatches": 0,
+        "images": 1211,
+        "labels": 1211,
+        "per_class_annotations": {
+          "0": 113,
+          "1": 178,
+          "2": 107,
+          "3": 104,
+          "4": 120,
+          "5": 76
+        }
+      },
+      "valid": {
+        "annotations": 204,
+        "empty_labels": 175,
+        "image_hash_mismatches": 0,
+        "images": 348,
+        "labels": 348,
+        "per_class_annotations": {
+          "0": 29,
+          "1": 48,
+          "2": 43,
+          "3": 36,
+          "4": 20,
+          "5": 28
+        }
+      }
+    }
+  },
+  "occupancy": {
+    "maximum": 0.9773961195,
+    "mean": 0.685368457768,
+    "median": 0.690987095461,
+    "minimum": 0.049270936927,
+    "q1": 0.585131508681,
+    "q3": 0.790022162696
+  },
+  "phase2b_output_path": "outputs/phase2b/v3_detection",
+  "prepared_dataset_fingerprint": "c5031d9937e2a1d917a2369f327b38a59a4b5e8bd40ae2da659451840c7d41b1",
+  "prepared_dataset_path": "data/prepared/v3_detection",
+  "prepared_unchanged_during_validation": true,
+  "remaining_limitations": [
+    "Visual overlays validate conversion alignment, not medical correctness or clinical utility.",
+    "Patient or study-level independence remains unverified because source identifiers are unavailable."
+  ],
+  "reproducibility": {
+    "approved_annotation_count": 998,
+    "approved_prepared_fingerprint": "c5031d9937e2a1d917a2369f327b38a59a4b5e8bd40ae2da659451840c7d41b1",
+    "class_counts_identical": true,
+    "empty_label_mismatch_count": 0,
+    "empty_label_mismatches": [],
+    "fingerprints_identical": true,
+    "image_files_compared": 1728,
+    "image_hash_mismatch_count": 0,
+    "image_hash_mismatches": [],
+    "label_files_compared": 1728,
+    "label_hash_mismatch_count": 0,
+    "label_hash_mismatches": [],
+    "missing_or_extra_directories": [],
+    "missing_or_extra_directory_count": 0,
+    "reproduced_annotation_count": 998,
+    "reproduced_prepared_fingerprint": "c5031d9937e2a1d917a2369f327b38a59a4b5e8bd40ae2da659451840c7d41b1",
+    "source_fingerprint_matches_current": true,
+    "source_fingerprint_matches_phase2a_summary": true,
+    "success": true,
+    "temporary_outputs_cleaned_after_comparison": true
+  },
+  "review_candidates": 88,
+  "review_selection_policy": {
+    "categories": [
+      "lowest occupancy",
+      "smallest box",
+      "largest box",
+      "closest to boundary",
+      "multi-annotation image",
+      "unusual image aspect ratio"
+    ],
+    "mandatory_class_representatives_per_split": 6,
+    "mandatory_class_representatives_total": 12,
+    "ranked_annotations_per_category": 10,
+    "visual_images_per_diagnostic_category": 4
+  },
+  "serialization_tolerance": 1e-10,
+  "source_dataset_fingerprint": "7dfa20e277473b91b742875bb7dee0e6a1fbd931925071ae3e32e77057675c68",
+  "source_dataset_path": "data/raw/bone-fracture-detection/bone-fracture-detection-v3-yolov8",
+  "source_unchanged_during_validation": true,
+  "technically_ready_for_phase2c": true,
+  "tool_version": "1.0.0",
+  "validation_timestamp_utc": "2026-09-19T15:32:03.033593+00:00",
+  "visual_review_images": 36,
+  "visual_review_split_scope": [
+    "train",
+    "valid"
+  ]
+}
