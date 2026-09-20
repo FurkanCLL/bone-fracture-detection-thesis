@@ -652,9 +652,9 @@ The goal is to test one clearly defined and defensible preprocessing strategy.
 
 ---
 
-## 7.2 Planned preprocessing
+## 7.2 Frozen preprocessing
 
-The main custom preprocessing condition should consist of:
+The Phase 2D custom preprocessing condition consists of:
 
 1. grayscale standardization;
 2. CLAHE local contrast enhancement;
@@ -681,14 +681,14 @@ The planned main enhancement technique is:
 
 **Contrast Limited Adaptive Histogram Equalization (CLAHE)**
 
-Initial proposed parameters:
+Frozen parameters:
 
 ```text
 clipLimit = 2.0
 tileGridSize = 8 × 8
 ```
 
-These should be reviewed visually before the preprocessing protocol is frozen.
+These parameters were frozen after automated validation and train/validation-only visual review in Phase 2D.
 
 Rationale:
 
@@ -774,16 +774,24 @@ base detection images
 custom preprocessed detection images
 ```
 
-For example:
-
 ```text
-v3_detection_original/
+v3_detection/
 v3_detection_clahe/
 ```
 
-Exact directory naming should be decided during Phase 2D planning.
+The base condition remains at `data/prepared/v3_detection`, and the custom condition is stored separately at `data/prepared/v3_detection_clahe`.
 
 Annotations must remain geometrically identical because the custom preprocessing does not alter image dimensions or spatial geometry.
+
+---
+
+## 7.9 Phase 2D validation outcome
+
+The derived dataset contains 1,728 lossless PNG images and 1,728 byte-identical label files. All 998 annotations, 868 empty labels, original split membership, dimensions, and six-class mapping were preserved. Every output has three identical channels.
+
+The source fingerprint remained `c5031d9937e2a1d917a2369f327b38a59a4b5e8bd40ae2da659451840c7d41b1`. The derived dataset fingerprint is `ca8286b35d3d31f0b8074aa387a44ca6392178926c23bde61ea6d99be70aba5f`, reproduced exactly by an independent temporary rebuild.
+
+Technical visual QA passed using train and validation images only. This freezes the preprocessing input for later controlled conditions but does not claim that CLAHE improves detection accuracy. The controlled experiment is required to determine benefit, neutrality, or harm.
 
 ---
 

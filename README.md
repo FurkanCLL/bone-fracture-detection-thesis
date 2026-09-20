@@ -78,3 +78,15 @@ python -m bone_fracture_pipeline.training_protocol
 ```
 
 This command performs no training. It writes full local evidence to `outputs/phase2/phase2c` and compact tracked evidence to `docs/evidence/phase2c`. The baseline itself is defined in `configs/training/baseline.yaml`; later controlled experiments must derive their common training values from it. See `docs/PHASE_2C_BASELINE_PROTOCOL.md` for the frozen settings, checkpoint rule, test-isolation policy, and remaining Phase 2F checks.
+
+## Phase 2D custom preprocessing
+
+Build and validate the fixed CLAHE image condition with:
+
+```powershell
+python -m bone_fracture_pipeline.preprocess_dataset
+```
+
+The command reads `data/prepared/v3_detection` without modifying it and creates `data/prepared/v3_detection_clahe`. It converts stored pixels to 8-bit grayscale, applies OpenCV CLAHE with `clipLimit = 2.0` and `tileGridSize = (8, 8)`, replicates the result to three identical channels, and saves lossless PNG files. Splits, dimensions, class mapping, and label bytes are preserved.
+
+The builder validates every output, checks the source fingerprint before and after processing, produces train/validation-only visual QA, and confirms determinism with an independent temporary rebuild. Generated artifacts remain under `outputs/phase2/phase2d`; compact evidence is tracked under `docs/evidence/phase2d`. See `docs/PHASE_2D_PREPROCESSING_REPORT.md` for the validated results and limitations. The command performs no training.

@@ -1,0 +1,290 @@
+{
+  "algorithm": {
+    "clahe_clip_limit": 2.0,
+    "clahe_tile_grid_size": [
+      8,
+      8
+    ],
+    "grayscale_conversion": "OpenCV BGR/BGRA to grayscale; existing single-channel input retained",
+    "opencv_threads": 1,
+    "opencv_version": "4.14.0",
+    "png_compression": 3,
+    "steps": [
+      "decode stored pixels without orientation transform",
+      "standardize to 8-bit single-channel grayscale",
+      "apply OpenCV CLAHE",
+      "replicate processed grayscale into three identical channels",
+      "encode losslessly as PNG"
+    ],
+    "uint8_standardization": "fixed full-dtype-range linear mapping; current source is already uint8"
+  },
+  "automated_validation_passed": true,
+  "class_mapping": {
+    "0": "elbow positive",
+    "1": "fingers positive",
+    "2": "forearm fracture",
+    "3": "humerus fracture",
+    "4": "shoulder fracture",
+    "5": "wrist positive"
+  },
+  "geometry_integrity": {
+    "crops": 0,
+    "dimension_mismatches": 0,
+    "images_compared": 1728,
+    "orientation_changes": 0,
+    "resizes": 0
+  },
+  "intensity_statistics": {
+    "overall": {
+      "images": 1728,
+      "images_with_increased_std": 1653,
+      "median_image_original_mean": 46.730116069023,
+      "median_image_original_std": 29.872488000589,
+      "median_image_processed_mean": 60.515871719782,
+      "median_image_processed_std": 38.34733101715,
+      "original_255_fraction": 0.001098712402,
+      "original_max": 255,
+      "original_mean": 53.969605746241,
+      "original_min": 0,
+      "original_std": 50.099700084532,
+      "original_zero_fraction": 0.080869841865,
+      "pixels": 349051307,
+      "processed_255_fraction": 0.001100737892,
+      "processed_max": 255,
+      "processed_mean": 65.079233260112,
+      "processed_min": 0,
+      "processed_std": 52.410072633584,
+      "processed_zero_fraction": 3.0941e-07,
+      "scope": "overall",
+      "std_change": 2.310372549052
+    },
+    "test": {
+      "images": 169,
+      "images_with_increased_std": 164,
+      "median_image_original_mean": 47.184777706186,
+      "median_image_original_std": 29.437831025586,
+      "median_image_processed_mean": 59.098887777094,
+      "median_image_processed_std": 37.480329336458,
+      "original_255_fraction": 0.002022068646,
+      "original_max": 255,
+      "original_mean": 58.717186169723,
+      "original_min": 0,
+      "original_std": 53.604584606888,
+      "original_zero_fraction": 0.082481067427,
+      "pixels": 36568986,
+      "processed_255_fraction": 0.002022205374,
+      "processed_max": 255,
+      "processed_mean": 69.02630917904,
+      "processed_min": 0,
+      "processed_std": 53.775366717504,
+      "processed_zero_fraction": 1.91419e-07,
+      "scope": "test",
+      "std_change": 0.170782110615
+    },
+    "train": {
+      "images": 1211,
+      "images_with_increased_std": 1161,
+      "median_image_original_mean": 46.31195359003,
+      "median_image_original_std": 29.868892472238,
+      "median_image_processed_mean": 59.973300579897,
+      "median_image_processed_std": 38.502275624623,
+      "original_255_fraction": 0.001044282791,
+      "original_max": 255,
+      "original_mean": 53.038566203405,
+      "original_min": 0,
+      "original_std": 49.660178593789,
+      "original_zero_fraction": 0.079193937472,
+      "pixels": 243869766,
+      "processed_255_fraction": 0.001047087567,
+      "processed_max": 255,
+      "processed_mean": 64.141481519279,
+      "processed_min": 0,
+      "processed_std": 52.251762410092,
+      "processed_zero_fraction": 3.07541e-07,
+      "scope": "train",
+      "std_change": 2.591583816303
+    },
+    "valid": {
+      "images": 348,
+      "images_with_increased_std": 328,
+      "median_image_original_mean": 48.027747011806,
+      "median_image_original_std": 30.264269943565,
+      "median_image_processed_mean": 61.947415830894,
+      "median_image_processed_std": 38.201045780451,
+      "original_255_fraction": 0.000800043082,
+      "original_max": 255,
+      "original_mean": 54.748445616112,
+      "original_min": 0,
+      "original_std": 49.562092889105,
+      "original_zero_fraction": 0.085967764937,
+      "pixels": 68612555,
+      "processed_255_fraction": 0.000800305425,
+      "processed_max": 255,
+      "processed_mean": 66.308581643695,
+      "processed_min": 0,
+      "processed_std": 52.110445991501,
+      "processed_zero_fraction": 3.78939e-07,
+      "scope": "valid",
+      "std_change": 2.548353102396
+    }
+  },
+  "label_integrity": {
+    "byte_identical_labels": 1728,
+    "empty_labels_preserved": 868,
+    "hash_mismatches": 0,
+    "labels_compared": 1728
+  },
+  "official_training_performed": false,
+  "phase2d_output_path": "outputs/phase2/phase2d",
+  "preprocessing_timestamp_utc": "2026-09-20T16:39:12.350222+00:00",
+  "processed_dataset_file_count": 3457,
+  "processed_dataset_fingerprint": "ca8286b35d3d31f0b8074aa387a44ca6392178926c23bde61ea6d99be70aba5f",
+  "processed_dataset_path": "data/prepared/v3_detection_clahe",
+  "repository_commit_sha": "c1ada1f5c274c28a274aa2a6912c5d31bffe79e9",
+  "reproducibility": {
+    "files_compared": 3457,
+    "fingerprints_identical": true,
+    "first_build_fingerprint": "ca8286b35d3d31f0b8074aa387a44ca6392178926c23bde61ea6d99be70aba5f",
+    "reproduced_fingerprint": "ca8286b35d3d31f0b8074aa387a44ca6392178926c23bde61ea6d99be70aba5f",
+    "success": true,
+    "temporary_rebuild_removed": true
+  },
+  "source_dataset_fingerprint_after": "c5031d9937e2a1d917a2369f327b38a59a4b5e8bd40ae2da659451840c7d41b1",
+  "source_dataset_fingerprint_before": "c5031d9937e2a1d917a2369f327b38a59a4b5e8bd40ae2da659451840c7d41b1",
+  "source_dataset_path": "data/prepared/v3_detection",
+  "source_encoding_profiles": [
+    {
+      "channels": 3,
+      "dtype": "uint8",
+      "exif_orientation": 1,
+      "images": 1728,
+      "suffix": ".jpg"
+    }
+  ],
+  "source_splits": {
+    "test": {
+      "annotations": 96,
+      "empty_labels": 86,
+      "images": 169,
+      "labels": 169,
+      "per_class_annotations": {
+        "0": 17,
+        "1": 27,
+        "2": 14,
+        "3": 15,
+        "4": 17,
+        "5": 6
+      }
+    },
+    "train": {
+      "annotations": 698,
+      "empty_labels": 607,
+      "images": 1211,
+      "labels": 1211,
+      "per_class_annotations": {
+        "0": 113,
+        "1": 178,
+        "2": 107,
+        "3": 104,
+        "4": 120,
+        "5": 76
+      }
+    },
+    "valid": {
+      "annotations": 204,
+      "empty_labels": 175,
+      "images": 348,
+      "labels": 348,
+      "per_class_annotations": {
+        "0": 29,
+        "1": 48,
+        "2": 43,
+        "3": 36,
+        "4": 20,
+        "5": 28
+      }
+    }
+  },
+  "source_unchanged": true,
+  "technically_ready_for_manual_visual_review": true,
+  "tool_version": "1.0.0",
+  "validation": {
+    "annotations": 998,
+    "decode_failures": 0,
+    "dimension_mismatches": 0,
+    "empty_labels": 868,
+    "images": 1728,
+    "label_hash_mismatches": 0,
+    "labels": 1728,
+    "non_png_images": 0,
+    "non_three_channel_images": 0,
+    "nonidentical_channel_images": 0,
+    "split_summary": {
+      "test": {
+        "annotations": 96,
+        "empty_labels": 86,
+        "images": 169,
+        "labels": 169,
+        "per_class_annotations": {
+          "0": 17,
+          "1": 27,
+          "2": 14,
+          "3": 15,
+          "4": 17,
+          "5": 6
+        }
+      },
+      "train": {
+        "annotations": 698,
+        "empty_labels": 607,
+        "images": 1211,
+        "labels": 1211,
+        "per_class_annotations": {
+          "0": 113,
+          "1": 178,
+          "2": 107,
+          "3": 104,
+          "4": 120,
+          "5": 76
+        }
+      },
+      "valid": {
+        "annotations": 204,
+        "empty_labels": 175,
+        "images": 348,
+        "labels": 348,
+        "per_class_annotations": {
+          "0": 29,
+          "1": 48,
+          "2": 43,
+          "3": 36,
+          "4": 20,
+          "5": 28
+        }
+      }
+    }
+  },
+  "visual_review": {
+    "images": 18,
+    "package_generated": true,
+    "selection_reasons": [
+      "bright_image",
+      "class_0_representative",
+      "class_1_representative",
+      "class_2_representative",
+      "class_3_representative",
+      "class_4_representative",
+      "class_5_representative",
+      "dark_image",
+      "low_contrast",
+      "multi_annotation",
+      "small_annotated_region",
+      "unusual_aspect_ratio"
+    ],
+    "split_scope": [
+      "train",
+      "valid"
+    ],
+    "test_images": 0
+  }
+}

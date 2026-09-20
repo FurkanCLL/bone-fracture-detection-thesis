@@ -9,6 +9,7 @@ Each completed phase should copy only the small canonical summaries or tables ne
 - `phase2a/` records the approved prepared-dataset build summary;
 - `phase2b/` records conversion validation and occupancy summaries;
 - `phase2c/` records the frozen training protocol and detected environment;
+- `phase2d/` records the deterministic CLAHE build, intensity summary, and manual visual QA decision;
 - later phases should follow the same compact-evidence principle.
 
 Generated evidence may contain paths that describe its original run location. The surrounding phase report and current tool defaults define the active local output structure.
