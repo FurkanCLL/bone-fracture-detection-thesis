@@ -11,6 +11,7 @@ from bone_fracture_pipeline.experiment_runner import (
     build_training_arguments,
     resolve_experiment_config,
     validate_experiment_matrix,
+    verify_applied_trainer_config,
     write_runtime_dataset_yaml,
 )
 from bone_fracture_pipeline.training_protocol import AUGMENTATION_OFF_SETTINGS
@@ -56,10 +57,10 @@ class ExperimentRunnerTests(unittest.TestCase):
     def test_smoke_changes_only_epochs_and_keeps_official_protocol_values(self) -> None:
         resolution = resolve_experiment_config(PROJECT_ROOT, "A")
         smoke, smoke_directory, smoke_kind = build_training_arguments(
-            PROJECT_ROOT, resolution, smoke=True
+            PROJECT_ROOT, resolution, smoke=True, require_new_output=False
         )
         official, official_directory, official_kind = build_training_arguments(
-            PROJECT_ROOT, resolution, smoke=False
+            PROJECT_ROOT, resolution, smoke=False, require_new_output=False
         )
 
         self.assertEqual(smoke["epochs"], 1)
@@ -105,6 +106,28 @@ class ExperimentRunnerTests(unittest.TestCase):
         self.assertEqual(runtime["train"], "train/images")
         self.assertEqual(runtime["val"], "valid/images")
         self.assertEqual(result["source"], "data/prepared/v3_detection_png/data.yaml")
+
+    def test_trainer_device_string_is_equivalent_to_frozen_cuda_device_zero(self) -> None:
+        resolution = resolve_experiment_config(PROJECT_ROOT, "A")
+        with tempfile.TemporaryDirectory() as directory:
+            run_directory = Path(directory)
+            expected, _, _ = build_training_arguments(
+                PROJECT_ROOT,
+                resolution,
+                smoke=True,
+                require_new_output=False,
+            )
+            actual = dict(expected)
+            actual["device"] = "0"
+            (run_directory / "args.yaml").write_text(
+                yaml.safe_dump(actual, sort_keys=False),
+                encoding="utf-8",
+            )
+
+            result = verify_applied_trainer_config(run_directory, expected)
+
+        self.assertTrue(result["valid"])
+        self.assertEqual(result["differences"], {})
 
 
 if __name__ == "__main__":

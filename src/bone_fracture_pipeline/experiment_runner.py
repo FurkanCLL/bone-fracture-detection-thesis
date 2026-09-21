@@ -460,6 +460,7 @@ def build_training_arguments(
     resolution: Mapping[str, object],
     *,
     smoke: bool,
+    require_new_output: bool = True,
 ) -> tuple[dict[str, object], Path, str]:
     config = _mapping(resolution, "resolved")
     training = dict(_mapping(config, "training"))
@@ -468,7 +469,7 @@ def build_training_arguments(
     run_name = f"{experiment}_seed{training['seed']}"
     output_root = project_root / str(training.pop("project")) / run_kind
     run_directory = output_root / run_name
-    if run_directory.exists():
+    if require_new_output and run_directory.exists():
         raise ExperimentValidationError(f"Run output already exists and will not be overwritten: {run_directory}")
 
     training["epochs"] = 1 if smoke else training["epochs"]
@@ -561,6 +562,9 @@ def verify_applied_trainer_config(
         actual_value = actual.get(key)
         if key in {"data", "project"}:
             equal = Path(str(actual_value)).resolve() == Path(str(expected_value)).resolve()
+        elif key == "device":
+            # Ultralytics serializes CUDA device 0 as "0" even when the launcher passes integer 0.
+            equal = str(actual_value) == str(expected_value)
         else:
             equal = actual_value == expected_value and type(actual_value) is type(expected_value)
         if not equal:
