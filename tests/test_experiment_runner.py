@@ -1,13 +1,17 @@
 from __future__ import annotations
 
+import tempfile
 import unittest
 from pathlib import Path
+
+import yaml
 
 from bone_fracture_pipeline.augmentation_policy import AUGMENTATION_SETTINGS
 from bone_fracture_pipeline.experiment_runner import (
     build_training_arguments,
     resolve_experiment_config,
     validate_experiment_matrix,
+    write_runtime_dataset_yaml,
 )
 from bone_fracture_pipeline.training_protocol import AUGMENTATION_OFF_SETTINGS
 
@@ -65,7 +69,7 @@ class ExperimentRunnerTests(unittest.TestCase):
         self.assertEqual(smoke_directory.name, "A_seed42")
         self.assertEqual(official_directory.name, "A_seed42")
         different = {key for key in smoke if smoke[key] != official[key]}
-        self.assertEqual(different, {"epochs", "project"})
+        self.assertEqual(different, {"data", "epochs", "project"})
         for key, value in {
             "batch": 8,
             "imgsz": 640,
@@ -89,6 +93,18 @@ class ExperimentRunnerTests(unittest.TestCase):
             self.assertEqual(split_policy["validation"], "valid")
             self.assertEqual(split_policy["checkpoint_selection"], "valid")
             self.assertEqual(split_policy["test_usage"], "final_evaluation_only")
+
+    def test_runtime_dataset_yaml_uses_the_frozen_absolute_dataset_root(self) -> None:
+        resolution = resolve_experiment_config(PROJECT_ROOT, "A")
+        with tempfile.TemporaryDirectory() as directory:
+            run_directory = Path(directory)
+            result = write_runtime_dataset_yaml(PROJECT_ROOT, resolution, run_directory)
+            runtime = yaml.safe_load((run_directory / "dataset.yaml").read_text(encoding="utf-8"))
+
+        self.assertEqual(runtime["path"], str((PROJECT_ROOT / "data/prepared/v3_detection_png").resolve()))
+        self.assertEqual(runtime["train"], "train/images")
+        self.assertEqual(runtime["val"], "valid/images")
+        self.assertEqual(result["source"], "data/prepared/v3_detection_png/data.yaml")
 
 
 if __name__ == "__main__":

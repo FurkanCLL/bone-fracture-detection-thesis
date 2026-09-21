@@ -474,7 +474,7 @@ def build_training_arguments(
     training["epochs"] = 1 if smoke else training["epochs"]
     arguments = {
         "model": str(project_root / str(_mapping(config, "model")["weights"])),
-        "data": str(_resolve(project_root, _mapping(config, "dataset")["data_yaml"], "dataset.data_yaml")),
+        "data": str(run_directory / "dataset.yaml"),
         **training,
         **dict(_mapping(config, "augmentation")),
         "project": str(output_root),
@@ -486,6 +486,27 @@ def build_training_arguments(
         "mode": "train",
     }
     return arguments, run_directory, run_kind
+
+
+# Ultralytics resolves `path: .` against the process directory, so each run gets an absolute-root copy.
+def write_runtime_dataset_yaml(
+    project_root: Path,
+    resolution: Mapping[str, object],
+    run_directory: Path,
+) -> dict[str, object]:
+    config = _mapping(resolution, "resolved")
+    dataset = _mapping(config, "dataset")
+    source_path = _resolve(project_root, dataset["data_yaml"], "dataset.data_yaml")
+    runtime = load_yaml_mapping(source_path, "Prepared dataset YAML")
+    runtime["path"] = str(_resolve(project_root, dataset["root"], "dataset.root"))
+    output_path = run_directory / "dataset.yaml"
+    output_path.write_text(yaml.safe_dump(runtime, sort_keys=False), encoding="utf-8")
+    return {
+        "source": source_path.relative_to(project_root).as_posix(),
+        "runtime": _display_path(project_root, output_path),
+        "runtime_sha256": sha256_file(output_path),
+        "absolute_dataset_root": runtime["path"],
+    }
 
 
 def _dataset_cache_paths(project_root: Path, config: Mapping[str, object]) -> list[Path]:
@@ -778,6 +799,7 @@ def run_experiment(project_root: Path, experiment: str, *, smoke: bool) -> dict[
     import torch
 
     run_directory.mkdir(parents=True)
+    runtime_dataset_yaml = write_runtime_dataset_yaml(project_root, resolution, run_directory)
     manifest_path = run_directory / "run_manifest.json"
     started_at = _utc_now()
     manifest: dict[str, object] = {
@@ -805,6 +827,7 @@ def run_experiment(project_root: Path, experiment: str, *, smoke: bool) -> dict[
             )
         },
         "resolved_config": resolution["resolved"],
+        "runtime_dataset_yaml": runtime_dataset_yaml,
         "trainer_arguments": arguments,
         "preflight": preflight,
         "environment": environment,
@@ -1018,6 +1041,13 @@ def _resolve(project_root: Path, value: object, label: str) -> Path:
         raise ExperimentValidationError(f"{label} must be a non-empty path string.")
     path = Path(value)
     return path.resolve() if path.is_absolute() else (project_root / path).resolve()
+
+
+def _display_path(project_root: Path, path: Path) -> str:
+    try:
+        return path.resolve().relative_to(project_root).as_posix()
+    except ValueError:
+        return str(path.resolve())
 
 
 def _utc_now() -> str:
