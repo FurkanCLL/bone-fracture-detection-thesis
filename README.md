@@ -90,3 +90,21 @@ python -m bone_fracture_pipeline.preprocess_dataset
 The command reads `data/prepared/v3_detection` without modifying it and creates `data/prepared/v3_detection_clahe`. It converts stored pixels to 8-bit grayscale, applies OpenCV CLAHE with `clipLimit = 2.0` and `tileGridSize = (8, 8)`, replicates the result to three identical channels, and saves lossless PNG files. Splits, dimensions, class mapping, and label bytes are preserved.
 
 The builder validates every output, checks the source fingerprint before and after processing, produces train/validation-only visual QA, and confirms determinism with an independent temporary rebuild. Generated artifacts remain under `outputs/phase2/phase2d`; compact evidence is tracked under `docs/evidence/phase2d`. See `docs/PHASE_2D_PREPROCESSING_REPORT.md` for the validated results and limitations. The command performs no training.
+
+## Phase 2E PNG control and augmentation policy
+
+Create the pixel-preserving PNG control used by Experiments A and C:
+
+```powershell
+python -m bone_fracture_pipeline.png_control
+```
+
+The command decodes each approved JPEG and saves the exact decoded three-channel `uint8` matrix as lossless PNG. It verifies exact pixel-array equality, byte-identical labels, unchanged splits and counts, source immutability, overwrite safety, and an independent deterministic rebuild.
+
+Validate the conservative train-only augmentation policy with:
+
+```powershell
+python -m bone_fracture_pipeline.augmentation_policy
+```
+
+The policy uses rotation ±10°, translation ±5%, scale 0.90–1.10, and value/intensity variation approximately ±15%. It explicitly disables flips, composites, shear, perspective, channel swapping, and unrelated transforms. The validator checks installed Ultralytics semantics, control/CLAHE sample identity, C/D seed behavior, and train-only box previews without performing model training. See `docs/PHASE_2E_AUGMENTATION_POLICY.md` for the frozen policy and remaining Phase 2F boundary.

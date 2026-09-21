@@ -1,0 +1,113 @@
+{
+  "automated_validation_passed": true,
+  "class_mapping": {
+    "0": "elbow positive",
+    "1": "fingers positive",
+    "2": "forearm fracture",
+    "3": "humerus fracture",
+    "4": "shoulder fracture",
+    "5": "wrist positive"
+  },
+  "control_dataset_file_count": 3457,
+  "control_dataset_fingerprint": "5dd43c8e40eda542a3d77ad65aad29e6964fbba6bb9d4ac77006413a7b8bb1ce",
+  "control_dataset_path": "data/prepared/v3_detection_png",
+  "conversion": {
+    "geometry_transformations": [],
+    "opencv_threads": 1,
+    "opencv_version": "4.14.0",
+    "operation": "decode approved JPEG and encode the identical pixel matrix as lossless PNG",
+    "pixel_transformations": [],
+    "png_compression": 3
+  },
+  "created_at_utc": "2026-09-21T19:35:24.513820+00:00",
+  "official_training_performed": false,
+  "phase2e_png_output_path": "outputs/phase2/phase2e/png_control",
+  "repository_commit_sha": "ff645601e53cad651b22661d949fb608d5a7e868",
+  "reproducibility": {
+    "files_compared": 3457,
+    "fingerprints_identical": true,
+    "first_build_fingerprint": "5dd43c8e40eda542a3d77ad65aad29e6964fbba6bb9d4ac77006413a7b8bb1ce",
+    "reproduced_fingerprint": "5dd43c8e40eda542a3d77ad65aad29e6964fbba6bb9d4ac77006413a7b8bb1ce",
+    "success": true,
+    "temporary_rebuild_removed": true
+  },
+  "source_dataset_fingerprint_after": "c5031d9937e2a1d917a2369f327b38a59a4b5e8bd40ae2da659451840c7d41b1",
+  "source_dataset_fingerprint_before": "c5031d9937e2a1d917a2369f327b38a59a4b5e8bd40ae2da659451840c7d41b1",
+  "source_dataset_path": "data/prepared/v3_detection",
+  "source_profile": {
+    "channels": [
+      3
+    ],
+    "dtypes": [
+      "uint8"
+    ],
+    "exif_orientations": [
+      1
+    ],
+    "images": 1728,
+    "suffixes": [
+      ".jpg"
+    ]
+  },
+  "source_splits": {
+    "test": {
+      "annotations": 96,
+      "empty_labels": 86,
+      "images": 169,
+      "labels": 169,
+      "per_class_annotations": {
+        "0": 17,
+        "1": 27,
+        "2": 14,
+        "3": 15,
+        "4": 17,
+        "5": 6
+      }
+    },
+    "train": {
+      "annotations": 698,
+      "empty_labels": 607,
+      "images": 1211,
+      "labels": 1211,
+      "per_class_annotations": {
+        "0": 113,
+        "1": 178,
+        "2": 107,
+        "3": 104,
+        "4": 120,
+        "5": 76
+      }
+    },
+    "valid": {
+      "annotations": 204,
+      "empty_labels": 175,
+      "images": 348,
+      "labels": 348,
+      "per_class_annotations": {
+        "0": 29,
+        "1": 48,
+        "2": 43,
+        "3": 36,
+        "4": 20,
+        "5": 28
+      }
+    }
+  },
+  "source_unchanged": true,
+  "stable_sample_identity": "<split>/<source stem>",
+  "tool_version": "1.0.0",
+  "validation": {
+    "annotations": 998,
+    "channel_mismatches": 0,
+    "decode_failures": 0,
+    "decoded_pixel_equal_images": 1728,
+    "dimension_mismatches": 0,
+    "dtype_mismatches": 0,
+    "empty_labels": 868,
+    "images": 1728,
+    "label_hash_mismatches": 0,
+    "labels": 1728,
+    "non_png_images": 0,
+    "pixel_mismatches": 0
+  }
+}

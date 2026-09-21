@@ -4,7 +4,7 @@
 **University:** Riga Technical University (RTU)  
 **Main model family:** YOLOv8 object detection  
 **Primary raw dataset:** Roboflow/Kaggle Bone Fracture Detection, Version 3 (v3)  
-**Status:** Phase 2 planning approved, implementation not yet started  
+**Status:** Phase 2A-2E implemented and validated; Phase 2F is next
 **Purpose of this document:** Provide a stable, high-level implementation plan for Phase 2 so that the work can proceed in a controlled, reproducible, and consistent way. Detailed implementation choices for each subphase should still be reviewed and finalized immediately before that subphase is implemented.
 
 ---
@@ -831,9 +831,9 @@ A single image may therefore appear differently across epochs without creating a
 
 ---
 
-## 8.3 Proposed conservative augmentation
+## 8.3 Frozen conservative augmentation
 
-The initial planned augmentation condition is:
+The Phase 2E augmentation condition is:
 
 ```text
 Rotation:        approximately ±10°
@@ -842,7 +842,7 @@ Scale:           approximately 0.90–1.10
 Intensity/value: approximately ±15%
 ```
 
-The exact implementation and parameter mapping must be verified against the training framework before Phase 2E is frozen.
+Installed Ultralytics 8.4.155 behavior was verified directly: `degrees=10.0` samples ±10°, `translate=0.05` samples ±5% independently by axis, `scale=0.10` samples 0.90-1.10, and `hsv_v=0.15` samples a 0.85-1.15 value multiplier with `uint8` clipping. Hue and saturation changes remain zero.
 
 The main principle is conservative medical-image variability rather than aggressive generic computer-vision augmentation.
 
@@ -909,35 +909,47 @@ custom augmentation = OFF
 
 ---
 
+## 8.6 PNG control and Phase 2E validation outcome
+
+Experiments A and C use `data/prepared/v3_detection_png` so all four primary conditions read PNG containers. This control was created by decoding each approved JPEG and losslessly encoding the exact decoded three-channel `uint8` matrix. All 1,728 decoded arrays matched exactly, all label files remained byte-identical, and an independent rebuild reproduced fingerprint `5dd43c8e40eda542a3d77ad65aad29e6964fbba6bb9d4ac77006413a7b8bb1ce`.
+
+The augmentation configuration is stored in `configs/training/augmentation_conservative.yaml`. It applies only to train mode. Validation and test remain augmentation-free, while flips, shear, perspective, Mosaic, MixUp, CutMix, copy-paste, channel swapping, AutoAugment, random erasing, and third-party default transforms remain disabled.
+
+Control and CLAHE datasets contain the same 1,728 `<split>/<source stem>` identities, labels, dimensions, and ordering. Under fresh seed-42 runs with the frozen Ultralytics version, worker count, loader settings, and sample order, the deterministic verification harness produced matching C/D geometry and RNG progression. Phase 2F must repeat this check through the final run launcher because changing workers, ordering, resume state, or framework versions can break exact pairing.
+
+Nine train-only endpoint and combined previews passed automated box validation and manual technical review. This freezes Phase 2E for Phase 2F smoke testing without making a detector-performance claim.
+
+---
+
 # 9. Phase 2F: Experiment Freeze and Smoke Testing
 
 ## 9.1 A/B/C/D experiment matrix
 
 The main thesis experiment is a 2 × 2 design:
 
-| Experiment | Custom preprocessing | Controlled augmentation |
+| Experiment | Image condition | Controlled augmentation |
 |---|---|---|
-| A | No | No |
-| B | Yes | No |
-| C | No | Yes |
-| D | Yes | Yes |
+| A | PNG control | No |
+| B | CLAHE PNG | No |
+| C | PNG control | Yes |
+| D | CLAHE PNG | Yes |
 
 Interpretation:
 
 ### Experiment A
-Baseline detection pipeline.
+PNG-container-normalized baseline detection pipeline.
 
-Tests YOLOv8 using the prepared detection dataset without custom X-ray preprocessing and without controlled augmentation.
+Tests YOLOv8 using the pixel-preserving PNG control without custom X-ray enhancement and without controlled augmentation.
 
 ### Experiment B
 Preprocessing only.
 
-Measures the effect of the custom grayscale + CLAHE preprocessing pipeline.
+Measures the effect of the custom grayscale + CLAHE preprocessing pipeline against the PNG-container control.
 
 ### Experiment C
 Augmentation only.
 
-Measures the effect of conservative controlled on-the-fly augmentation.
+Measures the effect of conservative controlled on-the-fly augmentation on the PNG control.
 
 ### Experiment D
 Preprocessing + augmentation.
@@ -1348,7 +1360,8 @@ grayscale standardization
 + lossless derived images
 
 PHASE 2E
-Controlled on-the-fly augmentation:
+Pixel-identical PNG control for A/C
++ controlled on-the-fly augmentation for C/D:
 small rotation
 + small translation
 + small scale variation

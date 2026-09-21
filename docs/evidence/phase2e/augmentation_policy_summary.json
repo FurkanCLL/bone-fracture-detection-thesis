@@ -1,0 +1,151 @@
+{
+  "augmentation": {
+    "augment": false,
+    "auto_augment": null,
+    "bgr": 0.0,
+    "close_mosaic": 0,
+    "copy_paste": 0.0,
+    "cutmix": 0.0,
+    "degrees": 10.0,
+    "erasing": 0.0,
+    "fliplr": 0.0,
+    "flipud": 0.0,
+    "hsv_h": 0.0,
+    "hsv_s": 0.0,
+    "hsv_v": 0.15,
+    "mixup": 0.0,
+    "mosaic": 0.0,
+    "perspective": 0.0,
+    "scale": 0.1,
+    "shear": 0.0,
+    "translate": 0.05
+  },
+  "config": {
+    "config_digest": "8e247a7c289ee3b3684fc116826c8b9f951beef6e805463d0d832ec2bd83654d",
+    "settings_checked": [
+      "augment",
+      "auto_augment",
+      "bgr",
+      "close_mosaic",
+      "copy_paste",
+      "cutmix",
+      "degrees",
+      "erasing",
+      "fliplr",
+      "flipud",
+      "hsv_h",
+      "hsv_s",
+      "hsv_v",
+      "mixup",
+      "mosaic",
+      "perspective",
+      "scale",
+      "shear",
+      "translate"
+    ],
+    "training_only": true,
+    "valid": true
+  },
+  "config_path": "configs/training/augmentation_conservative.yaml",
+  "dataset_identity": {
+    "clahe_dataset_file_count": 3457,
+    "clahe_dataset_fingerprint": "ca8286b35d3d31f0b8074aa387a44ca6392178926c23bde61ea6d99be70aba5f",
+    "control_dataset_file_count": 3457,
+    "control_dataset_fingerprint": "5dd43c8e40eda542a3d77ad65aad29e6964fbba6bb9d4ac77006413a7b8bb1ce",
+    "dimension_mismatches": 0,
+    "dtype_mismatches": 0,
+    "label_hash_mismatches": 0,
+    "matched_samples": 1728,
+    "missing_or_extra_identities": 0,
+    "ordered_identities_identical": true,
+    "split_counts": {
+      "test": 169,
+      "train": 1211,
+      "valid": 348
+    },
+    "stable_identity": "<split>/<source stem>"
+  },
+  "framework_semantics": {
+    "albumentations_installed": false,
+    "augment_flag_semantics": "prediction-time augmentation; retained false",
+    "augment_source_sha256": "3631af29958e17bc442cbaa49a6bd32b660615b1bb1171a4e8e8692bace1f428",
+    "config_parser_accepted_values": true,
+    "dataloader_source_sha256": "375789e4d9b5b2ff3cfc74311b6e05dd27be00f7933b52dfd24e6da223d82396",
+    "degrees_semantics": "uniform angle in [-10.0, 10.0] degrees",
+    "hsv_h_and_hsv_s_disabled": true,
+    "hsv_v_semantics": "uniform multiplicative value gain in [0.85, 1.15] with uint8 clipping",
+    "pytorch_version": "2.6.0+cu126",
+    "scale_semantics": "uniform multiplicative scale in [0.90, 1.10]",
+    "test_augmentation": false,
+    "training_transform_activation": "dataset mode train only",
+    "translate_semantics": "independent x/y center translation uniformly within +/-5% of output size",
+    "ultralytics_version": "8.4.155",
+    "unapproved_default_albumentations_active": false,
+    "valid": true,
+    "validation_augmentation": false
+  },
+  "official_training_performed": false,
+  "paired_reproducibility": {
+    "limitation": "Pairing depends on the frozen loader/version/runtime conditions and must be rechecked in Phase 2F; it is not guaranteed after worker-count, ordering, resume-state, or framework changes.",
+    "numpy_rng_states_identical": true,
+    "pairing_conditions": [
+      "fresh runs from seed 42",
+      "Ultralytics 8.4.155 and unchanged dependency versions",
+      "matching split/stem sample order and cardinality",
+      "matching labels, dimensions, batch size, workers, cache, and rect settings",
+      "no resume from a checkpoint with advanced RNG state"
+    ],
+    "python_rng_states_identical": true,
+    "sample_ids": [
+      "train/distal-humeral-fractures-2-_jpeg.rf.39ba3f53047ecb4064613850a1c76fc1",
+      "train/elbow-dislocation-with-coronoid-process-fracture_jpg.rf.8bcb11ff8d4409f1202e1cafdc73e87f",
+      "train/fracture-of-the-humeral-capitellum-milch-type-1-1-1-_jpg.rf.4c16d0817782b56497b9f18bca2b0fdd",
+      "train/image1_0_png.rf.bc222874fa14e205b638e87ddad52b9d",
+      "train/image1_1002_png.rf.c94d11a79032d6beb4ce4d876c9f7fda",
+      "train/image1_1010_png.rf.65f54641e628d0952fc45df00ef5e7ff",
+      "train/image1_1022_png.rf.b423a18f64684ae7c6342b0071ef46cf",
+      "train/image1_1036_png.rf.d815bc7f4963ed689a1bb90cc17ad13e"
+    ],
+    "samples_checked": 8,
+    "seed": 42,
+    "shuffle_order_reproducible": true,
+    "success": true,
+    "transformed_geometry_identical": true,
+    "worker_seeding_reproducible": true,
+    "workers": 8
+  },
+  "preview": {
+    "all_boxes_valid": true,
+    "images": 9,
+    "invalid_boxes": 0,
+    "package_generated": true,
+    "split_scope": [
+      "train"
+    ],
+    "test_images": 0
+  },
+  "repository_commit_sha": "ff645601e53cad651b22661d949fb608d5a7e868",
+  "schema_version": 1,
+  "split_policy": {
+    "test": false,
+    "train": true,
+    "valid": false
+  },
+  "technically_ready_for_manual_preview_review": true,
+  "tool_version": "1.0.0",
+  "unwanted_transforms_disabled": [
+    "horizontal_flip",
+    "vertical_flip",
+    "shear",
+    "perspective",
+    "mosaic",
+    "mixup",
+    "cutmix",
+    "copy_paste",
+    "bgr_channel_swap",
+    "auto_augment",
+    "random_erasing",
+    "third_party_albumentations_defaults"
+  ],
+  "validated_at_utc": "2026-09-21T19:38:34.687463+00:00"
+}

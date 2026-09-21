@@ -1,0 +1,18 @@
+{
+  "clahe_dataset_file_count": 3457,
+  "clahe_dataset_fingerprint": "ca8286b35d3d31f0b8074aa387a44ca6392178926c23bde61ea6d99be70aba5f",
+  "control_dataset_file_count": 3457,
+  "control_dataset_fingerprint": "5dd43c8e40eda542a3d77ad65aad29e6964fbba6bb9d4ac77006413a7b8bb1ce",
+  "dimension_mismatches": 0,
+  "dtype_mismatches": 0,
+  "label_hash_mismatches": 0,
+  "matched_samples": 1728,
+  "missing_or_extra_identities": 0,
+  "ordered_identities_identical": true,
+  "split_counts": {
+    "test": 169,
+    "train": 1211,
+    "valid": 348
+  },
+  "stable_identity": "<split>/<source stem>"
+}
