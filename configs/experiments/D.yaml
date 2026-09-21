@@ -1,0 +1,13 @@
+experiment_version: 1
+experiment: D
+inherits: configs/training/baseline.yaml
+
+image_condition:
+  name: clahe
+  root: data/prepared/v3_detection_clahe
+  data_yaml: data/prepared/v3_detection_clahe/data.yaml
+  expected_fingerprint: ca8286b35d3d31f0b8074aa387a44ca6392178926c23bde61ea6d99be70aba5f
+
+augmentation_condition:
+  name: conservative
+  policy: configs/training/augmentation_conservative.yaml

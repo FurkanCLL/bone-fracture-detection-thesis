@@ -1,0 +1,6 @@
+sample_set_version: 1
+split: valid
+sample_ids:
+  - coronoid-process-fracture_jpg.rf.71650459c69a9734ecd545067cf18bf4
+  - image1_104_png.rf.86a9d1eeedeec79216455a5b9be63e17
+  - image1_1_png.rf.fa169dd72c05264f1fa1b4c2a34d1469

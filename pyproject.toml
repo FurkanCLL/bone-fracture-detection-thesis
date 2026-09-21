@@ -28,6 +28,7 @@ validate-training-protocol = "bone_fracture_pipeline.training_protocol:main"
 prepare-clahe-dataset = "bone_fracture_pipeline.preprocess_dataset:main"
 prepare-png-control = "bone_fracture_pipeline.png_control:main"
 validate-augmentation-policy = "bone_fracture_pipeline.augmentation_policy:main"
+run-frozen-experiment = "bone_fracture_pipeline.experiment_runner:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
