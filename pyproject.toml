@@ -26,6 +26,8 @@ prepare-detection-dataset = "bone_fracture_pipeline.prepare_dataset:main"
 validate-detection-conversion = "bone_fracture_pipeline.validate_conversion:main"
 validate-training-protocol = "bone_fracture_pipeline.training_protocol:main"
 prepare-clahe-dataset = "bone_fracture_pipeline.preprocess_dataset:main"
+prepare-png-control = "bone_fracture_pipeline.png_control:main"
+validate-augmentation-policy = "bone_fracture_pipeline.augmentation_policy:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

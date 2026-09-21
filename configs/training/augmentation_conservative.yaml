@@ -1,0 +1,43 @@
+policy_version: 1
+inherits: configs/training/baseline.yaml
+applies_to_experiments:
+  - C
+  - D
+
+split_policy:
+  train: true
+  valid: false
+  test: false
+
+# Training mode activates the detection transform pipeline. `augment` remains false because it controls prediction TTA.
+augmentation:
+  augment: false
+  hsv_h: 0.0
+  hsv_s: 0.0
+  hsv_v: 0.15
+  degrees: 10.0
+  translate: 0.05
+  scale: 0.10
+  shear: 0.0
+  perspective: 0.0
+  flipud: 0.0
+  fliplr: 0.0
+  bgr: 0.0
+  mosaic: 0.0
+  mixup: 0.0
+  cutmix: 0.0
+  copy_paste: 0.0
+  close_mosaic: 0
+  auto_augment: null
+  erasing: 0.0
+
+reproducibility:
+  seed: 42
+  deterministic: true
+  workers: 8
+  cache: false
+  rect: false
+  require_fresh_run: true
+  stable_sample_identity: split_and_source_stem
+  require_matching_sample_order_for_c_and_d: true
+  require_albumentations_absent: true
