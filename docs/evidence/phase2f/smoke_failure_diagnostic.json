@@ -1,0 +1,65 @@
+{
+  "checked_at_utc": "2026-09-21T21:54:22.4365831Z",
+  "schema_version": 1,
+  "experiment": "A",
+  "condition": {
+    "dataset": "v3_detection_png",
+    "augmentation": "off",
+    "epochs": 1,
+    "batch": 8,
+    "imgsz": 640,
+    "amp": true,
+    "seed": 42,
+    "deterministic": true
+  },
+  "accepted_attempt": {
+    "manifest": "outputs/training/smoke/A_seed42/run_manifest.json",
+    "repository_commit_sha": "90d86908f7d3afa36cb58921452e7195055e0847",
+    "started_at_utc": "2026-09-21T21:44:08.294989+00:00",
+    "completed_at_utc": "2026-09-21T21:46:40.123472+00:00",
+    "status": "failed",
+    "failure": "Non-finite training result in val/box_loss."
+  },
+  "repeat_evidence": {
+    "prior_completed_training_attempt": "outputs/training/smoke/_failed_attempts/A_seed42_device_normalization_failure",
+    "train_losses_identical": true,
+    "current_train_losses": {
+      "box": 3.24173,
+      "cls": 26.9853,
+      "dfl": 3.01948
+    },
+    "prior_train_losses": {
+      "box": 3.24173,
+      "cls": 26.9853,
+      "dfl": 3.01948
+    },
+    "current_validation_losses": ["nan", "nan", "nan"],
+    "prior_validation_losses": ["nan", "nan", "nan"],
+    "failure_reproduced": true
+  },
+  "output_state": {
+    "results_csv_present": true,
+    "results_plots_present": true,
+    "trainer_batch_images_present": 3,
+    "last_checkpoint_present": true,
+    "best_checkpoint_present": true,
+    "checkpoint_parameters_finite": true,
+    "validation_inference_run": false
+  },
+  "runtime_observations": {
+    "oom": false,
+    "trainer_displayed_peak_gpu_memory_gib": 1.95,
+    "training_batches_completed": 152,
+    "training_images": 1211,
+    "validation_images": 348,
+    "dataloader_workers": 8,
+    "note": "The 1.95 GiB value is the maximum displayed by the trainer progress output, not a persisted CUDA allocator measurement."
+  },
+  "environment_observations": {
+    "phase2c_environment_match": true,
+    "albumentations_installed": false,
+    "amp_requested_and_retained": true,
+    "amp_auxiliary_self_check": "skipped because the restricted environment could not download yolo26n.pt"
+  },
+  "decision": "Stop the smoke matrix after A. Do not change batch size or frozen hyperparameters silently. Investigate and resolve non-finite validation loss before rerunning A/B/C/D."
+}

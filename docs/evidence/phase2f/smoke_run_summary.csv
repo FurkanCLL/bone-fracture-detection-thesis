@@ -1,0 +1,5 @@
+experiment,image_condition,augmentation,epochs,batch,runtime_seconds,peak_allocated_gib,peak_reserved_gib,train_box_loss,train_cls_loss,train_dfl_loss,val_losses_finite,map50,map50_95,checkpoint_last,checkpoint_best,validation_inference,test_used,status
+A,png_control,off,1,8,,,,3.24173,26.9853,3.01948,False,0,0,True,True,False,False,failed
+B,clahe,off,,8,,,,,,,,,,False,False,False,False,not_run_after_A_stability_gate
+C,png_control,conservative,,8,,,,,,,,,,False,False,False,False,not_run_after_A_stability_gate
+D,clahe,conservative,,8,,,,,,,,,,False,False,False,False,not_run_after_A_stability_gate

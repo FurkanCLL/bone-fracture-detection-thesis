@@ -1,0 +1,25 @@
+{
+  "reviewed_at_utc": "2026-09-21T21:54:22.4365831Z",
+  "schema_version": 1,
+  "scope": "technical training-batch QA, not medical correctness review",
+  "runs": {
+    "A": {
+      "augmentation_condition": "off",
+      "files_reviewed": [
+        "outputs/training/smoke/A_seed42/train_batch0.jpg",
+        "outputs/training/smoke/A_seed42/train_batch1.jpg",
+        "outputs/training/smoke/A_seed42/train_batch2.jpg"
+      ],
+      "box_alignment_technically_plausible": true,
+      "invalid_or_out_of_frame_boxes_observed": false,
+      "unexpected_controlled_transform_observed": false,
+      "standard_letterbox_padding_observed": true,
+      "decision": "The reviewed A batches are technically consistent with augmentation off."
+    },
+    "B": {"status": "not reviewed because the A stability gate stopped further runs"},
+    "C": {"status": "not reviewed because the A stability gate stopped further runs"},
+    "D": {"status": "not reviewed because the A stability gate stopped further runs"}
+  },
+  "overall_status": "partial_only",
+  "limitation": "Visual batch QA cannot approve Phase 2F because Experiment A failed the finite-validation-loss requirement."
+}

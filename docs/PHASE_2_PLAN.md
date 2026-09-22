@@ -4,7 +4,7 @@
 **University:** Riga Technical University (RTU)  
 **Main model family:** YOLOv8 object detection  
 **Primary raw dataset:** Roboflow/Kaggle Bone Fracture Detection, Version 3 (v3)  
-**Status:** Phase 2A-2E implemented and validated; Phase 2F is next
+**Status:** Phase 2F experiment freeze validated; smoke testing blocked by non-finite Experiment A validation losses
 **Purpose of this document:** Provide a stable, high-level implementation plan for Phase 2 so that the work can proceed in a controlled, reproducible, and consistent way. Detailed implementation choices for each subphase should still be reviewed and finalized immediately before that subphase is implemented.
 
 ---
@@ -1065,6 +1065,14 @@ Smoke tests should confirm:
 If possible, save visualized training batches for manual inspection.
 
 Official Experiment A should not begin until smoke tests pass.
+
+## 9.6 Phase 2F execution outcome
+
+The explicit A/B/C/D configurations, shared launcher, environment freeze, matrix-difference validation, and final C/D pairing verification are implemented. Their compact evidence is stored under `docs/evidence/phase2f/`.
+
+The real one-epoch Experiment A smoke training completed without OOM at batch 8, but all three validation losses were `nan` in two deterministic completed attempts. The finite-loss gate therefore failed. Experiments B, C, and D were not launched, fixed-sample inference was not reached, and no official 100-epoch run started.
+
+Phase 2F and Phase 2 remain incomplete. The validation-loss failure must be resolved under a documented, methodologically approved protocol before the complete A/B/C/D smoke matrix is rerun. See `docs/PHASE_2F_SMOKE_TEST_REPORT.md`.
 
 ---
 

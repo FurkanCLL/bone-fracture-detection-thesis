@@ -941,32 +941,70 @@ def summarize_smoke_runs(project_root: Path) -> dict[str, object]:
     for experiment in EXPERIMENTS:
         path = project_root / "outputs" / "training" / "smoke" / f"{experiment}_seed42" / "run_manifest.json"
         if not path.is_file():
-            raise ExperimentValidationError(f"Smoke manifest is missing for Experiment {experiment}.")
+            rows.append(
+                {
+                    "experiment": experiment,
+                    "image_condition": "png_control" if experiment in {"A", "C"} else "clahe",
+                    "augmentation": "conservative" if experiment in {"C", "D"} else "off",
+                    "epochs": "",
+                    "batch": 8,
+                    "runtime_seconds": "",
+                    "peak_allocated_gib": "",
+                    "peak_reserved_gib": "",
+                    "train_box_loss": "",
+                    "train_cls_loss": "",
+                    "train_dfl_loss": "",
+                    "val_losses_finite": "",
+                    "map50": "",
+                    "map50_95": "",
+                    "checkpoint_last": False,
+                    "checkpoint_best": False,
+                    "validation_inference": False,
+                    "test_used": False,
+                    "status": "not_run_after_A_stability_gate",
+                }
+            )
+            continue
         manifest = json.loads(path.read_text(encoding="utf-8"))
-        if manifest.get("status") != "completed" or manifest.get("run_kind") != "smoke":
-            raise ExperimentValidationError(f"Experiment {experiment} smoke run did not complete successfully.")
+        if manifest.get("run_kind") != "smoke":
+            raise ExperimentValidationError(f"Experiment {experiment} manifest is not a smoke run.")
         manifests[experiment] = manifest
-        final_values = manifest["output_verification"]["final_values"]
+        completed = manifest.get("status") == "completed"
+        final_values = manifest.get("output_verification", {}).get("final_values", {})
+        results_path = path.parent / "results.csv"
+        if not final_values and results_path.is_file():
+            with results_path.open(encoding="utf-8", newline="") as handle:
+                result_rows = [{key.strip(): value for key, value in row.items()} for row in csv.DictReader(handle)]
+            final_values = result_rows[-1] if result_rows else {}
+        validation_losses = [
+            final_values.get("val/box_loss"),
+            final_values.get("val/cls_loss"),
+            final_values.get("val/dfl_loss"),
+        ]
+        validation_losses_finite = all(
+            value not in (None, "") and math.isfinite(float(value)) for value in validation_losses
+        )
         rows.append(
             {
                 "experiment": experiment,
                 "image_condition": manifest["configuration"]["image_condition"],
                 "augmentation": manifest["configuration"]["augmentation_condition"],
-                "epochs": manifest["output_verification"]["epochs_completed"],
+                "epochs": manifest.get("output_verification", {}).get("epochs_completed", 1 if results_path.is_file() else ""),
                 "batch": manifest["trainer_arguments"]["batch"],
-                "runtime_seconds": manifest["runtime"]["seconds"],
-                "peak_allocated_gib": manifest["gpu_memory"]["peak_allocated_gib"],
-                "peak_reserved_gib": manifest["gpu_memory"]["peak_reserved_gib"],
-                "box_loss": final_values["train/box_loss"],
-                "cls_loss": final_values["train/cls_loss"],
-                "dfl_loss": final_values["train/dfl_loss"],
-                "map50": final_values["metrics/mAP50(B)"],
-                "map50_95": final_values["metrics/mAP50-95(B)"],
-                "checkpoint_last": True,
-                "checkpoint_best": True,
-                "validation_inference": True,
+                "runtime_seconds": manifest.get("runtime", {}).get("seconds", ""),
+                "peak_allocated_gib": manifest.get("gpu_memory", {}).get("peak_allocated_gib", ""),
+                "peak_reserved_gib": manifest.get("gpu_memory", {}).get("peak_reserved_gib", ""),
+                "train_box_loss": final_values.get("train/box_loss", ""),
+                "train_cls_loss": final_values.get("train/cls_loss", ""),
+                "train_dfl_loss": final_values.get("train/dfl_loss", ""),
+                "val_losses_finite": validation_losses_finite,
+                "map50": final_values.get("metrics/mAP50(B)", ""),
+                "map50_95": final_values.get("metrics/mAP50-95(B)", ""),
+                "checkpoint_last": (path.parent / "weights" / "last.pt").is_file(),
+                "checkpoint_best": (path.parent / "weights" / "best.pt").is_file(),
+                "validation_inference": bool(manifest.get("validation_inference", {}).get("valid")),
                 "test_used": False,
-                "status": "passed",
+                "status": "passed" if completed else "failed",
             }
         )
 
@@ -977,31 +1015,38 @@ def summarize_smoke_runs(project_root: Path) -> dict[str, object]:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
         writer.writeheader()
         writer.writerows(rows)
+    all_completed = len(manifests) == len(EXPERIMENTS) and all(
+        manifest.get("status") == "completed" for manifest in manifests.values()
+    )
     summary = {
         "schema_version": 1,
         "created_at_utc": _utc_now(),
-        "success": True,
-        "all_four_smoke_runs_passed": True,
+        "success": all_completed,
+        "all_four_smoke_runs_passed": all_completed,
+        "phase2f_status": "complete" if all_completed else "blocked",
+        "blocking_condition": (
+            None
+            if all_completed
+            else "Experiment A produced non-finite validation losses; B/C/D were not run after the stability gate."
+        ),
         "official_training_performed": False,
         "test_set_used": False,
-        "batch_size_8_stable_all_runs": all(item["gpu_memory"]["batch_size_8_stable"] for item in manifests.values()),
+        "batch_size_8_stable_all_runs": (
+            all(item.get("gpu_memory", {}).get("batch_size_8_stable") for item in manifests.values())
+            if all_completed
+            else False
+        ),
         "runs": {
             experiment: {
-                "manifest": f"outputs/training/smoke/{experiment}_seed42/run_manifest.json",
-                "status": manifest["status"],
-                "runtime": manifest["runtime"],
-                "gpu_memory": manifest["gpu_memory"],
-                "output_verification": {
-                    key: manifest["output_verification"][key]
-                    for key in ("valid", "epochs_completed", "normal_completion", "finite_metrics_and_losses")
-                },
-                "validation_inference": {
-                    "valid": manifest["validation_inference"]["valid"],
-                    "split": manifest["validation_inference"]["split"],
-                    "test_images": manifest["validation_inference"]["test_images"],
-                },
+                "manifest": (
+                    f"outputs/training/smoke/{experiment}_seed42/run_manifest.json"
+                    if experiment in manifests
+                    else None
+                ),
+                "status": manifests.get(experiment, {}).get("status", "not_run"),
+                "failure": manifests.get(experiment, {}).get("failure"),
             }
-            for experiment, manifest in manifests.items()
+            for experiment in EXPERIMENTS
         },
     }
     _write_json(evidence_directory / "smoke_test_summary.json", summary)
@@ -1088,8 +1133,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             write_freeze_evidence(project_root)
             print("Phase 2F experiment matrix, environment, and C/D pairing validation passed.")
         elif arguments.summarize_smoke:
-            summarize_smoke_runs(project_root)
-            print("All four Phase 2F smoke runs passed and were summarized.")
+            summary = summarize_smoke_runs(project_root)
+            if summary["success"]:
+                print("All four Phase 2F smoke runs passed and were summarized.")
+            else:
+                print(f"Phase 2F smoke summary recorded a blocking failure: {summary['blocking_condition']}")
         else:
             manifest = run_experiment(project_root, arguments.experiment, smoke=arguments.smoke)
             print(

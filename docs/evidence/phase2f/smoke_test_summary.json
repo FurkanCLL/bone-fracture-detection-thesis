@@ -1,0 +1,37 @@
+{
+  "all_four_smoke_runs_passed": false,
+  "batch_size_8_stable_all_runs": false,
+  "blocking_condition": "Experiment A produced non-finite validation losses; B/C/D were not run after the stability gate.",
+  "created_at_utc": "2026-09-22T00:32:10.305547+00:00",
+  "official_training_performed": false,
+  "phase2f_status": "blocked",
+  "runs": {
+    "A": {
+      "failure": {
+        "message": "Non-finite training result in val/box_loss.",
+        "oom": false,
+        "type": "ExperimentValidationError"
+      },
+      "manifest": "outputs/training/smoke/A_seed42/run_manifest.json",
+      "status": "failed"
+    },
+    "B": {
+      "failure": null,
+      "manifest": null,
+      "status": "not_run"
+    },
+    "C": {
+      "failure": null,
+      "manifest": null,
+      "status": "not_run"
+    },
+    "D": {
+      "failure": null,
+      "manifest": null,
+      "status": "not_run"
+    }
+  },
+  "schema_version": 1,
+  "success": false,
+  "test_set_used": false
+}

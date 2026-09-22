@@ -108,3 +108,35 @@ python -m bone_fracture_pipeline.augmentation_policy
 ```
 
 The policy uses rotation ±10°, translation ±5%, scale 0.90–1.10, and value/intensity variation approximately ±15%. It explicitly disables flips, composites, shear, perspective, channel swapping, and unrelated transforms. The validator checks installed Ultralytics semantics, control/CLAHE sample identity, C/D seed behavior, and train-only box previews without performing model training. See `docs/PHASE_2E_AUGMENTATION_POLICY.md` for the frozen policy and remaining Phase 2F boundary.
+
+## Phase 2F experiment freeze and smoke gate
+
+Validate the executable matrix, frozen environment, and final C/D pairing with:
+
+```powershell
+python -m bone_fracture_pipeline.experiment_runner --validate-freeze
+```
+
+Smoke runs use the same launcher as later official runs; `--smoke` changes only the epoch count to one:
+
+```powershell
+python -m bone_fracture_pipeline.experiment_runner --experiment A --smoke
+```
+
+The experiment freeze passed, but the real Experiment A smoke run reproducibly produced non-finite validation losses. The stability gate stopped B/C/D, no official training began, and Phase 3 remains paused. See `docs/PHASE_2F_SMOKE_TEST_REPORT.md` for the exact evidence and remaining blocker.
+
+## Phase 2F experiment freeze and smoke gate
+
+Validate the executable matrix, frozen environment, and final C/D pairing with:
+
+```powershell
+python -m bone_fracture_pipeline.experiment_runner --validate-freeze
+```
+
+Smoke runs use the same launcher as later official runs; `--smoke` changes only the epoch count to one:
+
+```powershell
+python -m bone_fracture_pipeline.experiment_runner --experiment A --smoke
+```
+
+The experiment freeze passed, but the real Experiment A smoke run reproducibly produced non-finite validation losses. The stability gate stopped B/C/D, no official training began, and Phase 3 remains paused. See `docs/PHASE_2F_SMOKE_TEST_REPORT.md` for the exact evidence and remaining blocker.

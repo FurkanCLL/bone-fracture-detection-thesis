@@ -1,0 +1,59 @@
+{
+  "c_resolved_digest": "0163eed7647d82832e5df5de4c31faf80763974ae2335fb0c52870cc6a7f7129",
+  "d_resolved_digest": "7ed88e100675f25d0c34456d530b2c0c3012adcb6eee2a122d9d4850b4a82e26",
+  "final_resolved_config_differences": [
+    "dataset.data_yaml",
+    "dataset.expected_fingerprint",
+    "dataset.root"
+  ],
+  "identity": {
+    "clahe_dataset_file_count": 3457,
+    "clahe_dataset_fingerprint": "ca8286b35d3d31f0b8074aa387a44ca6392178926c23bde61ea6d99be70aba5f",
+    "control_dataset_file_count": 3457,
+    "control_dataset_fingerprint": "5dd43c8e40eda542a3d77ad65aad29e6964fbba6bb9d4ac77006413a7b8bb1ce",
+    "dimension_mismatches": 0,
+    "dtype_mismatches": 0,
+    "label_hash_mismatches": 0,
+    "matched_samples": 1728,
+    "missing_or_extra_identities": 0,
+    "ordered_identities_identical": true,
+    "split_counts": {
+      "test": 169,
+      "train": 1211,
+      "valid": 348
+    },
+    "stable_identity": "<split>/<source stem>"
+  },
+  "pairing": {
+    "limitation": "Pairing depends on the frozen loader/version/runtime conditions and must be rechecked in Phase 2F; it is not guaranteed after worker-count, ordering, resume-state, or framework changes.",
+    "numpy_rng_states_identical": true,
+    "pairing_conditions": [
+      "fresh runs from seed 42",
+      "Ultralytics 8.4.155 and unchanged dependency versions",
+      "matching split/stem sample order and cardinality",
+      "matching labels, dimensions, batch size, workers, cache, and rect settings",
+      "no resume from a checkpoint with advanced RNG state"
+    ],
+    "python_rng_states_identical": true,
+    "sample_ids": [
+      "train/distal-humeral-fractures-2-_jpeg.rf.39ba3f53047ecb4064613850a1c76fc1",
+      "train/elbow-dislocation-with-coronoid-process-fracture_jpg.rf.8bcb11ff8d4409f1202e1cafdc73e87f",
+      "train/fracture-of-the-humeral-capitellum-milch-type-1-1-1-_jpg.rf.4c16d0817782b56497b9f18bca2b0fdd",
+      "train/image1_0_png.rf.bc222874fa14e205b638e87ddad52b9d",
+      "train/image1_1002_png.rf.c94d11a79032d6beb4ce4d876c9f7fda",
+      "train/image1_1010_png.rf.65f54641e628d0952fc45df00ef5e7ff",
+      "train/image1_1022_png.rf.b423a18f64684ae7c6342b0071ef46cf",
+      "train/image1_1036_png.rf.d815bc7f4963ed689a1bb90cc17ad13e"
+    ],
+    "samples_checked": 8,
+    "seed": 42,
+    "shuffle_order_reproducible": true,
+    "success": true,
+    "transformed_geometry_identical": true,
+    "worker_seeding_reproducible": true,
+    "workers": 8
+  },
+  "schema_version": 1,
+  "success": true,
+  "validated_at_utc": "2026-09-22T00:30:45.824283+00:00"
+}

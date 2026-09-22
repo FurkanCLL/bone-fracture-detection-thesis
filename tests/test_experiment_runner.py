@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -10,6 +11,7 @@ from bone_fracture_pipeline.augmentation_policy import AUGMENTATION_SETTINGS
 from bone_fracture_pipeline.experiment_runner import (
     build_training_arguments,
     resolve_experiment_config,
+    summarize_smoke_runs,
     validate_experiment_matrix,
     verify_applied_trainer_config,
     write_runtime_dataset_yaml,
@@ -128,6 +130,36 @@ class ExperimentRunnerTests(unittest.TestCase):
 
         self.assertTrue(result["valid"])
         self.assertEqual(result["differences"], {})
+
+    def test_partial_smoke_summary_records_failure_and_unrun_conditions(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            run_directory = root / "outputs/training/smoke/A_seed42"
+            run_directory.mkdir(parents=True)
+            manifest = {
+                "run_kind": "smoke",
+                "status": "failed",
+                "configuration": {"image_condition": "png_control", "augmentation_condition": "off"},
+                "trainer_arguments": {"batch": 8},
+                "failure": {"type": "ExperimentValidationError", "message": "Non-finite validation loss"},
+            }
+            (run_directory / "run_manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+            (run_directory / "results.csv").write_text(
+                "epoch,train/box_loss,train/cls_loss,train/dfl_loss,metrics/mAP50(B),"
+                "metrics/mAP50-95(B),val/box_loss,val/cls_loss,val/dfl_loss\n"
+                "1,3.2,27.0,3.0,0,0,nan,nan,nan\n",
+                encoding="utf-8",
+            )
+
+            summary = summarize_smoke_runs(root)
+
+            self.assertFalse(summary["success"])
+            self.assertEqual(summary["phase2f_status"], "blocked")
+            self.assertEqual(summary["runs"]["A"]["status"], "failed")
+            self.assertEqual(summary["runs"]["B"]["status"], "not_run")
+            csv_rows = (root / "docs/evidence/phase2f/smoke_run_summary.csv").read_text(encoding="utf-8")
+            self.assertIn("A,png_control,off", csv_rows)
+            self.assertIn("B,clahe,off", csv_rows)
 
 
 if __name__ == "__main__":
