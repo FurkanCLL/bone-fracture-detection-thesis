@@ -37,6 +37,7 @@ from bone_fracture_pipeline.single_class_dataset import (
     SINGLE_CLASS_EXPECTATIONS,
     SINGLE_CLASS_NAMES,
     SingleClassDatasetError,
+    prepare_single_class_dataset,
     validate_single_class_dataset,
 )
 from bone_fracture_pipeline.training_protocol import (
@@ -426,6 +427,22 @@ def run_preflight(
     config = _mapping(resolution, "resolved")
     is_follow_up = resolution["experiment"] == "E"
     expectations = SINGLE_CLASS_EXPECTATIONS if is_follow_up else CANONICAL_EXPECTATIONS
+    lineage = None
+    if is_follow_up:
+        target = _mapping(resolution, "target_formulation")
+        try:
+            lineage = validate_single_class_dataset(
+                _resolve(project_root, target["source_root"], "Experiment E source"),
+                _resolve(project_root, _mapping(config, "dataset")["root"], "Experiment E dataset"),
+                expected_source_fingerprint=str(target["source_fingerprint"]),
+                expected_derived_fingerprint=str(_mapping(config, "dataset")["expected_fingerprint"]),
+            )
+        except (SingleClassDatasetError, OSError) as error:
+            raise ExperimentValidationError(
+                "Experiment E dataset is missing, invalid, or inaccessible. "
+                "Run `python -m bone_fracture_pipeline.single_class_dataset` to rebuild it. "
+                f"Cause: {error}"
+            ) from error
     baseline = load_protocol_config(project_root / BASELINE_CONFIG_PATH)
     try:
         protocol_result = validate_protocol_config(baseline)
@@ -440,18 +457,6 @@ def run_preflight(
     if not weights_path.is_file() or sha256_file(weights_path) != EXPECTED_WEIGHTS_SHA256:
         raise ExperimentValidationError("Pretrained yolov8s.pt is missing or has the wrong SHA-256 hash.")
     dataset_detail = inspect_detection_dataset(project_root, config, expectations=expectations)
-    lineage = None
-    if is_follow_up:
-        target = _mapping(resolution, "target_formulation")
-        try:
-            lineage = validate_single_class_dataset(
-                _resolve(project_root, target["source_root"], "Experiment E source"),
-                _resolve(project_root, _mapping(config, "dataset")["root"], "Experiment E dataset"),
-                expected_source_fingerprint=str(target["source_fingerprint"]),
-                expected_derived_fingerprint=str(_mapping(config, "dataset")["expected_fingerprint"]),
-            )
-        except SingleClassDatasetError as error:
-            raise ExperimentValidationError(str(error)) from error
     environment = collect_and_compare_environment(project_root, config, weights_path)
 
     augmentation_on = resolution["augmentation_condition"] == "conservative"
@@ -881,6 +886,24 @@ def run_experiment(project_root: Path, experiment: str, *, smoke: bool) -> dict[
         if experiment.upper() == "E" else resolutions[experiment.upper()]
     )
     arguments, run_directory, run_kind = build_training_arguments(project_root, resolution, smoke=smoke)
+    if experiment.upper() == "E":
+        target = _mapping(resolution, "target_formulation")
+        dataset = _mapping(_mapping(resolution, "resolved"), "dataset")
+        # Materialize E in the same Windows account that will run training.
+        try:
+            prepared = prepare_single_class_dataset(
+                _resolve(project_root, target["source_root"], "Experiment E source"),
+                _resolve(project_root, dataset["root"], "Experiment E dataset"),
+                expected_source_fingerprint=str(target["source_fingerprint"]),
+            )
+        except (SingleClassDatasetError, OSError) as error:
+            raise ExperimentValidationError(
+                "Could not materialize the Experiment E dataset. "
+                "Run `python -m bone_fracture_pipeline.single_class_dataset` for a standalone rebuild. "
+                f"Cause: {error}"
+            ) from error
+        if prepared["derived_fingerprint"] != dataset["expected_fingerprint"]:
+            raise ExperimentValidationError("Rebuilt Experiment E dataset differs from the frozen E fingerprint.")
     preflight, environment = run_preflight(project_root, resolution, matrix_result)
 
     cache_paths = _dataset_cache_paths(project_root, _mapping(resolution, "resolved"))

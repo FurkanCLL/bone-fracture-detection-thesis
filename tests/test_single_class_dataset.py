@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -125,12 +127,42 @@ class SingleClassDatasetTests(unittest.TestCase):
             )
         self.assertFalse(second_output.exists())
 
-    def test_refuses_to_replace_an_existing_derived_dataset(self) -> None:
+    def test_rebuilds_an_existing_derived_dataset_without_changing_the_result(self) -> None:
         self.build()
         original = fingerprint_dataset(self.derived).digest
-        with self.assertRaisesRegex(SingleClassDatasetError, "already exists"):
-            self.build()
+        result = self.build()
+        self.assertTrue(result["replaced_existing"])
         self.assertEqual(fingerprint_dataset(self.derived).digest, original)
+
+    def test_rebuilds_a_partial_or_corrupt_derived_dataset(self) -> None:
+        self.derived.mkdir()
+        (self.derived / "partial.txt").write_text("incomplete", encoding="utf-8")
+        result = self.build()
+        self.assertTrue(result["replaced_existing"])
+        self.assertEqual(result["fingerprint_file_count"], 9)
+        self.assertFalse((self.derived / "partial.txt").exists())
+        self.assertEqual(self.validate(result["derived_fingerprint"])["images"], 4)
+
+    def test_failed_rebuild_keeps_the_existing_output(self) -> None:
+        self.derived.mkdir()
+        (self.derived / "partial.txt").write_text("keep", encoding="utf-8")
+        (self.source / "valid/labels/validation.txt").write_text("6 0.4 0.3 0.1 0.1\n", encoding="utf-8")
+        with self.assertRaises(SingleClassDatasetError):
+            self.build()
+        self.assertEqual((self.derived / "partial.txt").read_text(encoding="utf-8"), "keep")
+        self.assertEqual(len(list(self.root.glob(".single_class_building_*"))), 0)
+
+    @unittest.skipUnless(os.name == "nt", "Windows ACL regression check")
+    def test_rebuild_replaces_a_private_directory_with_an_inheriting_one(self) -> None:
+        def has_inherited_access() -> bool:
+            return subprocess.run(
+                ["icacls", str(self.derived)], check=True, capture_output=True, text=True,
+            ).stdout.find("(I)") >= 0
+
+        self.derived = Path(tempfile.mkdtemp(prefix="single_class_", dir=self.root))
+        self.assertFalse(has_inherited_access())
+        self.build()
+        self.assertTrue(has_inherited_access())
 
 
 if __name__ == "__main__":

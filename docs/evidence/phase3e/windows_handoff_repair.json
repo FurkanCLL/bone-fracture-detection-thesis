@@ -1,0 +1,47 @@
+{
+  "issue": "Original Experiment E dataset was inaccessible to the student's Windows account",
+  "cause": "The previous builder renamed a tempfile.TemporaryDirectory with a protected owner-only Windows ACL into the final derived-data path",
+  "original_directory": {
+    "fully_populated_in_codex_sandbox": true,
+    "owner": "FurkanCLL\\CodexSandboxOffline",
+    "acl_inheritance_protected": true,
+    "student_account_acl_entry": false
+  },
+  "repaired_directory": {
+    "path": "data/prepared/v3_detection_clahe_single_class",
+    "acl_inheritance_protected": false,
+    "student_account": "FurkanCLL\\furka",
+    "student_account_full_control_acl_entry": true,
+    "powershell_recursive_file_count": 3457,
+    "source_fingerprint": "ca8286b35d3d31f0b8074aa387a44ca6392178926c23bde61ea6d99be70aba5f",
+    "derived_fingerprint": "f3ad8c1ecb87ab63ecc609d6b2cf853bfadd66fa6ddd698bb681e6d4c8f20908",
+    "images": 1728,
+    "labels": 1728,
+    "annotations_with_only_class_token_remapped": 998,
+    "empty_labels": 868,
+    "matching_image_hashes": 1728,
+    "exact_remapped_label_matches": 1728,
+    "split_image_counts": {
+      "train": 1211,
+      "valid": 348,
+      "test": 169
+    }
+  },
+  "validation_after_rebuild_and_after_smoke": true,
+  "automated_tests_passed": 83,
+  "fresh_smoke": {
+    "manifest": "outputs/training/smoke/E_seed42/run_manifest.json",
+    "status": "completed",
+    "epochs": 1,
+    "training_images_loaded": 1211,
+    "validation_images_loaded": 348,
+    "test_images_loaded": 0,
+    "class_names": ["fracture"],
+    "best_checkpoint_present": true,
+    "last_checkpoint_present": true,
+    "finite_metrics_and_losses": true,
+    "cuda_oom": false,
+    "dataset_fingerprint_restored": true
+  },
+  "official_e_run_started": false
+}

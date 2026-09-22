@@ -3,10 +3,10 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
-import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Mapping, Sequence
+from uuid import uuid4
 
 from bone_fracture_audit.audit import _read_dataset_config, match_images_and_labels, sha256_file
 from bone_fracture_audit.yolo import parse_yolo_label
@@ -177,11 +177,14 @@ def prepare_single_class_dataset(
     expected_source_fingerprint: str | None = SOURCE_CLAHE_FINGERPRINT,
     expectations: DatasetExpectations = CANONICAL_EXPECTATIONS,
 ) -> dict[str, object]:
-    source, output = source.resolve(), output.resolve()
+    source = source.resolve()
+    if output.is_symlink():
+        raise SingleClassDatasetError("Experiment E output must be a real directory, not a symlink.")
+    output = output.parent.resolve() / output.name
     if source == output or source in output.parents or output in source.parents:
         raise SingleClassDatasetError("Source and output paths must be separate.")
-    if output.exists():
-        raise SingleClassDatasetError(f"Derived dataset already exists: {output}")
+    if output.exists() and not output.is_dir():
+        raise SingleClassDatasetError(f"Experiment E output is not a directory: {output}")
     if _read_dataset_config(source / "data.yaml") != expectations.class_names:
         raise SingleClassDatasetError("Source class mapping differs from the approved six classes.")
     before = fingerprint_dataset(source)
@@ -189,9 +192,11 @@ def prepare_single_class_dataset(
         raise SingleClassDatasetError("The CLAHE source fingerprint differs from Experiment D.")
 
     output.parent.mkdir(parents=True, exist_ok=True)
-    # Publish only a fully validated build; an interrupted build cleans up its temporary tree.
-    with tempfile.TemporaryDirectory(prefix=f".{output.name}_building_", dir=output.parent) as directory:
-        build = Path(directory)
+    # A normal sibling directory inherits Windows ACLs; TemporaryDirectory creates a private ACL.
+    build = output.parent / f".{output.name}_building_{uuid4().hex}"
+    backup = output.parent / f".{output.name}_replaced_{uuid4().hex}"
+    build.mkdir()
+    try:
         for split in SPLITS:
             image_source = source / split / "images"
             label_source = source / split / "labels"
@@ -217,15 +222,31 @@ def prepare_single_class_dataset(
         result = validate_single_class_dataset(
             source, build, expected_source_fingerprint=expected_source_fingerprint, expectations=expectations
         )
-        if output.exists():
-            raise SingleClassDatasetError(f"Derived dataset appeared during preparation: {output}")
-        build.rename(output)
+        # Move the old E artifact aside only after the replacement has passed every check.
+        replaced_existing = output.exists()
+        if replaced_existing:
+            output.rename(backup)
+        try:
+            build.rename(output)
+        except OSError:
+            if replaced_existing:
+                backup.rename(output)
+            raise
+        if replaced_existing:
+            try:
+                shutil.rmtree(backup)
+            except OSError as error:
+                result["cleanup_warning"] = f"Previous E dataset remains at {backup}: {error}"
+        result["replaced_existing"] = replaced_existing
+    finally:
+        if build.exists():
+            shutil.rmtree(build)
     result["derived_dataset"] = output.as_posix()
     return result
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Prepare or validate Experiment E's single-class CLAHE dataset.")
+    parser = argparse.ArgumentParser(description="Build or safely rebuild Experiment E's single-class CLAHE dataset.")
     parser.add_argument("--project-root", type=Path, default=Path.cwd())
     parser.add_argument("--validate-only", action="store_true")
     return parser
@@ -241,7 +262,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             result = validate_single_class_dataset(source, output)
         else:
             result = prepare_single_class_dataset(source, output)
-    except SingleClassDatasetError as error:
+    except (SingleClassDatasetError, OSError) as error:
         print(f"Experiment E dataset validation failed: {error}")
         return 1
     result["checked_at_utc"] = datetime.now(UTC).isoformat()
@@ -249,6 +270,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     evidence.parent.mkdir(parents=True, exist_ok=True)
     evidence.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"Experiment E dataset validated: {result['derived_fingerprint']}")
+    if result.get("cleanup_warning"):
+        print(result["cleanup_warning"])
     return 0
 
 

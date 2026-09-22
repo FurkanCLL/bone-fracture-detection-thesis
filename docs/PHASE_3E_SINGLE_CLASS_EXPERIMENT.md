@@ -19,7 +19,25 @@ The new ignored derived dataset is `data/prepared/v3_detection_clahe_single_clas
 | Test | 169 | 96 | 86 |
 | **Total** | **1,728** | **998** | **868** |
 
-The source CLAHE fingerprint remains `ca8286b35d3d31f0b8074aa387a44ca6392178926c23bde61ea6d99be70aba5f`. The derived dataset fingerprint is `f3ad8c1ecb87ab63ecc609d6b2cf853bfadd66fa6ddd698bb681e6d4c8f20908` across 3,457 files. Validator checks found 1,728 matching image hashes, 1,728 exact remapped label files, matched relative paths and split identities, the expected split counts, valid one-class detection rows, and no source-fingerprint drift. Identical image bytes also preserve decoded dimensions and pixels. These checks were repeated after the smoke run. The builder refuses to replace an existing derived dataset.
+The source CLAHE fingerprint remains `ca8286b35d3d31f0b8074aa387a44ca6392178926c23bde61ea6d99be70aba5f`. The derived dataset fingerprint is `f3ad8c1ecb87ab63ecc609d6b2cf853bfadd66fa6ddd698bb681e6d4c8f20908` across 3,457 files. Validator checks found 1,728 matching image hashes, 1,728 exact remapped label files, matched relative paths and split identities, the expected split counts, valid one-class detection rows, and no source-fingerprint drift. Identical image bytes also preserve decoded dimensions and pixels. These checks were repeated after the smoke run.
+
+## Local materialization and Windows access repair
+
+The dataset is intentionally excluded by `.gitignore` (`data/`), so a Git checkout alone does not contain it. The first preparation used Python's `tempfile.TemporaryDirectory` under `data/prepared/` and renamed that private build directory to the final E name. On this Windows installation, `tempfile.mkdtemp` gave its directory a protected ACL with access only for its creator, SYSTEM, and Administrators. Codex ran as `FurkanCLL\CodexSandboxOffline`, while the student's PyCharm/PowerShell session uses `FurkanCLL\furka`. The original dataset was fully populated in the shared physical checkout and supported the first smoke run, but `furka` could not enumerate it. This was a preparation-code and handoff failure, not a missing Git-tracked dataset or a failed smoke run.
+
+The builder now creates a randomly named sibling directory with normal inherited ACLs, validates the complete build, then moves any existing E directory aside and publishes the new one. It can replace a valid, empty, or partial E directory without touching the CLAHE source or A/B/C/D data. If preparation fails before publication, the existing E directory is retained. The runner also rebuilds E in the account launching E training, then checks its frozen fingerprint and the full lineage again. A missing, invalid, or inaccessible E dataset produces a clear rebuild error before training.
+
+From the repository root, the explicit local preparation and verification commands are:
+
+```powershell
+.venv\Scripts\python.exe -m bone_fracture_pipeline.single_class_dataset
+.venv\Scripts\python.exe -m bone_fracture_pipeline.single_class_dataset --validate-only
+(Get-ChildItem .\data\prepared\v3_detection_clahe_single_class -Recurse -File -ErrorAction Stop | Measure-Object).Count
+```
+
+The count must be **3,457**. Run the preparation command again to safely rebuild an existing E directory. The E runner performs the same local materialization automatically before either a smoke or official run; the explicit command is useful for checking the dataset before allocating GPU time. An unexpected ACL or replacement failure stops the run with an actionable error. The previous handoff should have made this prerequisite explicit and verified accessibility for the Windows account.
+
+The repaired directory has ACL inheritance enabled and a full-control entry for `FurkanCLL\furka`. PowerShell enumerated exactly 3,457 files. The complete validator passed both immediately after the repair and after the fresh E smoke run. The source and derived fingerprints, all 1,728 image hashes, 1,728 exact remapped labels, 998 annotation rows, 868 empty labels, and split identities matched. The compact [Windows handoff repair evidence](evidence/phase3e/windows_handoff_repair.json) records these checks.
 
 The test files were included only in automated file integrity and split-membership checks needed to establish dataset lineage. No test image was visually inspected, and no test data was loaded by the trainer, used for validation, or evaluated for metrics.
 
@@ -29,18 +47,11 @@ The test files were included only in automated file integrity and split-membersh
 
 The runner retains fresh-output protection, trainer-argument verification, finite recorded metrics and losses, checkpoint/output checks, train/validation loader path checks, fixed validation-only inference, and source-fingerprint restoration after generated cache cleanup. E's run manifest adds its follow-up role, target formulation, class mapping, source lineage, and derived fingerprint. The validation inference check also verifies that `best.pt` exposes only class `0: fracture` and that predicted class IDs, if any, are zero.
 
-To rebuild on a clean checkout after reproducing the approved D CLAHE dataset, run:
-
-```powershell
-.venv\Scripts\python.exe -m bone_fracture_pipeline.single_class_dataset
-.venv\Scripts\python.exe -m bone_fracture_pipeline.single_class_dataset --validate-only
-```
-
 The builder creates `outputs/phase3e/single_class/preparation_validation.json`; its compact checked facts are in [`docs/evidence/phase3e/single_class_validation.json`](evidence/phase3e/single_class_validation.json). The dataset and full generated evidence remain ignored by Git.
 
 ## Automated and smoke validation
 
-The full project suite passed: **79 tests** with `.venv\Scripts\python.exe -m unittest discover -s tests -v`. New tests cover class remapping, exact geometry-token and image preservation, empty files and split identities, invalid-source and drift rejection, fingerprint stability, E config resolution, runner data paths, test-path rejection, and unchanged A/B/C/D matrix behavior.
+The full project suite passed: **83 tests** with `.venv\Scripts\python.exe -m unittest discover -s tests -q`. New tests cover class remapping, exact geometry-token and image preservation, empty files and split identities, invalid-source and drift rejection, fingerprint stability, safe rebuild of existing or partial output, replacement of a private Windows directory with one that inherits access, retention of the old output after a failed build, actionable inaccessible-dataset errors, E config resolution, runner data paths, test-path rejection, and unchanged A/B/C/D matrix behavior.
 
 The smoke command was:
 
@@ -48,7 +59,7 @@ The smoke command was:
 .venv\Scripts\python.exe -m bone_fracture_pipeline.experiment_runner --experiment E --smoke
 ```
 
-The one-epoch run completed in `outputs/training/smoke/E_seed42`. It initialized one YOLOv8s output class, used the CLAHE derived dataset and conservative augmentation settings (`degrees=10`, `translate=0.05`, `scale=0.10`, `hsv_v=0.15`), finished training and validation, produced finite recorded losses and metrics, generated `best.pt` and `last.pt`, and passed fixed-sample validation inference. The manifest records 1,211 train images, 348 validation images, zero test images, batch 8, AMP off, no CUDA OOM, peak allocated/reserved memory 3.087/3.686 GiB, and restoration of the derived fingerprint. Saved train and validation batch overlays were inspected for technical label placement; no medical correctness conclusion was drawn.
+The one-epoch run was repeated through the repaired runner in `outputs/training/smoke/E_seed42`; the first run was retained in `outputs/training/smoke/E_seed42_before_acl_repair`. The fresh run initialized one YOLOv8s output class, used the CLAHE derived dataset and conservative augmentation settings (`degrees=10`, `translate=0.05`, `scale=0.10`, `hsv_v=0.15`), finished training and validation, produced finite recorded losses and metrics, generated `best.pt` and `last.pt`, and passed fixed-sample validation inference. The manifest records 1,211 train images, 348 validation images, zero test images, batch 8, AMP off, no CUDA OOM, peak allocated/reserved memory 3.087/3.686 GiB, and restoration of the derived fingerprint. Saved train and validation batch overlays from the first smoke run were inspected for technical label placement; no medical correctness conclusion was drawn.
 
 The one-epoch validation mAP50–95 recorded in `results.csv` is `0.0` at its saved precision. Validation box/class/DFL losses were finite at `4.42867`, `6781.25`, and `308.764`. The high class and DFL losses and near-zero early mAP warrant attention when the official training curves are reviewed. Smoke measurements establish execution and numerical finiteness, not detector quality. Compact gate evidence is in [`docs/evidence/phase3e/smoke_gate.json`](evidence/phase3e/smoke_gate.json); the full ignored manifest and outputs are under `outputs/training/smoke/E_seed42/`.
 

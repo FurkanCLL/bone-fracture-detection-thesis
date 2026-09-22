@@ -5,13 +5,16 @@ import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 import yaml
 
 from bone_fracture_pipeline.augmentation_policy import AUGMENTATION_SETTINGS
 from bone_fracture_pipeline.experiment_runner import (
+    ExperimentValidationError,
     build_training_arguments,
     resolve_experiment_config,
+    run_preflight,
     summarize_smoke_runs,
     validate_experiment_matrix,
     verify_applied_trainer_config,
@@ -25,6 +28,15 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 class ExperimentRunnerTests(unittest.TestCase):
+    def test_e_preflight_explains_how_to_rebuild_an_inaccessible_dataset(self) -> None:
+        e = resolve_experiment_config(PROJECT_ROOT, "E")
+        with patch(
+            "bone_fracture_pipeline.experiment_runner.validate_single_class_dataset",
+            side_effect=PermissionError("Access is denied"),
+        ):
+            with self.assertRaisesRegex(ExperimentValidationError, "single_class_dataset.*Access is denied"):
+                run_preflight(PROJECT_ROOT, e, {"success": True})
+
     def test_e_is_a_separate_follow_up_with_d_training_conditions(self) -> None:
         d = resolve_experiment_config(PROJECT_ROOT, "D")
         e = resolve_experiment_config(PROJECT_ROOT, "E")
