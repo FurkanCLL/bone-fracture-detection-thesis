@@ -33,7 +33,7 @@ training:
   weight_decay: 0.0005
   seed: 42
   deterministic: true
-  amp: true
+  amp: false
   patience: 0
   val: true
   pretrained: true

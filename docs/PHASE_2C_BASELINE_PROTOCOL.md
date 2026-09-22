@@ -2,7 +2,7 @@
 
 ## Status
 
-Phase 2C freezes and validates the common YOLOv8 training protocol. No official training, smoke training, preprocessing experiment, augmentation-on experiment, or test-set evaluation was performed in this phase.
+Phase 2C froze the common YOLOv8 training protocol. Phase 2F later amended its numerical-precision setting after a causal validation-overflow diagnosis; no official training or test-set evaluation has been performed.
 
 The version-controlled source of truth is `configs/training/baseline.yaml`. Compact validation evidence is stored under `docs/evidence/phase2c/`; generated framework settings and other local artifacts remain under the ignored `outputs/phase2/phase2c/` directory.
 
@@ -21,7 +21,7 @@ The version-controlled source of truth is `configs/training/baseline.yaml`. Comp
 | Weight decay | 0.0005 |
 | Primary seed | 42 |
 | Deterministic mode | Enabled |
-| AMP | Enabled |
+| AMP | Disabled |
 | Early stopping | Disabled with `patience: 0` |
 | Training device | CUDA device 0 |
 | Generated run root | `outputs/training` |
@@ -29,7 +29,9 @@ The version-controlled source of truth is `configs/training/baseline.yaml`. Comp
 
 YOLOv8s is retained as the approved small-model baseline: it is substantially more capable than the nano variant while remaining practical for the available laptop GPU. An input size of 640 follows the approved protocol and avoids adding a resolution comparison to the controlled preprocessing/augmentation study. The 100-epoch maximum is identical for all future A/B/C/D conditions.
 
-The planned batch size remains 8. CUDA availability, model loading, and approximately 6 GiB of GPU VRAM were confirmed. Memory stability has not been demonstrated because Phase 2C intentionally performs no training. Phase 2F must run the controlled smoke check before official experiments begin; it must report a problem rather than silently change the batch size.
+Batch size 8 remains fixed. Phase 2F confirmed it across all four one-epoch smoke runs with a maximum observed 3.088 GiB allocated and 3.686 GiB reserved CUDA memory.
+
+AMP was originally enabled. Phase 2F proved that the trained A checkpoint overflowed in FP16 validation inference while the same batches, targets, weights, and loss path stayed finite in CUDA and CPU FP32. AMP is therefore disabled globally for A/B/C/D as a documented numerical-stability correction, not as an experiment-specific tuning choice.
 
 ## Zero-augmentation baseline
 
@@ -102,8 +104,8 @@ The protocol tool confirmed that:
 - the test split is excluded from fitting and checkpoint selection;
 - no official training was performed.
 
-## Remaining Phase 2F checks
+## Phase 2F verification
 
-Phase 2F must still confirm batch-8 VRAM stability with the planned smoke procedure, verify that the official run launcher passes the frozen values unchanged, inspect initial training outputs, and confirm deterministic behavior as far as the CUDA stack supports it. Exact repeatability is not guaranteed across all PyTorch releases, platforms, or devices even when deterministic settings are requested.
+Phase 2F confirmed batch-8 VRAM stability, launcher argument fidelity, finite training and validation results, checkpoint creation, fixed-sample validation inference, and the intended A/B/C/D transform behavior. Exact repeatability is not guaranteed across all PyTorch releases, platforms, or devices even when deterministic settings are requested.
 
 This remains an experimental dataset-level localization pipeline. Protocol validation and later dataset metrics do not establish clinical safety, clinical reliability, or generalization to hospital populations.

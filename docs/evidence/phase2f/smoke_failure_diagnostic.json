@@ -13,7 +13,7 @@
     "deterministic": true
   },
   "accepted_attempt": {
-    "manifest": "outputs/training/smoke/A_seed42/run_manifest.json",
+    "manifest": "outputs/training/smoke/_failed_attempts/A_seed42_amp_validation_overflow/run_manifest.json",
     "repository_commit_sha": "90d86908f7d3afa36cb58921452e7195055e0847",
     "started_at_utc": "2026-09-21T21:44:08.294989+00:00",
     "completed_at_utc": "2026-09-21T21:46:40.123472+00:00",
@@ -61,5 +61,14 @@
     "amp_requested_and_retained": true,
     "amp_auxiliary_self_check": "skipped because the restricted environment could not download yolo26n.pt"
   },
-  "decision": "Stop the smoke matrix after A. Do not change batch size or frozen hyperparameters silently. Investigate and resolve non-finite validation loss before rerunning A/B/C/D."
+  "decision": "Stop the smoke matrix after A. Do not change batch size or frozen hyperparameters silently. Investigate and resolve non-finite validation loss before rerunning A/B/C/D.",
+  "resolution": {
+    "resolved_at_utc": "2026-09-22T02:15:00+00:00",
+    "cause": "FP16 validation inference overflow first observed in Detect.cv3.2.1.bn before loss calculation",
+    "protocol_change": "Disable AMP equally for A/B/C/D",
+    "causal_evidence": "Failed checkpoint is non-finite with CUDA AMP and finite with CUDA FP32 and CPU FP32 on the same 44 validation batches",
+    "replacement_smoke_runs": "A/B/C/D completed with finite losses and successful fixed-sample validation inference",
+    "test_set_used": false,
+    "evidence": "docs/evidence/phase2f/validation_nan_diagnosis.json"
+  }
 }

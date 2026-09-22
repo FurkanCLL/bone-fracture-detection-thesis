@@ -1,0 +1,363 @@
+{
+  "applied_fix": {
+    "new_value": false,
+    "old_value": true,
+    "scope": "shared baseline for A/B/C/D",
+    "setting": "training.amp",
+    "site_packages_modified": false
+  },
+  "checkpoint_parameters_finite": {
+    "all_finite": true,
+    "floating_tensors": 298,
+    "floating_values": 11157954,
+    "nonfinite_tensors": []
+  },
+  "conclusion": "The failed A checkpoint overflows in FP16 validation inference; disabling AMP keeps the identical validation path finite on CUDA and CPU.",
+  "created_at_utc": "2026-09-22T02:27:50.479253+00:00",
+  "empty_label_edge_case": {
+    "all_empty_natural_batches": [],
+    "conclusion": "Removing every target did not remove the prediction overflow, so empty labels are not the trigger.",
+    "natural_empty_images_in_first_batch": 2,
+    "targetless_replay_losses": {
+      "box_loss": 0.0,
+      "cls_loss": "nan",
+      "dfl_loss": 0.0
+    },
+    "targetless_replay_predictions_finite": false
+  },
+  "failed_run_archive": "outputs/training/smoke/_failed_attempts/A_seed42_amp_validation_overflow",
+  "first_batch_inputs": {
+    "normalized_images": {
+      "all_finite": true,
+      "device": "cuda:0",
+      "dtype": "torch.float16",
+      "finite_max": 1.0,
+      "finite_mean": 0.25781744718551636,
+      "finite_min": 0.0,
+      "finite_values": 6193152,
+      "nan_values": 0,
+      "negative_infinity_values": 0,
+      "nonfinite_values": 0,
+      "positive_infinity_values": 0,
+      "shape": [
+        8,
+        3,
+        384,
+        672
+      ],
+      "values": 6193152
+    },
+    "raw_images": {
+      "all_finite": true,
+      "device": "cpu",
+      "dtype": "torch.uint8",
+      "finite_max": 255.0,
+      "finite_mean": 65.7462158203125,
+      "finite_min": 0.0,
+      "finite_values": 6193152,
+      "nonfinite_values": 0,
+      "shape": [
+        8,
+        3,
+        384,
+        672
+      ],
+      "values": 6193152
+    },
+    "targets": {
+      "batch_idx": {
+        "all_finite": true,
+        "device": "cuda:0",
+        "dtype": "torch.int64",
+        "finite_max": 7.0,
+        "finite_mean": 3.7142858505249023,
+        "finite_min": 0.0,
+        "finite_values": 7,
+        "nonfinite_values": 0,
+        "shape": [
+          7
+        ],
+        "values": 7
+      },
+      "box_coordinates_within_zero_one": true,
+      "boxes": {
+        "all_finite": true,
+        "device": "cuda:0",
+        "dtype": "torch.float32",
+        "finite_max": 0.7363640666007996,
+        "finite_mean": 0.34193184971809387,
+        "finite_min": 0.05207470431923866,
+        "finite_values": 28,
+        "nan_values": 0,
+        "negative_infinity_values": 0,
+        "nonfinite_values": 0,
+        "positive_infinity_values": 0,
+        "shape": [
+          7,
+          4
+        ],
+        "values": 28
+      },
+      "class_counts": {
+        "2": 7
+      },
+      "class_ids": [
+        2
+      ],
+      "classes": {
+        "all_finite": true,
+        "device": "cuda:0",
+        "dtype": "torch.float32",
+        "finite_max": 2.0,
+        "finite_mean": 2.0,
+        "finite_min": 2.0,
+        "finite_values": 7,
+        "nan_values": 0,
+        "negative_infinity_values": 0,
+        "nonfinite_values": 0,
+        "positive_infinity_values": 0,
+        "shape": [
+          7
+        ],
+        "values": 7
+      },
+      "empty_image_count": 2,
+      "image_count": 8,
+      "images": [
+        {
+          "class_ids": [
+            2
+          ],
+          "empty_label": false,
+          "image_file": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\data\\prepared\\v3_detection_png\\valid\\images\\image2_5_png.rf.49ecdad27d07b6b8901d9931c2067bec.png",
+          "image_index": 0,
+          "target_count": 1
+        },
+        {
+          "class_ids": [],
+          "empty_label": true,
+          "image_file": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\data\\prepared\\v3_detection_png\\valid\\images\\image1_179_png.rf.2dac77668440f0f798140d3233888a64.png",
+          "image_index": 1,
+          "target_count": 0
+        },
+        {
+          "class_ids": [
+            2
+          ],
+          "empty_label": false,
+          "image_file": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\data\\prepared\\v3_detection_png\\valid\\images\\image1_811_png.rf.754f721fa3c67e3b94dfbc54d4611a83.png",
+          "image_index": 2,
+          "target_count": 1
+        },
+        {
+          "class_ids": [
+            2
+          ],
+          "empty_label": false,
+          "image_file": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\data\\prepared\\v3_detection_png\\valid\\images\\image1_947_png.rf.c09499f3067dd00d1e9fe5c6ea497ff2.png",
+          "image_index": 3,
+          "target_count": 1
+        },
+        {
+          "class_ids": [
+            2
+          ],
+          "empty_label": false,
+          "image_file": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\data\\prepared\\v3_detection_png\\valid\\images\\image1_1107_png.rf.f261d35066d972aeae64edc4b34a5d7e.png",
+          "image_index": 4,
+          "target_count": 1
+        },
+        {
+          "class_ids": [
+            2,
+            2
+          ],
+          "empty_label": false,
+          "image_file": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\data\\prepared\\v3_detection_png\\valid\\images\\image1_1607_png.rf.ecf3e995bfb4045c5ccbbd914a0fab8c.png",
+          "image_index": 5,
+          "target_count": 2
+        },
+        {
+          "class_ids": [],
+          "empty_label": true,
+          "image_file": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\data\\prepared\\v3_detection_png\\valid\\images\\image1_285_png.rf.ec8e67b4f493b56be2f41decdf280b62.png",
+          "image_index": 6,
+          "target_count": 0
+        },
+        {
+          "class_ids": [
+            2
+          ],
+          "empty_label": false,
+          "image_file": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\data\\prepared\\v3_detection_png\\valid\\images\\image2_516_png.rf.91d7d5784d59db1c419b9be508e4a37e.png",
+          "image_index": 7,
+          "target_count": 1
+        }
+      ],
+      "target_count": 7
+    }
+  },
+  "first_nonfinite_stage": {
+    "batch_index": 0,
+    "module": "cv3.2.1.bn",
+    "module_output": {
+      "all_finite": false,
+      "device": "cuda:0",
+      "dtype": "torch.float16",
+      "finite_max": 42688.0,
+      "finite_mean": -2456.064697265625,
+      "finite_min": -65472.0,
+      "finite_values": 257964,
+      "nan_values": 0,
+      "negative_infinity_values": 84,
+      "nonfinite_values": 84,
+      "positive_infinity_values": 0,
+      "shape": [
+        8,
+        128,
+        12,
+        21
+      ],
+      "values": 258048
+    },
+    "prediction_nonfinite_before_loss": true,
+    "propagation": [
+      "model prediction",
+      "per-batch validation loss",
+      "loss accumulator",
+      "normalized validator result",
+      "trainer metrics",
+      "results.csv"
+    ]
+  },
+  "precision_comparisons": [
+    {
+      "amp": true,
+      "batches_completed": 44,
+      "checkpoint": "yolov8s.pt",
+      "device": "cuda:0",
+      "first_nonfinite_batch": null,
+      "loss_nonfinite_batches": 0,
+      "normalized_losses": {
+        "box_loss": 3.344815037467263,
+        "cls_loss": 10.404302943836559,
+        "dfl_loss": 3.365868693048304
+      },
+      "normalized_losses_finite": true,
+      "prediction_nonfinite_batches": 0,
+      "report": "original_cuda0_amp.json"
+    },
+    {
+      "amp": true,
+      "batches_completed": 44,
+      "checkpoint": "outputs/training/smoke/A_seed42/weights/last.pt",
+      "device": "cuda:0",
+      "first_nonfinite_batch": 0,
+      "loss_nonfinite_batches": 40,
+      "normalized_losses": {
+        "box_loss": "nan",
+        "cls_loss": "nan",
+        "dfl_loss": "nan"
+      },
+      "normalized_losses_finite": false,
+      "prediction_nonfinite_batches": 40,
+      "report": "last_cuda0_amp.json"
+    },
+    {
+      "amp": true,
+      "batches_completed": 44,
+      "checkpoint": "outputs/training/smoke/A_seed42/weights/best.pt",
+      "device": "cuda:0",
+      "first_nonfinite_batch": 0,
+      "loss_nonfinite_batches": 40,
+      "normalized_losses": {
+        "box_loss": "nan",
+        "cls_loss": "nan",
+        "dfl_loss": "nan"
+      },
+      "normalized_losses_finite": false,
+      "prediction_nonfinite_batches": 40,
+      "report": "best_cuda0_amp.json"
+    },
+    {
+      "amp": false,
+      "batches_completed": 44,
+      "checkpoint": "outputs/training/smoke/A_seed42/weights/best.pt",
+      "device": "cuda:0",
+      "first_nonfinite_batch": null,
+      "loss_nonfinite_batches": 0,
+      "normalized_losses": {
+        "box_loss": 3.6224411544679174,
+        "cls_loss": 91555.50645862926,
+        "dfl_loss": 256.64661096411623
+      },
+      "normalized_losses_finite": true,
+      "prediction_nonfinite_batches": 0,
+      "report": "best_cuda0_fp32.json"
+    },
+    {
+      "amp": false,
+      "batches_completed": 44,
+      "checkpoint": "outputs/training/smoke/A_seed42/weights/best.pt",
+      "device": "cpu",
+      "first_nonfinite_batch": null,
+      "loss_nonfinite_batches": 0,
+      "normalized_losses": {
+        "box_loss": 3.622531174989778,
+        "cls_loss": 91562.76604669745,
+        "dfl_loss": 256.76739501721966
+      },
+      "normalized_losses_finite": true,
+      "prediction_nonfinite_batches": 0,
+      "report": "best_cpu_fp32.json"
+    }
+  ],
+  "schema_version": 1,
+  "standalone_validation": {
+    "created_at_utc": "2026-09-22T02:19:00.530945+00:00",
+    "note": "Ultralytics standalone model.val reports detection metrics but does not execute the trainer-integrated validation-loss branch.",
+    "runs": {
+      "failed_A_best": {
+        "all_metrics_finite": true,
+        "checkpoint": "outputs/training/smoke/_failed_attempts/A_seed42_amp_validation_overflow/weights/best.pt",
+        "checkpoint_sha256": "25ef3d88d40814ee7575a835e1510607318e445e78be516202f2b6a56f5a8bde",
+        "metrics": {
+          "fitness": 0.0,
+          "metrics/mAP50(B)": 0.0,
+          "metrics/mAP50-95(B)": 0.0,
+          "metrics/precision(B)": 0.0,
+          "metrics/recall(B)": 0.0
+        }
+      },
+      "failed_A_last": {
+        "all_metrics_finite": true,
+        "checkpoint": "outputs/training/smoke/_failed_attempts/A_seed42_amp_validation_overflow/weights/last.pt",
+        "checkpoint_sha256": "90bd20a1caeada285a8854a4bbde58d4c33124cff318ccf874836be13286e990",
+        "metrics": {
+          "fitness": 0.0,
+          "metrics/mAP50(B)": 0.0,
+          "metrics/mAP50-95(B)": 0.0,
+          "metrics/precision(B)": 0.0,
+          "metrics/recall(B)": 0.0
+        }
+      },
+      "original_yolov8s": {
+        "all_metrics_finite": true,
+        "checkpoint": "yolov8s.pt",
+        "checkpoint_sha256": "1f47a78bf100391c2a140b7ac73a1caae18c32779be7d310658112f7ac9aa78a",
+        "metrics": {
+          "fitness": 0.0,
+          "metrics/mAP50(B)": 0.0,
+          "metrics/mAP50-95(B)": 0.0,
+          "metrics/precision(B)": 0.0,
+          "metrics/recall(B)": 0.0
+        }
+      }
+    },
+    "schema_version": 1,
+    "split": "val",
+    "test_set_used": false,
+    "validation_loss_computed": false
+  },
+  "test_set_used": false
+}

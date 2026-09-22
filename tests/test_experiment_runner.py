@@ -82,7 +82,7 @@ class ExperimentRunnerTests(unittest.TestCase):
             "seed": 42,
             "deterministic": True,
             "workers": 8,
-            "amp": True,
+            "amp": False,
             "val": True,
         }.items():
             self.assertEqual(smoke[key], value)
@@ -160,6 +160,62 @@ class ExperimentRunnerTests(unittest.TestCase):
             csv_rows = (root / "docs/evidence/phase2f/smoke_run_summary.csv").read_text(encoding="utf-8")
             self.assertIn("A,png_control,off", csv_rows)
             self.assertIn("B,clahe,off", csv_rows)
+
+    def test_complete_smoke_summary_records_measured_batch_status(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            evidence_directory = root / "docs/evidence/phase2f"
+            evidence_directory.mkdir(parents=True)
+            (evidence_directory / "environment_freeze.json").write_text(
+                json.dumps({"batch_size_status": "planned_not_smoke_tested"}),
+                encoding="utf-8",
+            )
+            for index, experiment in enumerate(("A", "B", "C", "D")):
+                run_directory = root / f"outputs/training/smoke/{experiment}_seed42"
+                (run_directory / "weights").mkdir(parents=True)
+                (run_directory / "weights/last.pt").touch()
+                (run_directory / "weights/best.pt").touch()
+                manifest = {
+                    "run_kind": "smoke",
+                    "status": "completed",
+                    "configuration": {
+                        "image_condition": "png_control" if experiment in {"A", "C"} else "clahe",
+                        "augmentation_condition": "conservative" if experiment in {"C", "D"} else "off",
+                    },
+                    "trainer_arguments": {"batch": 8},
+                    "output_verification": {
+                        "epochs_completed": 1,
+                        "final_values": {
+                            "train/box_loss": 1.0,
+                            "train/cls_loss": 1.0,
+                            "train/dfl_loss": 1.0,
+                            "val/box_loss": 1.0,
+                            "val/cls_loss": 1.0,
+                            "val/dfl_loss": 1.0,
+                            "metrics/mAP50(B)": 0.0,
+                            "metrics/mAP50-95(B)": 0.0,
+                        },
+                    },
+                    "runtime": {"seconds": 10.0},
+                    "gpu_memory": {
+                        "batch_size_8_stable": True,
+                        "peak_allocated_gib": 2.0 + index / 10,
+                        "peak_reserved_gib": 3.0 + index / 10,
+                    },
+                    "validation_inference": {"valid": True},
+                }
+                (run_directory / "run_manifest.json").write_text(
+                    json.dumps(manifest), encoding="utf-8"
+                )
+
+            summary = summarize_smoke_runs(root)
+            environment = json.loads(
+                (evidence_directory / "environment_freeze.json").read_text(encoding="utf-8")
+            )
+
+            self.assertTrue(summary["success"])
+            self.assertEqual(environment["batch_size_status"], "smoke_validated_all_four_runs")
+            self.assertEqual(environment["smoke_observation"]["maximum_peak_allocated_gib"], 2.3)
 
 
 if __name__ == "__main__":

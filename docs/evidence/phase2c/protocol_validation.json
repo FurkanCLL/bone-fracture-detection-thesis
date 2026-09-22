@@ -22,7 +22,7 @@
       "shear",
       "translate"
     ],
-    "protocol_digest": "3f32c96a4b19484d2fa92fdeed75d4633d56da159a68158cc21855ff3ee777d8",
+    "protocol_digest": "bd0a0c6553c4a8c422fcfc4a3757fbdfdc92de01ec6c16d42a91df90026cd1e3",
     "test_isolation": true,
     "valid": true
   },
@@ -107,5 +107,5 @@
   "success": true,
   "test_set_isolated": true,
   "tool_version": "1.0.0",
-  "validated_at_utc": "2026-09-19T16:57:48.915495+00:00"
+  "validated_at_utc": "2026-09-22T11:56:44.925222+00:00"
 }

@@ -1,0 +1,27 @@
+{
+  "created_at_utc": "2026-09-22T02:27:50.484687+00:00",
+  "schema_version": 1,
+  "site_packages_modified": false,
+  "ultralytics_sources": {
+    "ultralytics.engine.trainer": {
+      "path": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\.venv\\Lib\\site-packages\\ultralytics\\engine\\trainer.py",
+      "sha256": "57f7b317346c757a38096a58ab12c5dc6c005a7ef0395d20eb375ff1f3aed877"
+    },
+    "ultralytics.engine.validator": {
+      "path": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\.venv\\Lib\\site-packages\\ultralytics\\engine\\validator.py",
+      "sha256": "505ab8228e7953a143b5d61bbd774efa3302c2311342dea60f3e45d0e5fddf9d"
+    },
+    "ultralytics.models.yolo.detect.val": {
+      "path": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\.venv\\Lib\\site-packages\\ultralytics\\models\\yolo\\detect\\val.py",
+      "sha256": "10e7944ede74be2c40c176fea65b81956cbe3837fdff1e4a361f2b57f6483e60"
+    },
+    "ultralytics.utils.loss": {
+      "path": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\.venv\\Lib\\site-packages\\ultralytics\\utils\\loss.py",
+      "sha256": "f6af7b277eb2cc939e3f4ca62fbb234742d1eb6c7607caaab06e6e026d47d45e"
+    },
+    "ultralytics.utils.metrics": {
+      "path": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\.venv\\Lib\\site-packages\\ultralytics\\utils\\metrics.py",
+      "sha256": "30e7e50e806ea60a1a9afaa81cdcd9de854c3307789231d4ad7bbb92f9674b60"
+    }
+  }
+}

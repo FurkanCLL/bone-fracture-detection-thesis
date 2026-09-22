@@ -28,7 +28,7 @@ REQUIRED_TRAINING_SETTINGS = {
     "weight_decay": 0.0005,
     "seed": 42,
     "deterministic": True,
-    "amp": True,
+    "amp": False,
     "patience": 0,
     "val": True,
     "pretrained": True,

@@ -1050,6 +1050,26 @@ def summarize_smoke_runs(project_root: Path) -> dict[str, object]:
         },
     }
     _write_json(evidence_directory / "smoke_test_summary.json", summary)
+    if all_completed:
+        # Replace the pre-smoke planning marker with measured memory evidence from all four runs.
+        environment_path = evidence_directory / "environment_freeze.json"
+        if environment_path.is_file():
+            environment = json.loads(environment_path.read_text(encoding="utf-8"))
+            environment["batch_size_status"] = "smoke_validated_all_four_runs"
+            environment["smoke_observation"] = {
+                "experiments": list(EXPERIMENTS),
+                "batch_size": 8,
+                "all_runs_stable": summary["batch_size_8_stable_all_runs"],
+                "maximum_peak_allocated_gib": max(
+                    float(manifest["gpu_memory"]["peak_allocated_gib"])
+                    for manifest in manifests.values()
+                ),
+                "maximum_peak_reserved_gib": max(
+                    float(manifest["gpu_memory"]["peak_reserved_gib"])
+                    for manifest in manifests.values()
+                ),
+            }
+            _write_json(environment_path, environment)
     return summary
 
 
