@@ -2,9 +2,7 @@
 
 ## Status
 
-The executable A/B/C/D experiment matrix is frozen and its configuration, environment, dataset, and C/D pairing checks pass. Phase 2F is **not complete or approved**, however, because Experiment A reproducibly produced non-finite validation losses during the real one-epoch smoke test.
-
-The stability gate stopped Experiments B, C, and D. No official 100-epoch training was started, and the test split was not used.
+Phase 2F is complete. The non-finite validation-loss failure was traced to FP16 overflow in the trained Experiment A detection head, the shared protocol was amended to disable AMP, and clean A/B/C/D one-epoch smoke runs passed with batch size 8. No official 100-epoch training was performed and the test split was not used.
 
 ## Frozen experiment matrix
 
@@ -15,67 +13,53 @@ The stability gate stopped Experiments B, C, and D. No official 100-epoch traini
 | C | Pixel-identical PNG control | Conservative policy |
 | D | CLAHE PNG | Conservative policy |
 
-All experiments inherit `configs/training/baseline.yaml`. The resolver proved that A/B and C/D differ only in the three dataset path/fingerprint fields, while A/C and B/D differ only in `degrees`, `translate`, `scale`, and `hsv_v`. All model, optimizer, learning-rate, weight-decay, seed, deterministic, AMP, worker, validation, checkpoint, and test-isolation settings remain fixed.
+All experiments inherit `configs/training/baseline.yaml`. The resolver proves that A/B and C/D differ only in dataset path/fingerprint fields, while A/C and B/D differ only in `degrees`, `translate`, `scale`, and `hsv_v`. Smoke mode changes only epochs from 100 to 1 and routes output to `outputs/training/smoke/`.
 
-The shared launcher is `bone_fracture_pipeline.experiment_runner`. Smoke mode changes only the epoch count from 100 to 1 and routes output from `outputs/training/official/` to `outputs/training/smoke/`. The official path was never invoked.
+## Validation-loss diagnosis
 
-## Preflight results
+The original COCO-pretrained `yolov8s.pt` completed all 44 validation batches with finite AMP predictions and normalized losses. Both `last.pt` and `best.pt` from the failed A run first became non-finite in validation batch 0 and had non-finite predictions and losses in 40 of 44 batches. Model parameters, input images, and targets were finite.
 
-The following checks passed before Experiment A trained:
+The first non-finite operation was `Detect.cv3.2.1.bn`. Its FP16 input from the preceding convolution was finite (range -15,800 to 7,932), but the batch-normalization output contained 84 negative infinities. The following activation and classification convolution propagated these into NaN class scores before the loss function ran. Those values then propagated through per-batch loss, accumulation, normalization, trainer metrics, and `results.csv`.
 
-- PNG control fingerprint `5dd43c8e40eda542a3d77ad65aad29e6964fbba6bb9d4ac77006413a7b8bb1ce`;
-- 1,728 images, 1,728 labels, 998 annotations, and 868 empty labels;
-- approved 1,211/348/169 train/validation/test split counts and six-class order;
-- byte-level pretrained-weight hash `1f47a78bf100391c2a140b7ac73a1caae18c32779be7d310658112f7ac9aa78a`;
-- Phase 2C Python, PyTorch, torchvision, Ultralytics, CUDA, cuDNN, driver, GPU, VRAM, OpenCV, NumPy, Pillow, and PyYAML environment match;
-- CUDA device 0 availability and absence of Albumentations;
-- validation-only checkpoint selection and final-evaluation-only test policy;
-- final C/D dataset identity and stochastic pairing through the resolved launcher configurations.
+The same failed checkpoint completed all 44 validation batches with finite losses in CUDA FP32 and CPU FP32. CUDA and CPU results were close, while AMP alone reproduced the overflow:
 
-The C/D check matched all 1,728 sample identities and reproduced the same representative transformed box geometry, Python/NumPy RNG progression, shuffle order, and worker seeding under the frozen conditions.
+| Checkpoint / mode | First non-finite batch | Non-finite batches | Normalized box / cls / DFL loss |
+|---|---:|---:|---:|
+| Original YOLOv8s, CUDA AMP | none | 0 / 44 | 3.34482 / 10.40430 / 3.36587 |
+| Failed A `last.pt`, CUDA AMP | 0 | 40 / 44 | NaN / NaN / NaN |
+| Failed A `best.pt`, CUDA AMP | 0 | 40 / 44 | NaN / NaN / NaN |
+| Failed A `best.pt`, CUDA FP32 | none | 0 / 44 | 3.62244 / 91555.50646 / 256.64661 |
+| Failed A `best.pt`, CPU FP32 | none | 0 / 44 | 3.62253 / 91562.76605 / 256.76740 |
 
-## Smoke execution
+Batch 0 contained seven finite targets and two empty-label images. Replaying the same images with every target removed still produced non-finite predictions, so empty labels are not the trigger. Standalone `model.val()` completed for the original, failed `last.pt`, and failed `best.pt` checkpoints with finite detection metrics, but that API path does not compute trainer-integrated validation losses and therefore did not contradict the diagnosis.
 
-The first A attempt stopped before training because Ultralytics interpreted `path: .` relative to the process directory. The launcher was corrected to write a run-local dataset YAML containing the absolute, fingerprint-validated dataset root. The failed attempt was preserved below `outputs/training/smoke/_failed_attempts/`.
+No installed Ultralytics file was patched. The exact installed validation, trainer, detection-validator, loss, and metrics source hashes are recorded in `docs/evidence/phase2f/installed_validation_source_hashes.json`.
 
-A subsequent real one-epoch training completed but was rejected by an overly strict post-run comparison because Ultralytics serializes CUDA device `0` as the string `"0"`. The comparison was corrected without changing the requested device. That completed attempt was also preserved.
+## Protocol amendment
 
-The final A retry used committed launcher revision `90d86908f7d3afa36cb58921452e7195055e0847` and completed all 152 training batches plus validation with batch size 8, image size 640, eight workers, AMP, seed 42, and deterministic mode. It did not OOM. The trainer displayed a maximum of approximately 1.95 GiB GPU memory during the epoch. `last.pt`, `best.pt`, `results.csv`, plots, and three trainer batch images were produced.
+AMP is disabled in the shared baseline and enforced by protocol validation. This is a single global numerical-stability change applied equally to A/B/C/D; no image condition, augmentation policy, split, seed, optimizer, learning rate, batch size, or checkpoint-selection rule changed. The failed AMP run and its original `results.csv` remain archived at `outputs/training/smoke/_failed_attempts/A_seed42_amp_validation_overflow/`.
 
-Training losses were finite:
+## Clean smoke execution
 
-| Value | Result |
-|---|---:|
-| train box loss | 3.24173 |
-| train classification loss | 26.9853 |
-| train DFL loss | 3.01948 |
+| Exp. | Runtime (s) | Peak allocated / reserved GiB | Train box / cls / DFL | Val box / cls / DFL | mAP50 / mAP50-95 |
+|---|---:|---:|---:|---:|---:|
+| A | 121.911 | 3.088 / 3.686 | 3.03400 / 10.52090 / 2.74980 | 3.20553 / 5.29495 / 2.82431 | 0.00005 / 0.00001 |
+| B | 110.098 | 3.088 / 3.686 | 3.04676 / 13.97400 / 2.64497 | 3.09234 / 6.11174 / 2.90359 | 0.00013 / 0.00004 |
+| C | 100.066 | 3.088 / 3.686 | 2.99962 / 11.27460 / 2.62248 | 3.30187 / 5.81715 / 2.84232 | 0.00016 / 0.00004 |
+| D | 91.493 | 3.088 / 3.686 | 2.99383 / 13.61790 / 2.54058 | 2.98935 / 5.28479 / 2.52963 | 0.00573 / 0.00119 |
 
-All three validation losses were `nan`. The prior completed A attempt produced the same three finite training losses and the same three non-finite validation losses, so the failure is reproducible under seed 42. The saved checkpoint parameters were independently checked and were finite. The one-epoch metrics were zero, but they are technical smoke outputs and must not be interpreted as thesis performance results.
+Every run completed one epoch, produced finite training and validation values, wrote `last.pt` and `best.pt`, generated expected plots and trainer batch images, and passed fixed-sample inference on three validation images with finite predictions. These smoke metrics are pipeline evidence, not thesis performance results.
 
-The optional Ultralytics AMP auxiliary self-check could not download `yolo26n.pt` in the restricted network environment. Ultralytics explicitly retained `amp=True`. This is recorded as an environment observation, not asserted as the cause of the non-finite validation losses.
+## Dataset, augmentation, and visual QA
 
-## Trainer batch QA
+All manifests recorded 1,211 training images, 348 validation images, zero test images loaded, and restored dataset fingerprints after generated cache cleanup. A/B had every controlled transform disabled. C/D recorded the same conservative train-only transform chain and retained augmentation-free validation.
 
-`train_batch0.jpg`, `train_batch1.jpg`, and `train_batch2.jpg` from Experiment A were manually inspected. The visible boxes were technically aligned with the displayed anatomy, no invalid or out-of-frame boxes were observed, and no controlled rotation, translation, scaling, or intensity transform was apparent. Standard letterbox padding remained present as expected.
-
-This review is technical pipeline QA only. It is not a medical-correctness assessment.
+All three saved training batches from every experiment were manually inspected. A/B showed consistent unaugmented geometry; B showed the expected CLAHE contrast difference. C/D showed plausible conservative rotation/intensity variation with corresponding boxes. No invalid, displaced, or out-of-frame boxes were observed. This is technical pipeline QA, not medical-correctness review.
 
 ## Gate decision
 
-Experiment A failed the explicit requirement that validation losses be finite. The post-run pipeline therefore stopped before fixed-sample inference and before launching B, C, or D. Continuing the matrix, changing batch size, disabling AMP, or accepting the `nan` values would have bypassed the frozen smoke-test criteria.
-
-Phase 2 is not fully complete, the official A/B/C/D experiment matrix is not approved to start, and Phase 3 must remain paused. The next work is a focused diagnosis of the non-finite validation-loss path under the pinned environment, followed by clean successful A/B/C/D one-epoch smoke runs using the same frozen scientific settings.
+The complete Phase 2F gate passes. Batch size 8 was stable across all four smoke runs, the numerical failure has a documented causal fix, configuration and pairing checks pass, fixed-sample validation inference passes, and test isolation is preserved. Phase 2 is technically complete and Phase 3 official controlled training may begin in a separate step. Official training has not started in this work.
 
 ## Evidence
 
-Compact evidence is stored in `docs/evidence/phase2f/`:
-
-- `experiment_matrix_validation.json`;
-- `environment_freeze.json`;
-- `cd_pairing_validation.json`;
-- `smoke_test_summary.json`;
-- `smoke_run_summary.csv`;
-- `smoke_failure_diagnostic.json`;
-- `manual_batch_review.json`.
-
-Full local outputs and checkpoints remain under ignored `outputs/training/smoke/`. These smoke artifacts are not official thesis results.
+Compact evidence is stored in `docs/evidence/phase2f/`, including the matrix/environment checks, smoke summary, manual batch review, diagnostic comparison, per-batch summary, and installed-source hashes. Full traces, checkpoints, and generated visualizations remain under ignored `outputs/` directories.

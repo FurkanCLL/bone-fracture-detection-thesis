@@ -1,37 +1,33 @@
 {
-  "all_four_smoke_runs_passed": false,
-  "batch_size_8_stable_all_runs": false,
-  "blocking_condition": "Experiment A produced non-finite validation losses; B/C/D were not run after the stability gate.",
-  "created_at_utc": "2026-09-22T00:32:10.305547+00:00",
+  "all_four_smoke_runs_passed": true,
+  "batch_size_8_stable_all_runs": true,
+  "blocking_condition": null,
+  "created_at_utc": "2026-09-22T11:58:57.384730+00:00",
   "official_training_performed": false,
-  "phase2f_status": "blocked",
+  "phase2f_status": "complete",
   "runs": {
     "A": {
-      "failure": {
-        "message": "Non-finite training result in val/box_loss.",
-        "oom": false,
-        "type": "ExperimentValidationError"
-      },
+      "failure": null,
       "manifest": "outputs/training/smoke/A_seed42/run_manifest.json",
-      "status": "failed"
+      "status": "completed"
     },
     "B": {
       "failure": null,
-      "manifest": null,
-      "status": "not_run"
+      "manifest": "outputs/training/smoke/B_seed42/run_manifest.json",
+      "status": "completed"
     },
     "C": {
       "failure": null,
-      "manifest": null,
-      "status": "not_run"
+      "manifest": "outputs/training/smoke/C_seed42/run_manifest.json",
+      "status": "completed"
     },
     "D": {
       "failure": null,
-      "manifest": null,
-      "status": "not_run"
+      "manifest": "outputs/training/smoke/D_seed42/run_manifest.json",
+      "status": "completed"
     }
   },
   "schema_version": 1,
-  "success": false,
+  "success": true,
   "test_set_used": false
 }

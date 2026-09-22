@@ -1,6 +1,6 @@
 {
-  "reviewed_at_utc": "2026-09-21T21:54:22.4365831Z",
-  "schema_version": 1,
+  "reviewed_at_utc": "2026-09-22T02:15:00+00:00",
+  "schema_version": 2,
   "scope": "technical training-batch QA, not medical correctness review",
   "runs": {
     "A": {
@@ -13,13 +13,45 @@
       "box_alignment_technically_plausible": true,
       "invalid_or_out_of_frame_boxes_observed": false,
       "unexpected_controlled_transform_observed": false,
-      "standard_letterbox_padding_observed": true,
-      "decision": "The reviewed A batches are technically consistent with augmentation off."
+      "decision": "Technically consistent with augmentation off."
     },
-    "B": {"status": "not reviewed because the A stability gate stopped further runs"},
-    "C": {"status": "not reviewed because the A stability gate stopped further runs"},
-    "D": {"status": "not reviewed because the A stability gate stopped further runs"}
+    "B": {
+      "augmentation_condition": "off",
+      "files_reviewed": [
+        "outputs/training/smoke/B_seed42/train_batch0.jpg",
+        "outputs/training/smoke/B_seed42/train_batch1.jpg",
+        "outputs/training/smoke/B_seed42/train_batch2.jpg"
+      ],
+      "box_alignment_technically_plausible": true,
+      "invalid_or_out_of_frame_boxes_observed": false,
+      "unexpected_controlled_transform_observed": false,
+      "decision": "Technically consistent with augmentation off and the expected CLAHE contrast condition."
+    },
+    "C": {
+      "augmentation_condition": "conservative",
+      "files_reviewed": [
+        "outputs/training/smoke/C_seed42/train_batch0.jpg",
+        "outputs/training/smoke/C_seed42/train_batch1.jpg",
+        "outputs/training/smoke/C_seed42/train_batch2.jpg"
+      ],
+      "box_alignment_technically_plausible": true,
+      "invalid_or_out_of_frame_boxes_observed": false,
+      "expected_rotation_or_intensity_variation_observed": true,
+      "decision": "Technically consistent with the conservative train-only policy."
+    },
+    "D": {
+      "augmentation_condition": "conservative",
+      "files_reviewed": [
+        "outputs/training/smoke/D_seed42/train_batch0.jpg",
+        "outputs/training/smoke/D_seed42/train_batch1.jpg",
+        "outputs/training/smoke/D_seed42/train_batch2.jpg"
+      ],
+      "box_alignment_technically_plausible": true,
+      "invalid_or_out_of_frame_boxes_observed": false,
+      "expected_rotation_or_intensity_variation_observed": true,
+      "decision": "Technically consistent with the conservative train-only policy and CLAHE condition."
+    }
   },
-  "overall_status": "partial_only",
-  "limitation": "Visual batch QA cannot approve Phase 2F because Experiment A failed the finite-validation-loss requirement."
+  "overall_status": "passed",
+  "limitation": "This review checks pipeline geometry and transform plausibility only; it is not a medical annotation review."
 }

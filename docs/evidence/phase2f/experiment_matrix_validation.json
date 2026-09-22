@@ -39,43 +39,43 @@
     "A": {
       "augmentation_condition": "off",
       "augmentation_policy_digest": null,
-      "baseline_digest": "3f32c96a4b19484d2fa92fdeed75d4633d56da159a68158cc21855ff3ee777d8",
+      "baseline_digest": "bd0a0c6553c4a8c422fcfc4a3757fbdfdc92de01ec6c16d42a91df90026cd1e3",
       "definition_digest": "90f596c56081bc8fbd18cd048b96679a0a98e31b77dcce5563d1f5a2bbd07cc8",
       "definition_path": "configs/experiments/A.yaml",
       "image_condition": "png_control",
-      "resolved_digest": "0329c0a7882ec0c10110543aa0dea59d4b54ebd5da0b23bf53c612aff3fc0f05"
+      "resolved_digest": "3c6deeb9fb4c7472ee32deb2dcd7ddc2d9484d12a21bf00d1e45ed653290ab1a"
     },
     "B": {
       "augmentation_condition": "off",
       "augmentation_policy_digest": null,
-      "baseline_digest": "3f32c96a4b19484d2fa92fdeed75d4633d56da159a68158cc21855ff3ee777d8",
+      "baseline_digest": "bd0a0c6553c4a8c422fcfc4a3757fbdfdc92de01ec6c16d42a91df90026cd1e3",
       "definition_digest": "6bd3fd2b327da4163b7c9d9eebc27204df24b3eb98719aa0a7f9d11b2431fa65",
       "definition_path": "configs/experiments/B.yaml",
       "image_condition": "clahe",
-      "resolved_digest": "f6ce07adee1089df7a2fb2cbd8d9f9583eb4c258badd153efbec37efaf5f45e3"
+      "resolved_digest": "658930f0776c628105214927d8cedd917facb996ffc2e456515b900b82a4e927"
     },
     "C": {
       "augmentation_condition": "conservative",
       "augmentation_policy_digest": "8e247a7c289ee3b3684fc116826c8b9f951beef6e805463d0d832ec2bd83654d",
-      "baseline_digest": "3f32c96a4b19484d2fa92fdeed75d4633d56da159a68158cc21855ff3ee777d8",
+      "baseline_digest": "bd0a0c6553c4a8c422fcfc4a3757fbdfdc92de01ec6c16d42a91df90026cd1e3",
       "definition_digest": "183f60004d456dea3a55dc6326e0c54748cc747a877d26cc274b45fcd156827b",
       "definition_path": "configs/experiments/C.yaml",
       "image_condition": "png_control",
-      "resolved_digest": "0163eed7647d82832e5df5de4c31faf80763974ae2335fb0c52870cc6a7f7129"
+      "resolved_digest": "808b78a1349c785945d88f19e4f60a4a96f3186ced8dfe7c528d0821aa19c7e0"
     },
     "D": {
       "augmentation_condition": "conservative",
       "augmentation_policy_digest": "8e247a7c289ee3b3684fc116826c8b9f951beef6e805463d0d832ec2bd83654d",
-      "baseline_digest": "3f32c96a4b19484d2fa92fdeed75d4633d56da159a68158cc21855ff3ee777d8",
+      "baseline_digest": "bd0a0c6553c4a8c422fcfc4a3757fbdfdc92de01ec6c16d42a91df90026cd1e3",
       "definition_digest": "9e4da32df0fad95f6f68189851c1d7f303311f656299b9a8e09d0ec093243e47",
       "definition_path": "configs/experiments/D.yaml",
       "image_condition": "clahe",
-      "resolved_digest": "7ed88e100675f25d0c34456d530b2c0c3012adcb6eee2a122d9d4850b4a82e26"
+      "resolved_digest": "965eb0f987328b0f145e632198e74c5be2f1ab5cb10e31c0b19d644f2b493d34"
     }
   },
   "only_planned_factors_differ": true,
   "schema_version": 1,
   "success": true,
   "tool_version": "1.0.0",
-  "validated_at_utc": "2026-09-22T00:30:02.674605+00:00"
+  "validated_at_utc": "2026-09-22T11:56:54.693234+00:00"
 }

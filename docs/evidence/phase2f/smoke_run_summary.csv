@@ -1,5 +1,5 @@
 experiment,image_condition,augmentation,epochs,batch,runtime_seconds,peak_allocated_gib,peak_reserved_gib,train_box_loss,train_cls_loss,train_dfl_loss,val_losses_finite,map50,map50_95,checkpoint_last,checkpoint_best,validation_inference,test_used,status
-A,png_control,off,1,8,,,,3.24173,26.9853,3.01948,False,0,0,True,True,False,False,failed
-B,clahe,off,,8,,,,,,,,,,False,False,False,False,not_run_after_A_stability_gate
-C,png_control,conservative,,8,,,,,,,,,,False,False,False,False,not_run_after_A_stability_gate
-D,clahe,conservative,,8,,,,,,,,,,False,False,False,False,not_run_after_A_stability_gate
+A,png_control,off,1,8,121.911,3.088,3.686,3.034,10.5209,2.7498,True,5e-05,1e-05,True,True,True,False,passed
+B,clahe,off,1,8,110.098,3.088,3.686,3.04676,13.974,2.64497,True,0.00013,4e-05,True,True,True,False,passed
+C,png_control,conservative,1,8,100.066,3.088,3.686,2.99962,11.2746,2.62248,True,0.00016,4e-05,True,True,True,False,passed
+D,clahe,conservative,1,8,91.493,3.088,3.686,2.99383,13.6179,2.54058,True,0.00573,0.00119,True,True,True,False,passed

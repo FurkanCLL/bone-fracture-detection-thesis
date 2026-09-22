@@ -1,6 +1,6 @@
 {
-  "c_resolved_digest": "0163eed7647d82832e5df5de4c31faf80763974ae2335fb0c52870cc6a7f7129",
-  "d_resolved_digest": "7ed88e100675f25d0c34456d530b2c0c3012adcb6eee2a122d9d4850b4a82e26",
+  "c_resolved_digest": "808b78a1349c785945d88f19e4f60a4a96f3186ced8dfe7c528d0821aa19c7e0",
+  "d_resolved_digest": "965eb0f987328b0f145e632198e74c5be2f1ab5cb10e31c0b19d644f2b493d34",
   "final_resolved_config_differences": [
     "dataset.data_yaml",
     "dataset.expected_fingerprint",
@@ -55,5 +55,5 @@
   },
   "schema_version": 1,
   "success": true,
-  "validated_at_utc": "2026-09-22T00:30:45.824283+00:00"
+  "validated_at_utc": "2026-09-22T11:58:47.226869+00:00"
 }

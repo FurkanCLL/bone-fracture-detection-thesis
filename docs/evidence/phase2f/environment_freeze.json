@@ -1,7 +1,7 @@
 {
   "albumentations_installed": false,
-  "batch_size_status": "planned_not_smoke_tested",
-  "collected_at_utc": "2026-09-22T00:30:46.063444+00:00",
+  "batch_size_status": "smoke_validated_all_four_runs",
+  "collected_at_utc": "2026-09-22T11:58:47.544465+00:00",
   "comparison_to_phase2c": {
     "differences": {},
     "fields_checked": [
@@ -63,6 +63,18 @@
     "version": "3.12.14"
   },
   "schema_version": 1,
+  "smoke_observation": {
+    "all_runs_stable": true,
+    "batch_size": 8,
+    "experiments": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "maximum_peak_allocated_gib": 3.088,
+    "maximum_peak_reserved_gib": 3.686
+  },
   "weights": {
     "filename": "yolov8s.pt",
     "path": "yolov8s.pt",

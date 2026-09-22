@@ -4,7 +4,7 @@
 **University:** Riga Technical University (RTU)  
 **Main model family:** YOLOv8 object detection  
 **Primary raw dataset:** Roboflow/Kaggle Bone Fracture Detection, Version 3 (v3)  
-**Status:** Phase 2F experiment freeze validated; smoke testing blocked by non-finite Experiment A validation losses
+**Status:** Phase 2 complete; Phase 2F A/B/C/D smoke gate passed and Phase 3 is ready to begin
 **Purpose of this document:** Provide a stable, high-level implementation plan for Phase 2 so that the work can proceed in a controlled, reproducible, and consistent way. Detailed implementation choices for each subphase should still be reviewed and finalized immediately before that subphase is implemented.
 
 ---
@@ -536,12 +536,12 @@ Phase 2C validated and froze the following configuration:
 | Weight decay | 0.0005 |
 | Primary experimental seed | 42 |
 | Deterministic mode | Enabled where supported |
-| Mixed precision / AMP | Enabled |
+| Mixed precision / AMP | Disabled after Phase 2F FP16 overflow diagnosis |
 | Primary model-selection source | Validation set |
 | Primary metric | mAP50-95 |
 | Additional metrics | mAP50, Precision, Recall, per-class AP |
 
-The software environment, framework semantics, prepared-dataset fingerprint, and pretrained weights were validated in Phase 2C. Batch 8 remains the fixed planned value, but its VRAM stability must still be confirmed by the Phase 2F smoke check before official training.
+The software environment, framework semantics, prepared-dataset fingerprint, and pretrained weights were validated in Phase 2C. Phase 2F confirmed batch-8 VRAM stability in all four smoke conditions.
 
 The goal is stability and reproducibility, not aggressive hyperparameter optimization.
 
@@ -1070,9 +1070,9 @@ Official Experiment A should not begin until smoke tests pass.
 
 The explicit A/B/C/D configurations, shared launcher, environment freeze, matrix-difference validation, and final C/D pairing verification are implemented. Their compact evidence is stored under `docs/evidence/phase2f/`.
 
-The real one-epoch Experiment A smoke training completed without OOM at batch 8, but all three validation losses were `nan` in two deterministic completed attempts. The finite-loss gate therefore failed. Experiments B, C, and D were not launched, fixed-sample inference was not reached, and no official 100-epoch run started.
+The initial Experiment A smoke attempt completed without OOM but produced `nan` validation losses. Per-batch tracing located FP16 overflow in `Detect.cv3.2.1.bn` before loss computation. The same checkpoint and batches stayed finite in CUDA and CPU FP32, so the shared protocol was amended to disable AMP for every experiment.
 
-Phase 2F and Phase 2 remain incomplete. The validation-loss failure must be resolved under a documented, methodologically approved protocol before the complete A/B/C/D smoke matrix is rerun. See `docs/PHASE_2F_SMOKE_TEST_REPORT.md`.
+Clean A/B/C/D one-epoch smoke runs then completed with finite losses, batch 8, expected checkpoints and plots, successful fixed-sample validation inference, verified transform chains, restored dataset fingerprints, and zero test images loaded. No official 100-epoch training was performed. Phase 2 is complete; see `docs/PHASE_2F_SMOKE_TEST_REPORT.md`.
 
 ---
 
