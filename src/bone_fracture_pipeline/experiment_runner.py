@@ -29,8 +29,15 @@ from bone_fracture_pipeline.augmentation_policy import (
 from bone_fracture_pipeline.prepare_dataset import (
     CANONICAL_EXPECTATIONS,
     CLASS_NAMES,
+    DatasetExpectations,
     SPLITS,
     fingerprint_dataset,
+)
+from bone_fracture_pipeline.single_class_dataset import (
+    SINGLE_CLASS_EXPECTATIONS,
+    SINGLE_CLASS_NAMES,
+    SingleClassDatasetError,
+    validate_single_class_dataset,
 )
 from bone_fracture_pipeline.training_protocol import (
     AUGMENTATION_OFF_SETTINGS,
@@ -46,6 +53,7 @@ from bone_fracture_pipeline.training_protocol import (
 
 TOOL_VERSION = "1.0.0"
 EXPERIMENTS = ("A", "B", "C", "D")
+SUPPORTED_EXPERIMENTS = (*EXPERIMENTS, "E")
 EXPECTED_WEIGHTS_SHA256 = "1f47a78bf100391c2a140b7ac73a1caae18c32779be7d310658112f7ac9aa78a"
 EXPERIMENT_CONFIG_DIRECTORY = Path("configs/experiments")
 BASELINE_CONFIG_PATH = Path("configs/training/baseline.yaml")
@@ -76,16 +84,15 @@ def config_digest(config: Mapping[str, object]) -> str:
 # Resolves every condition from the same baseline so unrelated settings cannot diverge.
 def resolve_experiment_config(project_root: Path, experiment: str) -> dict[str, object]:
     experiment = experiment.upper()
-    if experiment not in EXPERIMENTS:
+    if experiment not in SUPPORTED_EXPERIMENTS:
         raise ExperimentValidationError(f"Unknown experiment: {experiment}")
 
     experiment_path = project_root / EXPERIMENT_CONFIG_DIRECTORY / f"{experiment}.yaml"
     definition = load_yaml_mapping(experiment_path, f"Experiment {experiment} configuration")
-    _require_exact_keys(
-        definition,
-        {"experiment_version", "experiment", "inherits", "image_condition", "augmentation_condition"},
-        f"Experiment {experiment}",
-    )
+    definition_keys = {"experiment_version", "experiment", "inherits", "image_condition", "augmentation_condition"}
+    if experiment == "E":
+        definition_keys |= {"follow_up_to", "target_formulation"}
+    _require_exact_keys(definition, definition_keys, f"Experiment {experiment}")
     if definition.get("experiment_version") != 1 or definition.get("experiment") != experiment:
         raise ExperimentValidationError(f"Experiment {experiment} identity or version is invalid.")
     if definition.get("inherits") != BASELINE_CONFIG_PATH.as_posix():
@@ -118,7 +125,7 @@ def resolve_experiment_config(project_root: Path, experiment: str) -> dict[str, 
         {"name", "policy"},
         f"Experiment {experiment} augmentation_condition",
     )
-    augmentation_on = experiment in {"C", "D"}
+    augmentation_on = experiment in {"C", "D", "E"}
     expected_name = "conservative" if augmentation_on else "off"
     if augmentation_condition.get("name") != expected_name:
         raise ExperimentValidationError(f"Experiment {experiment} has the wrong augmentation condition.")
@@ -132,7 +139,47 @@ def resolve_experiment_config(project_root: Path, experiment: str) -> dict[str, 
     elif policy is not None:
         raise ExperimentValidationError(f"Experiment {experiment} must not load an augmentation policy.")
 
-    return {
+    target_formulation = None
+    if experiment == "E":
+        if definition.get("follow_up_to") != "D":
+            raise ExperimentValidationError("Experiment E must follow the frozen Experiment D.")
+        target_formulation = _mapping(definition, "target_formulation")
+        _require_exact_keys(
+            target_formulation,
+            {"name", "class_names", "source_root", "source_fingerprint", "class_mapping"},
+            "Experiment E target_formulation",
+        )
+        d = resolve_experiment_config(project_root, "D")
+        d_dataset = _mapping(_mapping(d, "resolved"), "dataset")
+        if (
+            target_formulation.get("name") != "single_class_fracture"
+            or target_formulation.get("class_names") != list(SINGLE_CLASS_NAMES)
+            or target_formulation.get("class_mapping") != {str(index): 0 for index in range(len(CLASS_NAMES))}
+            or target_formulation.get("source_root") != d_dataset["root"]
+            or target_formulation.get("source_fingerprint") != d_dataset["expected_fingerprint"]
+        ):
+            raise ExperimentValidationError("Experiment E's six-to-one lineage differs from Experiment D.")
+        if image_condition["root"] != "data/prepared/v3_detection_clahe_single_class":
+            raise ExperimentValidationError("Experiment E must use its separate single-class CLAHE dataset.")
+        if image_condition["data_yaml"] != f"{image_condition['root']}/data.yaml":
+            raise ExperimentValidationError("Experiment E data.yaml must belong to its derived dataset.")
+        dataset["expected_classes"] = list(SINGLE_CLASS_NAMES)
+        allowed = {
+            "dataset.root", "dataset.data_yaml", "dataset.expected_fingerprint", "dataset.expected_classes"
+        }
+        comparison = {
+            "dataset": dataset,
+            "model": resolved["model"],
+            "training": resolved["training"],
+            "augmentation": resolved["augmentation"],
+            "evaluation": resolved["evaluation"],
+            "seed_policy": resolved["seed_policy"],
+            "framework": resolved["framework"],
+        }
+        if _different_paths(_scientific_config(d), comparison) != allowed:
+            raise ExperimentValidationError("Experiment E differs from D outside the target dataset taxonomy.")
+
+    resolution = {
         "experiment": experiment,
         "definition_path": experiment_path.relative_to(project_root).as_posix(),
         "definition": definition,
@@ -150,6 +197,9 @@ def resolve_experiment_config(project_root: Path, experiment: str) -> dict[str, 
         "resolved": resolved,
         "resolved_digest": config_digest(resolved),
     }
+    if experiment == "E":
+        resolution["target_formulation"] = target_formulation
+    return resolution
 
 
 def _scientific_config(resolution: Mapping[str, object]) -> dict[str, object]:
@@ -236,17 +286,22 @@ def validate_experiment_matrix(project_root: Path) -> tuple[dict[str, dict[str, 
     return resolutions, result
 
 
-def inspect_detection_dataset(project_root: Path, config: Mapping[str, object]) -> dict[str, object]:
+def inspect_detection_dataset(
+    project_root: Path,
+    config: Mapping[str, object],
+    *,
+    expectations: DatasetExpectations = CANONICAL_EXPECTATIONS,
+) -> dict[str, object]:
     dataset = _mapping(config, "dataset")
     root = _resolve(project_root, dataset.get("root"), "dataset.root")
-    if _read_dataset_config(root / "data.yaml") != CLASS_NAMES:
-        raise ExperimentValidationError("Dataset class mapping differs from the approved six classes.")
+    if _read_dataset_config(root / "data.yaml") != expectations.class_names:
+        raise ExperimentValidationError("Dataset class mapping differs from the approved experiment classes.")
 
     split_results: dict[str, object] = {}
     total_annotations = 0
     total_empty = 0
     total_class_counts: Counter[int] = Counter()
-    valid_ids = set(range(len(CLASS_NAMES)))
+    valid_ids = set(range(len(expectations.class_names)))
     for split in SPLITS:
         image_paths = sorted(path for path in (root / split / "images").iterdir() if path.is_file())
         label_paths = sorted((root / split / "labels").glob("*.txt"))
@@ -266,8 +321,8 @@ def inspect_detection_dataset(project_root: Path, config: Mapping[str, object]) 
             empty_count += int(parsed.is_empty)
             class_counts.update(item.class_id for item in parsed.annotations)
 
-        expected = CANONICAL_EXPECTATIONS.splits[split]
-        actual_counts = tuple(class_counts[index] for index in range(len(CLASS_NAMES)))
+        expected = expectations.splits[split]
+        actual_counts = tuple(class_counts[index] for index in range(len(expectations.class_names)))
         if (len(image_paths), annotation_count, empty_count, actual_counts) != (
             expected.images,
             expected.annotations,
@@ -280,7 +335,10 @@ def inspect_detection_dataset(project_root: Path, config: Mapping[str, object]) 
             "labels": len(label_paths),
             "annotations": annotation_count,
             "empty_labels": empty_count,
-            "class_counts": {CLASS_NAMES[index]: actual_counts[index] for index in range(len(CLASS_NAMES))},
+            "class_counts": {
+                expectations.class_names[index]: actual_counts[index]
+                for index in range(len(expectations.class_names))
+            },
         }
         total_annotations += annotation_count
         total_empty += empty_count
@@ -294,13 +352,14 @@ def inspect_detection_dataset(project_root: Path, config: Mapping[str, object]) 
         "root": root.relative_to(project_root).as_posix(),
         "fingerprint": fingerprint.digest,
         "file_count": fingerprint.file_count,
-        "images": CANONICAL_EXPECTATIONS.images,
-        "labels": CANONICAL_EXPECTATIONS.images,
+        "images": expectations.images,
+        "labels": expectations.images,
         "annotations": total_annotations,
         "empty_labels": total_empty,
-        "class_names": list(CLASS_NAMES),
+        "class_names": list(expectations.class_names),
         "class_counts": {
-            CLASS_NAMES[index]: total_class_counts[index] for index in range(len(CLASS_NAMES))
+            expectations.class_names[index]: total_class_counts[index]
+            for index in range(len(expectations.class_names))
         },
         "splits": split_results,
     }
@@ -365,10 +424,14 @@ def run_preflight(
     matrix_result: Mapping[str, object],
 ) -> tuple[dict[str, object], dict[str, object]]:
     config = _mapping(resolution, "resolved")
+    is_follow_up = resolution["experiment"] == "E"
+    expectations = SINGLE_CLASS_EXPECTATIONS if is_follow_up else CANONICAL_EXPECTATIONS
     baseline = load_protocol_config(project_root / BASELINE_CONFIG_PATH)
     try:
         protocol_result = validate_protocol_config(baseline)
-        dataset_contract = validate_prepared_dataset(project_root, config)
+        dataset_contract = validate_prepared_dataset(
+            project_root, config, approved_classes=expectations.class_names
+        )
         framework_result = verify_ultralytics_semantics(baseline)
     except ProtocolValidationError as error:
         raise ExperimentValidationError(str(error)) from error
@@ -376,7 +439,19 @@ def run_preflight(
     weights_path = project_root / str(_mapping(config, "model")["weights"])
     if not weights_path.is_file() or sha256_file(weights_path) != EXPECTED_WEIGHTS_SHA256:
         raise ExperimentValidationError("Pretrained yolov8s.pt is missing or has the wrong SHA-256 hash.")
-    dataset_detail = inspect_detection_dataset(project_root, config)
+    dataset_detail = inspect_detection_dataset(project_root, config, expectations=expectations)
+    lineage = None
+    if is_follow_up:
+        target = _mapping(resolution, "target_formulation")
+        try:
+            lineage = validate_single_class_dataset(
+                _resolve(project_root, target["source_root"], "Experiment E source"),
+                _resolve(project_root, _mapping(config, "dataset")["root"], "Experiment E dataset"),
+                expected_source_fingerprint=str(target["source_fingerprint"]),
+                expected_derived_fingerprint=str(_mapping(config, "dataset")["expected_fingerprint"]),
+            )
+        except SingleClassDatasetError as error:
+            raise ExperimentValidationError(str(error)) from error
     environment = collect_and_compare_environment(project_root, config, weights_path)
 
     augmentation_on = resolution["augmentation_condition"] == "conservative"
@@ -425,6 +500,10 @@ def run_preflight(
         "test_set_isolated": True,
         "test_split_used": False,
     }
+    if is_follow_up:
+        result["follow_up_to"] = "D"
+        result["target_formulation"] = resolution["target_formulation"]
+        result["source_dataset_lineage"] = lineage
     return result, environment
 
 
@@ -734,6 +813,8 @@ def run_validation_inference(
 
     checkpoint = run_directory / "weights" / "best.pt"
     model = YOLO(str(checkpoint))
+    if resolution["experiment"] == "E" and model.names != {0: "fracture"}:
+        raise ExperimentValidationError("Experiment E checkpoint does not contain only class 0: fracture.")
     predictions = model.predict(
         source=sources,
         imgsz=int(_mapping(config, "training")["imgsz"]),
@@ -751,6 +832,8 @@ def run_validation_inference(
     result_rows: list[dict[str, object]] = []
     for sample_id, prediction in zip(sample_ids, predictions):
         boxes = prediction.boxes
+        if resolution["experiment"] == "E" and any(int(value) != 0 for value in boxes.cls.tolist()):
+            raise ExperimentValidationError("Experiment E predicted a non-fracture class ID.")
         tensors = [boxes.xyxy, boxes.conf, boxes.cls]
         if any(not tensor.isfinite().all().item() for tensor in tensors):
             raise ExperimentValidationError(f"Inference produced non-finite values for {sample_id}.")
@@ -782,6 +865,8 @@ def run_validation_inference(
         "finite_predictions": True,
         "results": result_rows,
     }
+    if resolution["experiment"] == "E":
+        output["class_names"] = ["fracture"]
     _write_json(run_directory / "inference_smoke.json", output)
     return output
 
@@ -789,8 +874,12 @@ def run_validation_inference(
 def run_experiment(project_root: Path, experiment: str, *, smoke: bool) -> dict[str, object]:
     project_root = project_root.resolve()
     _configure_ultralytics(project_root)
+    # Validate the frozen four-run matrix separately from the follow-up E definition.
     resolutions, matrix_result = validate_experiment_matrix(project_root)
-    resolution = resolutions[experiment.upper()]
+    resolution = (
+        resolve_experiment_config(project_root, "E")
+        if experiment.upper() == "E" else resolutions[experiment.upper()]
+    )
     arguments, run_directory, run_kind = build_training_arguments(project_root, resolution, smoke=smoke)
     preflight, environment = run_preflight(project_root, resolution, matrix_result)
 
@@ -839,6 +928,10 @@ def run_experiment(project_root: Path, experiment: str, *, smoke: bool) -> dict[
         "test_set_used": False,
         "output_directory": run_directory.relative_to(project_root).as_posix(),
     }
+    if experiment.upper() == "E":
+        manifest["experiment_role"] = "follow_up_to_D"
+        manifest["target_formulation"] = resolution["target_formulation"]
+        manifest["source_dataset_lineage"] = preflight["source_dataset_lineage"]
     _write_json(manifest_path, manifest)
 
     started = time.perf_counter()
@@ -1131,7 +1224,7 @@ def _write_json(path: Path, data: Mapping[str, object]) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Freeze, validate, and launch Phase 2F experiments.")
     parser.add_argument("--project-root", type=Path, default=Path.cwd())
-    parser.add_argument("--experiment", choices=EXPERIMENTS)
+    parser.add_argument("--experiment", choices=SUPPORTED_EXPERIMENTS)
     parser.add_argument("--smoke", action="store_true", help="Override only the epoch count to one.")
     parser.add_argument("--validate-freeze", action="store_true", help="Write matrix, environment, and C/D evidence.")
     parser.add_argument("--summarize-smoke", action="store_true", help="Summarize four completed smoke runs.")
@@ -1165,7 +1258,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 f"{manifest['output_directory']}"
             )
     except (ExperimentValidationError, ProtocolValidationError) as error:
-        print(f"Phase 2F validation failed: {error}")
+        prefix = "Experiment" if arguments.experiment == "E" else "Phase 2F"
+        print(f"{prefix} validation failed: {error}")
         return 1
     return 0
 

@@ -4,6 +4,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 
 import yaml
 
@@ -14,6 +15,7 @@ from bone_fracture_pipeline.experiment_runner import (
     summarize_smoke_runs,
     validate_experiment_matrix,
     verify_applied_trainer_config,
+    verify_trainer_data_routing,
     write_runtime_dataset_yaml,
 )
 from bone_fracture_pipeline.training_protocol import AUGMENTATION_OFF_SETTINGS
@@ -23,6 +25,65 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 class ExperimentRunnerTests(unittest.TestCase):
+    def test_e_is_a_separate_follow_up_with_d_training_conditions(self) -> None:
+        d = resolve_experiment_config(PROJECT_ROOT, "D")
+        e = resolve_experiment_config(PROJECT_ROOT, "E")
+        matrix, _ = validate_experiment_matrix(PROJECT_ROOT)
+        self.assertEqual(set(matrix), {"A", "B", "C", "D"})
+        for section in ("model", "training", "augmentation", "evaluation", "seed_policy", "framework"):
+            self.assertEqual(e["resolved"][section], d["resolved"][section])
+        self.assertEqual(e["resolved"]["dataset"]["expected_classes"], ["fracture"])
+        self.assertEqual(e["target_formulation"]["class_mapping"], {str(index): 0 for index in range(6)})
+        self.assertEqual(e["target_formulation"]["source_fingerprint"], d["resolved"]["dataset"]["expected_fingerprint"])
+        self.assertEqual(e["image_condition"], "clahe")
+        self.assertEqual(e["augmentation_condition"], "conservative")
+
+    def test_e_commands_route_only_train_and_validation_to_single_class_data(self) -> None:
+        e = resolve_experiment_config(PROJECT_ROOT, "E")
+        smoke, smoke_dir, _ = build_training_arguments(
+            PROJECT_ROOT, e, smoke=True, require_new_output=False
+        )
+        official, official_dir, _ = build_training_arguments(
+            PROJECT_ROOT, e, smoke=False, require_new_output=False
+        )
+        self.assertEqual(smoke["epochs"], 1)
+        self.assertEqual(official["epochs"], 100)
+        self.assertEqual(smoke["batch"], 8)
+        self.assertFalse(smoke["amp"])
+        self.assertEqual(smoke["degrees"], 10.0)
+        self.assertEqual(smoke["translate"], 0.05)
+        self.assertEqual(smoke_dir.name, "E_seed42")
+        self.assertEqual(official_dir.name, "E_seed42")
+        self.assertIn("/smoke/", smoke_dir.as_posix())
+        self.assertIn("/official/", official_dir.as_posix())
+        self.assertEqual(e["resolved"]["dataset"]["split_policy"]["validation"], "valid")
+        self.assertEqual(e["resolved"]["dataset"]["split_policy"]["test_usage"], "final_evaluation_only")
+        with tempfile.TemporaryDirectory() as directory:
+            runtime = write_runtime_dataset_yaml(PROJECT_ROOT, e, Path(directory))
+            data = yaml.safe_load((Path(directory) / "dataset.yaml").read_text(encoding="utf-8"))
+        self.assertEqual(data["path"], str((PROJECT_ROOT / "data/prepared/v3_detection_clahe_single_class").resolve()))
+        self.assertEqual(data["names"], {0: "fracture"})
+        self.assertEqual(data["train"], "train/images")
+        self.assertEqual(data["val"], "valid/images")
+        self.assertEqual(runtime["source"], "data/prepared/v3_detection_clahe_single_class/data.yaml")
+
+    def test_e_trainer_routing_rejects_a_test_image(self) -> None:
+        e = resolve_experiment_config(PROJECT_ROOT, "E")
+        root = PROJECT_ROOT / e["resolved"]["dataset"]["root"]
+        train_files = [str(root / "train/images" / f"train-{index}.png") for index in range(1211)]
+        valid_files = [str(root / "valid/images" / f"valid-{index}.png") for index in range(348)]
+        trainer = SimpleNamespace(
+            train_loader=SimpleNamespace(dataset=SimpleNamespace(im_files=train_files)),
+            validator=SimpleNamespace(dataloader=SimpleNamespace(dataset=SimpleNamespace(im_files=valid_files))),
+        )
+        result = verify_trainer_data_routing(trainer, PROJECT_ROOT, e["resolved"])
+        self.assertEqual(result["training_images_loaded"], 1211)
+        self.assertEqual(result["validation_images_loaded"], 348)
+        self.assertEqual(result["test_images_loaded"], 0)
+        trainer.train_loader.dataset.im_files[0] = str(root / "test/images/heldout.png")
+        with self.assertRaisesRegex(Exception, "non-training image"):
+            verify_trainer_data_routing(trainer, PROJECT_ROOT, e["resolved"])
+
     def test_matrix_contains_only_the_two_planned_factors(self) -> None:
         resolutions, result = validate_experiment_matrix(PROJECT_ROOT)
 

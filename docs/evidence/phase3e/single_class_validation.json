@@ -1,0 +1,24 @@
+{
+  "experiment": "E",
+  "status": "validated",
+  "source_dataset": "data/prepared/v3_detection_clahe",
+  "source_fingerprint": "ca8286b35d3d31f0b8074aa387a44ca6392178926c23bde61ea6d99be70aba5f",
+  "derived_dataset": "data/prepared/v3_detection_clahe_single_class",
+  "derived_fingerprint": "f3ad8c1ecb87ab63ecc609d6b2cf853bfadd66fa6ddd698bb681e6d4c8f20908",
+  "fingerprint_file_count": 3457,
+  "class_names": ["fracture"],
+  "class_mapping": {"0": 0, "1": 0, "2": 0, "3": 0, "4": 0, "5": 0},
+  "images": 1728,
+  "labels": 1728,
+  "annotations": 998,
+  "empty_labels": 868,
+  "image_hash_matches": 1728,
+  "token_exact_label_matches": 1728,
+  "splits": {
+    "train": {"images": 1211, "labels": 1211, "annotations": 698, "empty_labels": 607},
+    "valid": {"images": 348, "labels": 348, "annotations": 204, "empty_labels": 175},
+    "test": {"images": 169, "labels": 169, "annotations": 96, "empty_labels": 86}
+  },
+  "test_handling": "file integrity and split membership checks only; no test training, inference, metrics, or visual review",
+  "full_local_evidence": "outputs/phase3e/single_class/preparation_validation.json"
+}

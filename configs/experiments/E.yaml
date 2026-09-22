@@ -1,0 +1,28 @@
+experiment_version: 1
+experiment: E
+inherits: configs/training/baseline.yaml
+follow_up_to: D
+
+image_condition:
+  name: clahe
+  root: data/prepared/v3_detection_clahe_single_class
+  data_yaml: data/prepared/v3_detection_clahe_single_class/data.yaml
+  expected_fingerprint: f3ad8c1ecb87ab63ecc609d6b2cf853bfadd66fa6ddd698bb681e6d4c8f20908
+
+augmentation_condition:
+  name: conservative
+  policy: configs/training/augmentation_conservative.yaml
+
+target_formulation:
+  name: single_class_fracture
+  class_names:
+    - fracture
+  source_root: data/prepared/v3_detection_clahe
+  source_fingerprint: ca8286b35d3d31f0b8074aa387a44ca6392178926c23bde61ea6d99be70aba5f
+  class_mapping:
+    '0': 0
+    '1': 0
+    '2': 0
+    '3': 0
+    '4': 0
+    '5': 0

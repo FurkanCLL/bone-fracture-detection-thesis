@@ -145,8 +145,15 @@ def validate_protocol_config(config: Mapping[str, object]) -> dict[str, object]:
     }
 
 
-def validate_prepared_dataset(project_root: Path, config: Mapping[str, object]) -> dict[str, object]:
+def validate_prepared_dataset(
+    project_root: Path,
+    config: Mapping[str, object],
+    *,
+    approved_classes: tuple[str, ...] = CLASS_NAMES,
+) -> dict[str, object]:
     dataset = _mapping(config, "dataset")
+    if tuple(dataset.get("expected_classes") or ()) != approved_classes:
+        raise ProtocolValidationError("Prepared dataset expected classes differ from this experiment's approval.")
     dataset_root = _resolve_project_path(project_root, dataset.get("root"), "dataset.root")
     data_yaml = _resolve_project_path(project_root, dataset.get("data_yaml"), "dataset.data_yaml")
     if not dataset_root.is_dir():
@@ -167,8 +174,10 @@ def validate_prepared_dataset(project_root: Path, config: Mapping[str, object]) 
         class_names = tuple(names)
     else:
         raise ProtocolValidationError("Prepared data.yaml must define class names.")
-    if class_names != CLASS_NAMES:
-        raise ProtocolValidationError("Prepared data.yaml does not contain the six approved classes.")
+    if class_names != approved_classes:
+        if approved_classes == CLASS_NAMES:
+            raise ProtocolValidationError("Prepared data.yaml does not contain the six approved classes.")
+        raise ProtocolValidationError("Prepared data.yaml does not contain the approved experiment classes.")
 
     expected_paths = {"train": "train/images", "val": "valid/images", "test": "test/images"}
     for key, expected in expected_paths.items():
