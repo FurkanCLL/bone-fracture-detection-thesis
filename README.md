@@ -1,142 +1,60 @@
-# Bone Fracture Detection Thesis
+# Deep Learning-Based Object Detection Pipeline for Bone Fracture Identification and Estimation in X-Ray Images
 
-Implementation workspace for an RTU bachelor thesis on object detection for suspected bone-fracture regions in X-ray images.
+This repository supports a Riga Technical University bachelor thesis on localizing source-annotated suspected fracture regions in X-ray images. It brings together dataset checks, traceable image preparation, controlled YOLOv8 experiments, and validation analysis. “Estimation” refers to estimating a region's location, not fracture severity or prognosis.
 
-## Dataset audit
+## Research purpose and data
 
-The Phase 1 audit discovers YOLOv8 exports below `data/raw/`, validates their labels, calculates image and bounding-box statistics, checks exact and cautious perceptual duplicates, and creates review images without changing the source dataset.
+The study asks how image preprocessing and conservative training augmentation affect fracture-region detection under a shared protocol. Its starting point is version 3 of the *Bone Fracture Detection: Computer Vision Project* dataset. The local v3 export has 1,728 images across fixed train (1,211), validation (348), and held-out test (169) splits, with six original source classes. The source labels are polygons; the detection pipeline converts each to a minimum enclosing axis-aligned box. An empty label means that no region was annotated in that file, not that the image was clinically verified as fracture-free.
 
-```powershell
-python -m bone_fracture_audit.cli --raw-root data/raw --output outputs/data_quality/dataset_audit --report docs/DATASET_AUDIT_REPORT.md --thesis-context docs/THESIS.md
-```
+Raw data under `data/raw/` remains unchanged. Derived datasets under `data/prepared/` retain the source split membership and traceable conversions. The held-out test split has not been used for model selection or the official validation results below.
 
-Create or activate the project virtual environment, install the dependencies, and install the project in editable mode:
+## Pipeline and experimental design
 
-```powershell
-# Reproduce the Phase 2C NVIDIA/CUDA environment before installing the remaining dependencies.
-python -m pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu126
-python -m pip install -r requirements.txt
-python -m pip install -e .
-```
+The workflow audits the source exports, prepares and independently validates the v3 detection boxes, builds two controlled image conditions, and fine-tunes a COCO-pretrained YOLOv8s detector. Training uses 640-pixel input, a 100-epoch budget, seed 42, and a shared configuration. The best checkpoint is selected by validation mAP50–95.
 
-The first command selects the CUDA 12.6 PyTorch wheels used by the recorded training environment. A non-training CPU environment may use the platform-appropriate PyTorch build instead. The editable install makes the `src/` packages and command-line entry points available without setting `PYTHONPATH` manually. In PyCharm, select this environment as the project interpreter. Marking `src` as a Sources Root is optional if the IDE still needs an additional navigation hint; do not commit `.idea` metadata. Generated audit artifacts belong under `outputs/` and are intentionally excluded from Git.
+The PNG control preserves decoded image pixels. The CLAHE condition converts images to grayscale, applies OpenCV CLAHE (`clipLimit=2.0`, `tileGridSize=8×8`), and saves three identical channels as PNG. The conservative policy for C, D, and E applies only during training: limited rotation, translation, scale, and intensity variation. It excludes flips and composite-image augmentation.
 
-## Dataset follow-up tools
+| Experiment | Image condition | Conservative augmentation | Target classes |
+| --- | --- | --- | --- |
+| A | PNG control | No | Six original classes |
+| B | CLAHE | No | Six original classes |
+| C | PNG control | Yes | Six original classes |
+| D | CLAHE | Yes | Six original classes |
+| E | CLAHE | Yes | One merged `fracture` class |
 
-Prepare the fixed 16-train/4-validation empty-label sample for radiologist review:
+A–D form the controlled 2×2 comparison. E is a separate follow-up that asks whether merging the six source classes changes class-agnostic localization; it changes the prediction task and its mAP is not strictly comparable with the six-class runs.
 
-```powershell
-python -m bone_fracture_audit.review
-```
+## Current results
 
-Analyze source-name and Phase 1 similarity candidates using feature matching and robust affine alignment:
+All five official seed-42 runs completed 100 epochs. These are **validation** values from the best epoch selected by mAP50–95, as recorded in each local `outputs/training/official/<experiment>_seed42/results.csv`.
 
-```powershell
-python -m bone_fracture_audit.provenance
-```
+| Experiment | Best epoch | Validation mAP50 | Validation mAP50–95 |
+| --- | ---: | ---: | ---: |
+| A | 19 | 0.06633 | 0.02414 |
+| B | 18 | 0.06414 | 0.02566 |
+| C | 40 | 0.12065 | 0.04163 |
+| D | 57 | 0.14861 | 0.04732 |
+| E | 27 | 0.14895 | 0.05115 |
 
-Compare the independently audited v3 and v4 exports, including held-out files and v3-to-v4 training derivatives:
+Conservative augmentation improved validation performance in both image conditions. CLAHE alone brought only a small improvement over A. D was the strongest six-class condition. E's one-class result is only modestly higher than D's aggregate value, with the task-definition caveat above. Baseline training and validation curves show substantial overfitting; none of these scores establishes reliable clinical performance. The runs use one seed each, and no final held-out model evaluation is reported here.
 
-```powershell
-python -m bone_fracture_audit.comparison
-```
+A separate [dataset difficulty characterization](docs/DATASET_DIFFICULTY_CHARACTERIZATION.md) measures train and validation composition, image dimensions, and box scale. It found 698 training boxes across 604 positive images, roughly half of images with empty labels in each split, and a median effective box shorter side near 64 pixels at the 640-pixel training size. The typical enclosing box is therefore not extremely small, and the measured train/validation geometry is broadly similar. These properties may contribute to a difficult learning regime but do not identify a single cause of low validation performance.
 
-These commands accept explicit read-only dataset/audit roots and write generated evidence below `outputs/`. See `docs/DATASET_FOLLOWUP_REPORT.md` and `docs/DATASET_V3_V4_COMPARISON_REPORT.md` for the source-backed findings and remaining questions before Phase 2.
+## Repository guide and reproducibility
 
-## Phase 2A dataset preparation
+| Path | Purpose |
+| --- | --- |
+| `configs/training/`, `configs/experiments/` | Shared protocol, augmentation policy, and experiment definitions |
+| `src/bone_fracture_audit/` | Dataset audit and provenance checks |
+| `src/bone_fracture_pipeline/` | Preparation, validation, experiment runner, and analysis code |
+| `tests/` | Focused automated checks |
+| `docs/` | Method reports, dataset findings, and compact evidence |
+| `data/`, `outputs/` | Local datasets, detailed generated evidence, figures, run logs, and checkpoints; excluded from Git |
 
-Version 3 is the canonical Phase 2 source dataset. Prepare its polygon labels as standard YOLO detection boxes with:
+The project declares dependencies in `requirements.txt` and `pyproject.toml`. The protocol in [`configs/training/baseline.yaml`](configs/training/baseline.yaml) fixes model, optimizer, image size, seed, split use, checkpoint rule, and numerical settings; each experiment configuration selects its image and augmentation condition. Local official run manifests preserve the resolved settings, environment, data-routing checks, and output verification. The full test suite can be run with `python -m unittest discover -s tests -q` in the configured environment.
 
-```powershell
-python -m bone_fracture_pipeline.prepare_dataset
-```
+For methods and evidence, start with the [v3–v4 comparison](docs/DATASET_V3_V4_COMPARISON_REPORT.md), [conversion validation](docs/PHASE_2B_VALIDATION_REPORT.md), [training protocol](docs/PHASE_2C_BASELINE_PROTOCOL.md), [preprocessing report](docs/PHASE_2D_PREPROCESSING_REPORT.md), [augmentation policy](docs/PHASE_2E_AUGMENTATION_POLICY.md), and [dataset difficulty report](docs/DATASET_DIFFICULTY_CHARACTERIZATION.md). Phase reports describe the state at the time they were written; current run status is in the local official manifests, while best-epoch metrics must be read from `results.csv`.
 
-The command copies every image byte-for-byte, preserves the original train/validation/test membership and six-class mapping, converts each polygon to its minimum enclosing axis-aligned box, and keeps empty labels as zero-byte files. It builds atomically and refuses to replace an existing prepared dataset unless `--overwrite` is supplied. Use `--source`, `--output`, and `--artifacts` to override the defaults.
+## Status and limitations
 
-The prepared dataset is written to `data/prepared/v3_detection`. Traceability outputs are written to `outputs/phase2/phase2a/v3_detection`, including per-file hashes, one-to-one annotation conversions, the source fingerprint, and the preparation summary. Both locations are intentionally ignored by Git. The raw v3 export is read-only and remains unchanged.
-
-Phase 2A provides the deterministic format conversion. Phase 2B independently validates its geometry, visual overlays, and reproducibility as described below.
-
-## Phase 2B conversion validation
-
-Run the independent conversion and reproducibility checks with:
-
-```powershell
-python -m bone_fracture_pipeline.validate_conversion
-```
-
-The command re-checks every polygon and prepared box, calculates occupancy statistics, generates ranked review candidates and train/validation-only overlays, and rebuilds Phase 2A in temporary locations for hash comparison. It writes generated evidence to `outputs/phase2/phase2b/v3_detection` and does not modify either dataset. Existing Phase 2B output is protected unless `--overwrite` is supplied.
-
-See `docs/PHASE_2B_VALIDATION_REPORT.md` for the validated results and remaining limitations. Phase 2B technically passed; preprocessing, augmentation, and training remain out of scope until their later planned phases.
-
-## Phase 2C baseline protocol
-
-Validate the frozen training protocol, prepared-dataset fingerprint, installed framework semantics, pretrained YOLOv8s weights, and local environment with:
-
-```powershell
-python -m bone_fracture_pipeline.training_protocol
-```
-
-This command performs no training. It writes full local evidence to `outputs/phase2/phase2c` and compact tracked evidence to `docs/evidence/phase2c`. The baseline itself is defined in `configs/training/baseline.yaml`; later controlled experiments must derive their common training values from it. See `docs/PHASE_2C_BASELINE_PROTOCOL.md` for the frozen settings, checkpoint rule, test-isolation policy, and remaining Phase 2F checks.
-
-## Phase 2D custom preprocessing
-
-Build and validate the fixed CLAHE image condition with:
-
-```powershell
-python -m bone_fracture_pipeline.preprocess_dataset
-```
-
-The command reads `data/prepared/v3_detection` without modifying it and creates `data/prepared/v3_detection_clahe`. It converts stored pixels to 8-bit grayscale, applies OpenCV CLAHE with `clipLimit = 2.0` and `tileGridSize = (8, 8)`, replicates the result to three identical channels, and saves lossless PNG files. Splits, dimensions, class mapping, and label bytes are preserved.
-
-The builder validates every output, checks the source fingerprint before and after processing, produces train/validation-only visual QA, and confirms determinism with an independent temporary rebuild. Generated artifacts remain under `outputs/phase2/phase2d`; compact evidence is tracked under `docs/evidence/phase2d`. See `docs/PHASE_2D_PREPROCESSING_REPORT.md` for the validated results and limitations. The command performs no training.
-
-## Phase 2E PNG control and augmentation policy
-
-Create the pixel-preserving PNG control used by Experiments A and C:
-
-```powershell
-python -m bone_fracture_pipeline.png_control
-```
-
-The command decodes each approved JPEG and saves the exact decoded three-channel `uint8` matrix as lossless PNG. It verifies exact pixel-array equality, byte-identical labels, unchanged splits and counts, source immutability, overwrite safety, and an independent deterministic rebuild.
-
-Validate the conservative train-only augmentation policy with:
-
-```powershell
-python -m bone_fracture_pipeline.augmentation_policy
-```
-
-The policy uses rotation ±10°, translation ±5%, scale 0.90–1.10, and value/intensity variation approximately ±15%. It explicitly disables flips, composites, shear, perspective, channel swapping, and unrelated transforms. The validator checks installed Ultralytics semantics, control/CLAHE sample identity, C/D seed behavior, and train-only box previews without performing model training. See `docs/PHASE_2E_AUGMENTATION_POLICY.md` for the frozen policy and remaining Phase 2F boundary.
-
-## Phase 2F experiment freeze and smoke gate
-
-Validate the executable matrix, frozen environment, and final C/D pairing with:
-
-```powershell
-python -m bone_fracture_pipeline.experiment_runner --validate-freeze
-```
-
-Smoke runs use the same launcher as later official runs; `--smoke` changes only the epoch count to one:
-
-```powershell
-python -m bone_fracture_pipeline.experiment_runner --experiment A --smoke
-```
-
-The experiment freeze passed, but the real Experiment A smoke run reproducibly produced non-finite validation losses. The stability gate stopped B/C/D, no official training began, and Phase 3 remains paused. See `docs/PHASE_2F_SMOKE_TEST_REPORT.md` for the exact evidence and remaining blocker.
-
-## Phase 2F experiment freeze and smoke gate
-
-Validate the executable matrix, frozen environment, and final C/D pairing with:
-
-```powershell
-python -m bone_fracture_pipeline.experiment_runner --validate-freeze
-```
-
-Smoke runs use the same launcher as later official runs; `--smoke` changes only the epoch count to one:
-
-```powershell
-python -m bone_fracture_pipeline.experiment_runner --experiment A --smoke
-```
-
-The experiment freeze passed, but the real Experiment A smoke run reproducibly produced non-finite validation losses. The stability gate stopped B/C/D, no official training began, and Phase 3 remains paused. See `docs/PHASE_2F_SMOKE_TEST_REPORT.md` for the exact evidence and remaining blocker.
+Dataset preparation, protocol checks, A–E official training, and the train/validation difficulty analysis are complete. Further error analysis and the reserved final test evaluation remain separate work. Source-class semantics, empty-label meaning, annotation quality, and patient or study independence are not fully established. This detector is an experimental research prototype, **not a clinically validated diagnostic system**.
