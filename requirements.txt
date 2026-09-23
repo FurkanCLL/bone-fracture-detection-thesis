@@ -1,6 +1,7 @@
 numpy>=2.0,<3.0
 opencv-python>=4.10,<5.0
 Pillow>=11.0,<13.0
+matplotlib>=3.9,<4.0
 PyYAML>=6.0,<7.0
 torch==2.6.0
 torchvision==0.21.0

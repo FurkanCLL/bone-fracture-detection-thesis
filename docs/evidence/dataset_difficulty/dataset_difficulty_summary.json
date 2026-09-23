@@ -1,0 +1,326 @@
+{
+  "analyzed_splits": [
+    "train",
+    "valid"
+  ],
+  "class_statistics": [
+    {
+      "annotations": 113,
+      "class_id": 0,
+      "class_name": "elbow positive",
+      "median_effective_height_640": 73.86761474662501,
+      "median_effective_short_side_640": 66.686025161,
+      "median_effective_width_640": 70.98819816000001,
+      "median_normalized_area_pct": 1.9020973202029052,
+      "p25_effective_short_side_640": 53.34889648725,
+      "p25_normalized_area_pct": 1.162705933206696,
+      "p75_effective_short_side_640": 80.98653809049999,
+      "p75_normalized_area_pct": 2.6983112208839057,
+      "positive_images": 102,
+      "split": "train"
+    },
+    {
+      "annotations": 178,
+      "class_id": 1,
+      "class_name": "fingers positive",
+      "median_effective_height_640": 54.669001088,
+      "median_effective_short_side_640": 46.9752520103125,
+      "median_effective_width_640": 52.8800678474375,
+      "median_normalized_area_pct": 1.3851511239236391,
+      "p25_effective_short_side_640": 34.659221144625,
+      "p25_normalized_area_pct": 0.6268591104518414,
+      "p75_effective_short_side_640": 66.7954933546875,
+      "p75_normalized_area_pct": 2.7066373842932236,
+      "positive_images": 145,
+      "split": "train"
+    },
+    {
+      "annotations": 107,
+      "class_id": 2,
+      "class_name": "forearm fracture",
+      "median_effective_height_640": 74.39031744,
+      "median_effective_short_side_640": 60.60669758149999,
+      "median_effective_width_640": 67.988741949375,
+      "median_normalized_area_pct": 1.6972701465772406,
+      "p25_effective_short_side_640": 46.868350112,
+      "p25_normalized_area_pct": 1.131536794058296,
+      "p75_effective_short_side_640": 73.5530243955,
+      "p75_normalized_area_pct": 2.53231722337262,
+      "positive_images": 96,
+      "split": "train"
+    },
+    {
+      "annotations": 104,
+      "class_id": 3,
+      "class_name": "humerus fracture",
+      "median_effective_height_640": 141.99983129600002,
+      "median_effective_short_side_640": 112.48136220800001,
+      "median_effective_width_640": 115.93121581125001,
+      "median_normalized_area_pct": 5.175871761473044,
+      "p25_effective_short_side_640": 77.645675657625,
+      "p25_normalized_area_pct": 2.418971174280797,
+      "p75_effective_short_side_640": 142.13223997415628,
+      "p75_normalized_area_pct": 8.151565710273369,
+      "positive_images": 100,
+      "split": "train"
+    },
+    {
+      "annotations": 120,
+      "class_id": 4,
+      "class_name": "shoulder fracture",
+      "median_effective_height_640": 85.67658155174999,
+      "median_effective_short_side_640": 73.816069056,
+      "median_effective_width_640": 87.45043958400001,
+      "median_normalized_area_pct": 2.094238959523202,
+      "p25_effective_short_side_640": 59.177083939875004,
+      "p25_normalized_area_pct": 1.3572786225142606,
+      "p75_effective_short_side_640": 101.029284261375,
+      "p75_normalized_area_pct": 3.573551699844108,
+      "positive_images": 105,
+      "split": "train"
+    },
+    {
+      "annotations": 76,
+      "class_id": 5,
+      "class_name": "wrist positive",
+      "median_effective_height_640": 56.125077216,
+      "median_effective_short_side_640": 53.075691135999996,
+      "median_effective_width_640": 76.905142300875,
+      "median_normalized_area_pct": 1.57708247588391,
+      "p25_effective_short_side_640": 43.148573784750006,
+      "p25_normalized_area_pct": 1.0800938014402668,
+      "p75_effective_short_side_640": 65.335431248,
+      "p75_normalized_area_pct": 2.8408193010241525,
+      "positive_images": 56,
+      "split": "train"
+    },
+    {
+      "annotations": 29,
+      "class_id": 0,
+      "class_name": "elbow positive",
+      "median_effective_height_640": 70.020326464,
+      "median_effective_short_side_640": 64.072149248,
+      "median_effective_width_640": 70.609187733,
+      "median_normalized_area_pct": 1.7035526113370087,
+      "p25_effective_short_side_640": 52.381055042,
+      "p25_normalized_area_pct": 1.108297379891468,
+      "p75_effective_short_side_640": 85.60835766049999,
+      "p75_normalized_area_pct": 2.3263010082496924,
+      "positive_images": 28,
+      "split": "valid"
+    },
+    {
+      "annotations": 48,
+      "class_id": 1,
+      "class_name": "fingers positive",
+      "median_effective_height_640": 55.516127424000004,
+      "median_effective_short_side_640": 49.795938367999995,
+      "median_effective_width_640": 57.365484543125,
+      "median_normalized_area_pct": 2.0393818648157644,
+      "p25_effective_short_side_640": 41.582346915500004,
+      "p25_normalized_area_pct": 1.2065636976519727,
+      "p75_effective_short_side_640": 68.02307225971876,
+      "p75_normalized_area_pct": 3.0334091520379802,
+      "positive_images": 41,
+      "split": "valid"
+    },
+    {
+      "annotations": 43,
+      "class_id": 2,
+      "class_name": "forearm fracture",
+      "median_effective_height_640": 64.018675776,
+      "median_effective_short_side_640": 59.869434446999996,
+      "median_effective_width_640": 62.98957198925001,
+      "median_normalized_area_pct": 1.4991225694692785,
+      "p25_effective_short_side_640": 43.512580113750005,
+      "p25_normalized_area_pct": 0.8581986558091406,
+      "p75_effective_short_side_640": 68.60325096849999,
+      "p75_normalized_area_pct": 2.1835692759563976,
+      "positive_images": 37,
+      "split": "valid"
+    },
+    {
+      "annotations": 36,
+      "class_id": 3,
+      "class_name": "humerus fracture",
+      "median_effective_height_640": 161.133940576,
+      "median_effective_short_side_640": 110.91921832599999,
+      "median_effective_width_640": 113.41876516862499,
+      "median_normalized_area_pct": 5.548011959872291,
+      "p25_effective_short_side_640": 94.988964078375,
+      "p25_normalized_area_pct": 3.215283924119638,
+      "p75_effective_short_side_640": 141.70211972740623,
+      "p75_normalized_area_pct": 7.708343586594848,
+      "positive_images": 31,
+      "split": "valid"
+    },
+    {
+      "annotations": 20,
+      "class_id": 4,
+      "class_name": "shoulder fracture",
+      "median_effective_height_640": 93.37465061431251,
+      "median_effective_short_side_640": 81.48935597775,
+      "median_effective_width_640": 87.841322048,
+      "median_normalized_area_pct": 2.3692705990930536,
+      "p25_effective_short_side_640": 67.91745344,
+      "p25_normalized_area_pct": 1.6911495455553647,
+      "p75_effective_short_side_640": 96.34199096887501,
+      "p75_normalized_area_pct": 3.962931446628082,
+      "positive_images": 19,
+      "split": "valid"
+    },
+    {
+      "annotations": 28,
+      "class_id": 5,
+      "class_name": "wrist positive",
+      "median_effective_height_640": 45.040992224,
+      "median_effective_short_side_640": 45.040992224,
+      "median_effective_width_640": 55.218619038,
+      "median_normalized_area_pct": 1.1075409250560022,
+      "p25_effective_short_side_640": 32.802756230750006,
+      "p25_normalized_area_pct": 0.6155873955025872,
+      "p75_effective_short_side_640": 65.54409455999999,
+      "p75_normalized_area_pct": 2.271997950984866,
+      "positive_images": 17,
+      "split": "valid"
+    }
+  ],
+  "condition_geometry_checks": {
+    "clahe": {
+      "matched_image_identities": 1559,
+      "matching_image_dimensions": 1559,
+      "matching_label_hashes": 1559,
+      "root": "data/prepared/v3_detection_clahe"
+    },
+    "png_control": {
+      "matched_image_identities": 1559,
+      "matching_image_dimensions": 1559,
+      "matching_label_hashes": 1559,
+      "root": "data/prepared/v3_detection_png"
+    }
+  },
+  "figure_files": [
+    "image_dimensions.png",
+    "aspect_ratio_distribution.png",
+    "bbox_area_distribution.png",
+    "effective_bbox_size_640.png",
+    "class_bbox_scale_comparison.png",
+    "train_validation_comparison.png"
+  ],
+  "full_dataset_fingerprint_recomputed": false,
+  "historical_approved_full_dataset_fingerprint": "c5031d9937e2a1d917a2369f327b38a59a4b5e8bd40ae2da659451840c7d41b1",
+  "source_dataset": "data/prepared/v3_detection",
+  "source_unchanged": true,
+  "splits": {
+    "train": {
+      "annotations": 698,
+      "effective_short_side_below_px": {
+        "16": {
+          "count": 0,
+          "fraction": 0.0
+        },
+        "32": {
+          "count": 57,
+          "fraction": 0.08166189111747851
+        },
+        "64": {
+          "count": 352,
+          "fraction": 0.504297994269341
+        },
+        "8": {
+          "count": 0,
+          "fraction": 0.0
+        }
+      },
+      "empty_label_images": 607,
+      "empty_label_percentage": 50.12386457473163,
+      "images": 1211,
+      "median_aspect_ratio": 0.8203125,
+      "median_effective_short_side_640_px": 63.765790528,
+      "median_normalized_box_area_pct": 1.9645000315997565,
+      "normalized_area_below_fraction_of_image": {
+        "0.005": {
+          "count": 54,
+          "fraction": 0.07736389684813753
+        },
+        "0.01": {
+          "count": 148,
+          "fraction": 0.21203438395415472
+        },
+        "0.02": {
+          "count": 359,
+          "fraction": 0.5143266475644699
+        },
+        "0.05": {
+          "count": 594,
+          "fraction": 0.8510028653295129
+        },
+        "0.1": {
+          "count": 680,
+          "fraction": 0.9742120343839542
+        }
+      },
+      "positive_image_percentage": 49.87613542526837,
+      "positive_images": 604,
+      "unique_image_resolutions": 359
+    },
+    "valid": {
+      "annotations": 204,
+      "effective_short_side_below_px": {
+        "16": {
+          "count": 1,
+          "fraction": 0.004901960784313725
+        },
+        "32": {
+          "count": 18,
+          "fraction": 0.08823529411764706
+        },
+        "64": {
+          "count": 101,
+          "fraction": 0.4950980392156863
+        },
+        "8": {
+          "count": 0,
+          "fraction": 0.0
+        }
+      },
+      "empty_label_images": 175,
+      "empty_label_percentage": 50.28735632183908,
+      "images": 348,
+      "median_aspect_ratio": 0.8203125,
+      "median_effective_short_side_640_px": 64.045412512,
+      "median_normalized_box_area_pct": 1.9345372877694798,
+      "normalized_area_below_fraction_of_image": {
+        "0.005": {
+          "count": 18,
+          "fraction": 0.08823529411764706
+        },
+        "0.01": {
+          "count": 44,
+          "fraction": 0.21568627450980393
+        },
+        "0.02": {
+          "count": 104,
+          "fraction": 0.5098039215686274
+        },
+        "0.05": {
+          "count": 173,
+          "fraction": 0.8480392156862745
+        },
+        "0.1": {
+          "count": 200,
+          "fraction": 0.9803921568627451
+        }
+      },
+      "positive_image_percentage": 49.71264367816092,
+      "positive_images": 173,
+      "unique_image_resolutions": 157
+    }
+  },
+  "test_split_opened_or_analyzed": false,
+  "train_valid_fingerprint": {
+    "file_count": 3119,
+    "scope": "data.yaml plus train/valid images and labels",
+    "sha256": "6d630edad24c4a2ebad803ab88bf9298a767c1c3819dc30c35d35a2731979702"
+  }
+}
