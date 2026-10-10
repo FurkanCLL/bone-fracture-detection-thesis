@@ -57,4 +57,6 @@ For methods and evidence, start with the [v3–v4 comparison](docs/DATASET_V3_V4
 
 ## Status and limitations
 
-Dataset preparation, protocol checks, A–E official training, and the train/validation difficulty analysis are complete. Further error analysis and the reserved final test evaluation remain separate work. Source-class semantics, empty-label meaning, annotation quality, and patient or study independence are not fully established. This detector is an experimental research prototype, **not a clinically validated diagnostic system**.
+Dataset preparation, protocol checks, A–E official training, and the train/validation difficulty analysis are complete. [Error analysis Stage 1](docs/evidence/error_analysis/README.md) adds a reproducible validation-only prediction export and tested diagnostic matching utilities. Its official metric reproduction check fails the fixed mAP50 tolerance, so equivalent reproduction is not claimed. Quantitative error analysis and the reserved final test evaluation remain separate work.
+
+Source-class semantics, empty-label meaning, annotation quality, and patient or study independence are not fully established. This detector is an experimental research prototype, **not a clinically validated diagnostic system**.
