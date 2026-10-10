@@ -15,6 +15,7 @@ from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from torchvision.models.detection.transform import GeneralizedRCNNTransform
 
 from bone_fracture_audit.audit import sha256_file
+from .faster_rcnn_diagnostics import parameter_status, tensor_status, rng_state
 
 
 class NumericalTrainingError(FloatingPointError):
@@ -26,8 +27,10 @@ class NumericalTrainingError(FloatingPointError):
 # Keep non-finite values as explicit strings so failure evidence remains strict JSON.
 def check_losses(loss_dict, *, position, sample_id):
     values = {key: float(value.detach()) for key, value in loss_dict.items()}
-    if not all(math.isfinite(value) for value in values.values()):
+    total = float(sum(loss_dict.values()).detach())
+    if not math.isfinite(total) or not all(math.isfinite(value) for value in values.values()):
         raise NumericalTrainingError({"position_zero_based": position, "sample_id": sample_id,
+                                      "total_loss": total if math.isfinite(total) else str(total),
                                       "losses": {key: value if math.isfinite(value) else str(value)
                                                  for key, value in values.items()}})
 
@@ -165,7 +168,9 @@ def finite_step(model, optimizer):
     return float(norm)
 
 
-def train_epoch(model, dataset, optimizer, scheduler, *, epoch, config, device, progress_path):
+def train_epoch(model, dataset, optimizer, scheduler, *, epoch, config, device, progress_path, max_images=None):
+    if max_images is not None and not 1 <= max_images <= len(dataset):
+        raise ValueError("Diagnostic image limit is outside the training split.")
     model.train()
     dataset.epoch = epoch
     order = torch.randperm(len(dataset), generator=torch.Generator().manual_seed(config["seed"] + epoch)).tolist()
@@ -175,11 +180,16 @@ def train_epoch(model, dataset, optimizer, scheduler, *, epoch, config, device, 
     with progress_path.open("w", encoding="utf-8") as log:
         for start, window_size in accumulation_windows(len(dataset), config["accumulation"]):
             for position in range(start, start + window_size):
+                # A bounded diagnostic stops without stepping an unfinished 64-image window.
+                if max_images is not None and position >= max_images:
+                    return {"diagnostic_limit_reached": max_images, "images": len(losses),
+                            "optimizer_updates": updates, "seconds": time.perf_counter() - started}
                 image, target, image_metadata = dataset[order[position]]
                 image = image.to(device)
                 target = {k: v.to(device) for k, v in target.items()}
                 if torch.is_autocast_enabled() or image.dtype != torch.float32:
                     raise ValueError("Experiment F must remain FP32 with AMP disabled.")
+                model._failure_forward_rng = rng_state()
                 loss_dict = model([image], [target])
                 loss = sum(loss_dict.values())
                 try:
@@ -188,6 +198,9 @@ def train_epoch(model, dataset, optimizer, scheduler, *, epoch, config, device, 
                     error.evidence.update({"completed_backwards": len(losses), "optimizer_updates": updates,
                                            "current_window_start": start, "current_window_size": window_size,
                                            "input_shape": list(image.shape), "image_metadata": image_metadata,
+                                           "input_status": tensor_status(image), "ground_truth_count": len(target["boxes"]),
+                                           "current_lrs": [group["lr"] for group in optimizer.param_groups],
+                                           "optimizer_update_count": len(updates), "state_status": parameter_status(model),
                                            "target_boxes": target["boxes"].detach().cpu().tolist(),
                                            "target_labels": target["labels"].detach().cpu().tolist(),
                                            "finite_loss_mean_before_failure": float(np.mean(losses)) if losses else None,

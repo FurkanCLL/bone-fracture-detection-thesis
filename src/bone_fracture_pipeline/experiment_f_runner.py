@@ -67,7 +67,7 @@ def fresh_output(project, output):
 def implementation_hashes(project):
     return {p.relative_to(project).as_posix(): sha256_file(p) for p in
             (Path(__file__), *(Path(__file__).parent / name for name in
-                              ("faster_rcnn_dataset.py", "faster_rcnn_training.py", "detection_ap_evaluation.py")))}
+                              ("faster_rcnn_dataset.py", "faster_rcnn_training.py", "faster_rcnn_diagnostics.py", "detection_ap_evaluation.py")))}
 
 
 # An explicit official opt-in cannot bypass a failed or stale full-epoch smoke gate.
@@ -152,7 +152,7 @@ def verify_checkpoint(path, model, metadata, optimizer=None):
 
 
 def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evidence=None):
-    if mode not in ("smoke", "official") or (mode == "official" and not confirm_official):
+    if mode not in ("smoke", "official", "diagnostic") or (mode == "official" and not confirm_official):
         raise ValueError("Official training requires --confirm-official-100-epochs.")
     if resume is not None and mode != "official":
         raise ValueError("Smoke mode cannot resume or run a second epoch.")
@@ -179,6 +179,7 @@ def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evi
             from .faster_rcnn_training import (build_model, set_seed, make_optimizer, ImageSchedule, train_epoch,
                                               checkpoint_is_better, save_checkpoint, finite_step)
             from .detection_ap_evaluation import shared_ap
+            from .faster_rcnn_diagnostics import NumericalProbe, save_failure
             from .error_analysis_quantitative import evaluate_rows, aggregate_evaluations, size_group
             if (torch.__version__, torchvision.__version__, ultralytics.__version__) != ("2.6.0+cu126", "0.21.0+cu126", "8.4.155"):
                 raise ValueError("The preserved CUDA dependency versions are required.")
@@ -225,6 +226,7 @@ def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evi
                                   "deterministic_warn_only": True, "amp": False, "tf32": False,
                                   "device": "cuda:0", "physical_batch": 1, "workers": 0}
             model.to(device)
+            probe = NumericalProbe(model) if mode == "diagnostic" else None
             last_proposals = {}
             # Capture the actual RPN output before ROI sampling, including a possible empty proposal list.
             def record_proposals(_module, _inputs, result):
@@ -287,9 +289,15 @@ def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evi
             summary["startup_seconds"] = time.perf_counter() - started
             _write_json(output / "run_summary.json", summary)
             epochs = []
-            for epoch in range(first_epoch, 1 if mode == "smoke" else config["epochs"]):
+            for epoch in range(first_epoch, config["epochs"] if mode == "official" else 1):
                 stats = train_epoch(model, train, optimizer, scheduler, epoch=epoch, config=config, device=device,
-                                    progress_path=output / f"epoch_{epoch+1:03d}_updates.jsonl")
+                                    progress_path=output / f"epoch_{epoch+1:03d}_updates.jsonl",
+                                    max_images=500 if mode == "diagnostic" else None)
+                if mode == "diagnostic":
+                    summary["diagnostic_statistics"] = stats
+                    summary["status"] = "bounded_diagnostic_complete"
+                    summary["protection_after"] = verify_protection(project, protection)
+                    return summary
                 summary["completed_training_epoch"] = epoch + 1
                 summary["last_training_statistics"] = stats
                 _write_json(output / "run_summary.json", summary)
@@ -348,18 +356,22 @@ def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evi
                                   "settings_automatically_changed": False}
             if hasattr(error, "evidence"):
                 error.evidence["rpn_proposals_per_image"] = last_proposals.get("counts")
+                error.evidence["intermediates"] = probe.state if probe is not None else {}
+                error.evidence["runtime"] = summary.get("runtime")
+                error.evidence["cuda_memory_at_failure"] = {
+                    "allocated_bytes": torch.cuda.memory_allocated(), "reserved_bytes": torch.cuda.memory_reserved(),
+                    "peak_allocated_bytes": torch.cuda.max_memory_allocated(),
+                    "peak_reserved_bytes": torch.cuda.max_memory_reserved()}
                 summary["failure"]["numerical_evidence"] = error.evidence
                 # Preserve the actual failing model and partial gradients without presenting a resumable epoch.
                 failure_path = output / "failure_capture.pt"
-                torch.save({"status": "partial_numerical_failure", "resumable": False,
-                            "model": {k: v.detach().cpu() for k,v in model.state_dict().items()},
-                            "partial_gradients": {k: p.grad.detach().cpu() for k,p in model.named_parameters() if p.grad is not None},
-                            "optimizer": optimizer.state_dict(), "scheduler": scheduler.state_dict(),
-                            "metadata": metadata, "failure": error.evidence}, failure_path)
+                save_failure(failure_path, model, optimizer, scheduler, metadata, error.evidence)
                 summary["failure"]["diagnostic_state"] = {"path": str(failure_path), "sha256": sha256_file(failure_path),
                                                             "resumable": False}
             raise
         finally:
+            if "probe" in locals() and probe is not None:
+                probe.close()
             if "torch" in locals() and torch.cuda.is_available():
                 summary["cuda_memory"] = {"peak_allocated_bytes": torch.cuda.max_memory_allocated(),
                                           "peak_reserved_bytes": torch.cuda.max_memory_reserved(),
@@ -374,7 +386,7 @@ def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evi
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project-root", type=Path, default=Path.cwd())
-    parser.add_argument("--mode", choices=("smoke", "official"), required=True)
+    parser.add_argument("--mode", choices=("smoke", "official", "diagnostic"), required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--confirm-official-100-epochs", action="store_true")
     parser.add_argument("--resume", type=Path)
