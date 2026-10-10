@@ -19,6 +19,7 @@ Path(os.environ["YOLO_CONFIG_DIR"]).mkdir(parents=True, exist_ok=True)
 
 from bone_fracture_pipeline.detection_evaluation import GroundTruth
 from bone_fracture_pipeline.error_analysis import ValidationSample, validate_export_rows
+from bone_fracture_pipeline.error_analysis_training import verify_sample_export
 from bone_fracture_pipeline.error_analysis_quantitative import evaluate_rows, size_group
 from bone_fracture_pipeline.faster_rcnn_dataset import (
     detector_label, canonical_label, load_split, FractureDataset, prepare_image, original_boxes, prediction_row,
@@ -247,6 +248,9 @@ class ExperimentFTests(unittest.TestCase):
         self.assertEqual(result["predictions"][0]["class_id"],0)
         self.assertTrue(np.allclose(result["predictions"][0]["xyxy"],[10,10,30,30]))
         validate_export_rows([result])
+        # Exercise the actual runner's in-memory check; a JSON roundtrip hid tuple/list mismatch.
+        verify_sample_export([result], (sample,), split="valid")
+        self.assertIsInstance(result["ground_truth"][0]["xyxy"], list)
         self.assertEqual(json.loads(json.dumps(result))["ground_truth"], [json.loads(json.dumps(asdict(sample.ground_truth[0])))])
 
     def test_ap_perfect_multiclass(self):

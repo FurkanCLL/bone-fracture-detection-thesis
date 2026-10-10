@@ -85,9 +85,9 @@ class NumericalProbe:
         self.rpn_module.filter_proposals = self.original_filter
 
 
-def save_failure(path, model, optimizer, scheduler, metadata, evidence):
+def save_failure(path, model, optimizer, scheduler, metadata, evidence, *, status="partial_numerical_failure"):
     # This is the exact partial state, never an epoch checkpoint or resumable run.
-    torch.save({"status": "partial_numerical_failure", "resumable": False,
+    torch.save({"status": status, "resumable": False,
                 "model": {k: v.detach().cpu() for k, v in model.state_dict().items()},
                 "partial_gradients": {k: p.grad.detach().cpu() for k, p in model.named_parameters() if p.grad is not None},
                 "optimizer": optimizer.state_dict(), "scheduler": scheduler.state_dict(),

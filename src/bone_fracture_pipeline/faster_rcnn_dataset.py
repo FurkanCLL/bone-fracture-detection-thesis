@@ -137,4 +137,6 @@ def prediction_row(sample: ValidationSample, prediction: dict, metadata: dict) -
             "image": f"{split}/images/{sample.image_path.name}",
             "width": sample.width, "height": sample.height,
             "image_sha256": sample.image_sha256, "label_sha256": sample.label_sha256,
-            "ground_truth": [asdict(g) for g in sample.ground_truth], "predictions": predictions}
+            # Match the JSON schema before validation, not only after writing and reading JSON.
+            "ground_truth": [{**asdict(g), "xyxy": list(g.xyxy)} for g in sample.ground_truth],
+            "predictions": predictions}

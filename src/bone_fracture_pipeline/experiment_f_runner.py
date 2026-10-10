@@ -339,12 +339,15 @@ def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evi
                         del image, prediction
                 torch.cuda.synchronize()
                 validation_seconds = time.perf_counter() - val_start
+                summary["completed_validation_inference_images"] = len(rows)
+                summary["validation_inference_seconds"] = validation_seconds
+                # Retain predictions before later schema/AP checks can fail.
+                export = output / f"epoch_{epoch+1:03d}_validation_predictions.jsonl"
+                export.write_text("".join(json.dumps(row, sort_keys=True, allow_nan=False) + "\n" for row in rows), encoding="utf-8")
                 verify_sample_export(rows, valid_samples, split="valid")
                 ap_start = time.perf_counter()
                 ap = shared_ap(rows, samples=valid_samples)
                 ap_seconds = time.perf_counter() - ap_start
-                export = output / f"epoch_{epoch+1:03d}_validation_predictions.jsonl"
-                export.write_text("".join(json.dumps(row, sort_keys=True, allow_nan=False) + "\n" for row in rows), encoding="utf-8")
                 validate_export_rows(rows)
                 # Verify direct compatibility; these are smoke diagnostics, not final D-F findings.
                 diagnostics = {"class_aware": aggregate_evaluations(evaluate_rows(rows, confidence=.25, iou=.5)),
@@ -398,6 +401,13 @@ def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evi
                 # Preserve the actual failing model and partial gradients without presenting a resumable epoch.
                 failure_path = output / "failure_capture.pt"
                 save_failure(failure_path, model, optimizer, scheduler, metadata, error.evidence)
+                summary["failure"]["diagnostic_state"] = {"path": str(failure_path), "sha256": sha256_file(failure_path),
+                                                            "resumable": False}
+            elif {"model", "optimizer", "scheduler", "metadata"}.issubset(locals()):
+                # Keep completed training state when export, validation, or checkpoint IO fails.
+                failure_path = output / "execution_failure_capture.pt"
+                save_failure(failure_path, model, optimizer, scheduler, metadata, summary["failure"],
+                             status="execution_failure")
                 summary["failure"]["diagnostic_state"] = {"path": str(failure_path), "sha256": sha256_file(failure_path),
                                                             "resumable": False}
             raise
