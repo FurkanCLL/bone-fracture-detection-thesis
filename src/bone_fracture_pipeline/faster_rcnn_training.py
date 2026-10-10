@@ -17,6 +17,21 @@ from torchvision.models.detection.transform import GeneralizedRCNNTransform
 from bone_fracture_audit.audit import sha256_file
 
 
+class NumericalTrainingError(FloatingPointError):
+    def __init__(self, evidence):
+        self.evidence = evidence
+        super().__init__(f"Non-finite loss at training image {evidence['position_zero_based']}; no automatic retuning.")
+
+
+# Keep non-finite values as explicit strings so failure evidence remains strict JSON.
+def check_losses(loss_dict, *, position, sample_id):
+    values = {key: float(value.detach()) for key, value in loss_dict.items()}
+    if not all(math.isfinite(value) for value in values.values()):
+        raise NumericalTrainingError({"position_zero_based": position, "sample_id": sample_id,
+                                      "losses": {key: value if math.isfinite(value) else str(value)
+                                                 for key, value in values.items()}})
+
+
 class LetterboxedTransform(GeneralizedRCNNTransform):
     # Geometry is already applied to both pixels and boxes in the dataset adapter.
     # Keep COCO normalization and batching, but reject unexpected dimensions instead of resizing twice.
@@ -160,15 +175,25 @@ def train_epoch(model, dataset, optimizer, scheduler, *, epoch, config, device, 
     with progress_path.open("w", encoding="utf-8") as log:
         for start, window_size in accumulation_windows(len(dataset), config["accumulation"]):
             for position in range(start, start + window_size):
-                image, target, _ = dataset[order[position]]
+                image, target, image_metadata = dataset[order[position]]
                 image = image.to(device)
                 target = {k: v.to(device) for k, v in target.items()}
                 if torch.is_autocast_enabled() or image.dtype != torch.float32:
                     raise ValueError("Experiment F must remain FP32 with AMP disabled.")
                 loss_dict = model([image], [target])
                 loss = sum(loss_dict.values())
-                if not all(torch.isfinite(v).all() for v in loss_dict.values()):
-                    raise FloatingPointError(f"Non-finite loss at training image {position}; no automatic retuning.")
+                try:
+                    check_losses(loss_dict, position=position, sample_id=dataset.samples[order[position]].sample_id)
+                except NumericalTrainingError as error:
+                    error.evidence.update({"completed_backwards": len(losses), "optimizer_updates": updates,
+                                           "current_window_start": start, "current_window_size": window_size,
+                                           "input_shape": list(image.shape), "image_metadata": image_metadata,
+                                           "target_boxes": target["boxes"].detach().cpu().tolist(),
+                                           "target_labels": target["labels"].detach().cpu().tolist(),
+                                           "finite_loss_mean_before_failure": float(np.mean(losses)) if losses else None,
+                                           "finite_loss_max_before_failure": max(losses) if losses else None,
+                                           "seconds_before_failure": time.perf_counter() - started})
+                    raise
                 # Divide by the actual window size, including the last 59-image window.
                 (loss / window_size).backward()
                 losses.append(float(loss.detach()))

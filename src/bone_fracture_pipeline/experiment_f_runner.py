@@ -64,6 +64,27 @@ def fresh_output(project, output):
     return output
 
 
+def implementation_hashes(project):
+    return {p.relative_to(project).as_posix(): sha256_file(p) for p in
+            (Path(__file__), *(Path(__file__).parent / name for name in
+                              ("faster_rcnn_dataset.py", "faster_rcnn_training.py", "detection_ap_evaluation.py")))}
+
+
+# An explicit official opt-in cannot bypass a failed or stale full-epoch smoke gate.
+def verify_smoke_gate(project, path, config_hash, source_hashes):
+    if path is None:
+        raise ValueError("Official mode also requires --smoke-evidence from a successful complete smoke epoch.")
+    path = path.resolve()
+    if not path.is_relative_to(project / "outputs/training/experiment_f"):
+        raise ValueError("Smoke evidence must be a local Experiment F run summary.")
+    evidence = json.loads(path.read_text(encoding="utf-8"))
+    if (evidence.get("status") != "passed" or evidence.get("mode") != "smoke"
+            or evidence.get("completed_epochs") != 1 or evidence.get("configuration_sha256") != config_hash
+            or evidence.get("implementation_hashes") != source_hashes):
+        raise ValueError("Official mode is blocked by a failed, incomplete or changed-protocol smoke gate.")
+    return evidence
+
+
 def verify_protection(project, protection):
     changed = [p for p, digest in protection.items() if sha256_file(project / p) != digest]
     if changed:
@@ -130,13 +151,15 @@ def verify_checkpoint(path, model, metadata, optimizer=None):
             "state_tensor_dtypes": sorted({str(v.dtype) for v in record["model"].values()})}
 
 
-def run(project, output, *, mode, confirm_official=False, resume=None):
+def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evidence=None):
     if mode not in ("smoke", "official") or (mode == "official" and not confirm_official):
         raise ValueError("Official training requires --confirm-official-100-epochs.")
     if resume is not None and mode != "official":
         raise ValueError("Smoke mode cannot resume or run a second epoch.")
     project = project.resolve()
     config, config_hash = load_config(project)
+    source_hashes = implementation_hashes(project)
+    gate = verify_smoke_gate(project, smoke_evidence, config_hash, source_hashes) if mode == "official" else None
     output = fresh_output(project, output)
     (output / "runtime").mkdir()
     os.environ["YOLO_CONFIG_DIR"] = str(output / "runtime")
@@ -144,6 +167,7 @@ def run(project, output, *, mode, confirm_official=False, resume=None):
     os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
     summary = {"status": "running", "mode": mode, "created_at_utc": datetime.now(UTC).isoformat(),
                "configuration": config, "configuration_sha256": config_hash,
+               "implementation_hashes": source_hashes,
                "requested_epochs": 1 if mode == "smoke" else 100, "completed_epochs": 0}
     started = time.perf_counter()
     with held_out_guard(project) as guard:
@@ -181,6 +205,8 @@ def run(project, output, *, mode, confirm_official=False, resume=None):
                                   "train_empty": sum(not s.ground_truth for s in train_samples),
                                   "valid_empty": sum(not s.ground_truth for s in valid_samples),
                                   "lineage_verified": True, "identities_disjoint": True}
+            if gate is not None and gate["dataset"] != summary["dataset"]:
+                raise ValueError("Current data differs from the successful smoke gate.")
             d_rows, d_evidence = read_stage1_validation(project)
             summary["d_evaluation"] = {"official": d_evidence["official_validation"]["best_row"],
                                         "official_source": d_evidence["official_validation"]["reference"],
@@ -199,12 +225,13 @@ def run(project, output, *, mode, confirm_official=False, resume=None):
                                   "deterministic_warn_only": True, "amp": False, "tf32": False,
                                   "device": "cuda:0", "physical_batch": 1, "workers": 0}
             model.to(device)
+            last_proposals = {}
+            # Capture the actual RPN output before ROI sampling, including a possible empty proposal list.
+            def record_proposals(_module, _inputs, result):
+                last_proposals["counts"] = [len(boxes) for boxes in result[0]]
+            proposal_handle = model.rpn.register_forward_hook(record_proposals)
             optimizer = make_optimizer(model, config)
             scheduler = ImageSchedule(optimizer, config, len(train))
-            source_hashes = {str(Path(__file__).relative_to(project)): sha256_file(Path(__file__))}
-            for name in ("faster_rcnn_dataset.py", "faster_rcnn_training.py", "detection_ap_evaluation.py"):
-                p = Path(__file__).parent / name
-                source_hashes[str(p.relative_to(project))] = sha256_file(p)
             metadata = {"configuration": config, "configuration_sha256": config_hash,
                         "dataset": summary["dataset"], "model": model_report, "seed": 42,
                         "mode": mode, "implementation_hashes": source_hashes}
@@ -214,6 +241,8 @@ def run(project, output, *, mode, confirm_official=False, resume=None):
                 if not resume.is_relative_to(project / "outputs/training/experiment_f"):
                     raise ValueError("Resume requires a trusted local F checkpoint.")
                 saved = torch.load(resume, map_location=device, weights_only=False)
+                if saved.get("resumable") is False:
+                    raise ValueError("A partial failure capture is diagnostic only and cannot resume training.")
                 if saved["metadata"] != metadata or saved["epoch"] not in range(99):
                     raise ValueError("Resume mode, sources, data or configuration differ from the checkpoint.")
                 model.load_state_dict(saved["model"])
@@ -317,6 +346,18 @@ def run(project, output, *, mode, confirm_official=False, resume=None):
             summary["status"] = "failed"
             summary["failure"] = {"type": type(error).__name__, "message": str(error),
                                   "settings_automatically_changed": False}
+            if hasattr(error, "evidence"):
+                error.evidence["rpn_proposals_per_image"] = last_proposals.get("counts")
+                summary["failure"]["numerical_evidence"] = error.evidence
+                # Preserve the actual failing model and partial gradients without presenting a resumable epoch.
+                failure_path = output / "failure_capture.pt"
+                torch.save({"status": "partial_numerical_failure", "resumable": False,
+                            "model": {k: v.detach().cpu() for k,v in model.state_dict().items()},
+                            "partial_gradients": {k: p.grad.detach().cpu() for k,p in model.named_parameters() if p.grad is not None},
+                            "optimizer": optimizer.state_dict(), "scheduler": scheduler.state_dict(),
+                            "metadata": metadata, "failure": error.evidence}, failure_path)
+                summary["failure"]["diagnostic_state"] = {"path": str(failure_path), "sha256": sha256_file(failure_path),
+                                                            "resumable": False}
             raise
         finally:
             if "torch" in locals() and torch.cuda.is_available():
@@ -337,9 +378,10 @@ def main(argv=None):
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--confirm-official-100-epochs", action="store_true")
     parser.add_argument("--resume", type=Path)
+    parser.add_argument("--smoke-evidence", type=Path, help="Required successful, matching full-epoch gate for official mode.")
     args = parser.parse_args(argv)
     result = run(args.project_root, args.output, mode=args.mode,
-                 confirm_official=args.confirm_official_100_epochs, resume=args.resume)
+                 confirm_official=args.confirm_official_100_epochs, resume=args.resume, smoke_evidence=args.smoke_evidence)
     print(json.dumps({"status": result["status"], "completed_epochs": result["completed_epochs"]}))
     return 0
 

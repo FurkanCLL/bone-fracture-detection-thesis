@@ -26,9 +26,10 @@ from bone_fracture_pipeline.faster_rcnn_dataset import (
 from bone_fracture_pipeline.faster_rcnn_training import (
     adapt_head, LetterboxedTransform, accumulation_windows, finite_step, ImageSchedule,
     checkpoint_is_better, save_checkpoint, make_optimizer,
+    check_losses, NumericalTrainingError, train_epoch,
 )
 from bone_fracture_pipeline.detection_ap_evaluation import shared_ap
-from bone_fracture_pipeline.experiment_f_runner import held_out_guard, fresh_output, load_config, run
+from bone_fracture_pipeline.experiment_f_runner import held_out_guard, fresh_output, load_config, run, verify_smoke_gate
 
 
 def row(targets=(), predictions=(), sample="valid/fixture"):
@@ -152,6 +153,49 @@ class ExperimentFTests(unittest.TestCase):
         with self.assertRaises(FloatingPointError):
             finite_step(model,optimizer)
         self.assertTrue(torch.equal(before,model.weight))
+
+    def test_nonfinite_loss_capture_is_strict_json(self):
+        with self.assertRaises(NumericalTrainingError) as context:
+            check_losses({"classifier": torch.tensor(float("nan")), "rpn": torch.tensor(.1)},
+                         position=401, sample_id="train/fixture")
+        evidence = context.exception.evidence
+        self.assertEqual(evidence["losses"]["classifier"], "nan")
+        self.assertEqual(evidence["sample_id"], "train/fixture")
+        self.assertTrue(json.dumps(evidence,allow_nan=False))
+
+    def test_finite_loss_check_preserves_gradient(self):
+        value = torch.tensor(2.,requires_grad=True)
+        check_losses({"loss": value},position=0,sample_id="train/fixture")
+        value.backward()
+        self.assertEqual(value.grad.item(),1)
+
+    def test_epoch_failure_retains_partial_progress(self):
+        class ToyModel(nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.weight = nn.Parameter(torch.tensor(1.))
+                self.calls = 0
+            def forward(self, images, targets):
+                self.calls += 1
+                return {"loss": self.weight if self.calls == 1 else self.weight * float("nan")}
+        class ToyDataset:
+            samples = [SimpleNamespace(sample_id="train/a"), SimpleNamespace(sample_id="train/b")]
+            def __len__(self):
+                return 2
+            def __getitem__(self, index):
+                return torch.zeros(3,2,2), {"boxes":torch.zeros(0,4),"labels":torch.zeros(0,dtype=torch.int64)}, {}
+        config = load_config(Path.cwd())[0]
+        model = ToyModel()
+        optimizer = make_optimizer(model,config)
+        scheduler = ImageSchedule(optimizer,config,2)
+        with tempfile.TemporaryDirectory() as temp, self.assertRaises(NumericalTrainingError) as context:
+            train_epoch(model,ToyDataset(),optimizer,scheduler,epoch=0,config=config,device=torch.device("cpu"),
+                        progress_path=Path(temp)/"updates.jsonl")
+        evidence = context.exception.evidence
+        self.assertEqual(evidence["completed_backwards"],1)
+        self.assertEqual(evidence["optimizer_updates"],[])
+        self.assertEqual(evidence["current_window_size"],2)
+        self.assertEqual(evidence["finite_loss_max_before_failure"],1)
 
     def test_optimizer_decay_exemptions(self):
         model = nn.Linear(2,1)
@@ -277,6 +321,23 @@ class ExperimentFTests(unittest.TestCase):
                 run(project,target,mode="official")
             with self.assertRaises(ValueError):
                 run(project,target,mode="smoke",resume=Path("last.pt"))
+
+    def test_official_requires_matching_successful_smoke(self):
+        with tempfile.TemporaryDirectory() as temp:
+            project = Path(temp)
+            path = project/"outputs/training/experiment_f/smoke/run_summary.json"
+            path.parent.mkdir(parents=True)
+            evidence = {"status":"passed","mode":"smoke","completed_epochs":1,
+                        "configuration_sha256":"config","implementation_hashes":{"runner":"source"}}
+            path.write_text(json.dumps(evidence),encoding="utf-8")
+            self.assertEqual(verify_smoke_gate(project,path,"config",{"runner":"source"}),evidence)
+            for key,value in (("status","failed"),("completed_epochs",0),("configuration_sha256","changed")):
+                invalid = {**evidence,key:value}
+                path.write_text(json.dumps(invalid),encoding="utf-8")
+                with self.assertRaises(ValueError):
+                    verify_smoke_gate(project,path,"config",{"runner":"source"})
+            with self.assertRaises(ValueError):
+                verify_smoke_gate(project,None,"config",{})
 
 
 if __name__ == "__main__":

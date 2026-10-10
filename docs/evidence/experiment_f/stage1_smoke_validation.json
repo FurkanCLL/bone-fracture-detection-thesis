@@ -1,0 +1,1214 @@
+{
+  "augmentation_visual_review": {
+    "medical_correctness_claimed": false,
+    "records": [
+      {
+        "after_boxes": [
+          [
+            258.7344055175781,
+            216.19540405273438,
+            323.9324951171875,
+            284.9855651855469
+          ]
+        ],
+        "before_boxes": [
+          [
+            227.74996948242188,
+            245.1034698486328,
+            291.62957763671875,
+            313.1231994628906
+          ]
+        ],
+        "image_sha256": "3f1687b029dffb98b99f81e2922b6fc313715f634a1f813f72f3ecefd9d2fe02",
+        "labels": [
+          1
+        ],
+        "metadata": {
+          "affine_matrix": [
+            [
+              0.9417309165000916,
+              -0.0741061344742775,
+              67.45956420898438
+            ],
+            [
+              0.0741061344742775,
+              0.9417309165000916,
+              -31.5037841796875
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "height": 1024,
+          "left": 0,
+          "ratio": [
+            0.625,
+            0.625
+          ],
+          "resized_wh": [
+            640,
+            640
+          ],
+          "scale": 0.9446421476297646,
+          "top": 0,
+          "training": true,
+          "width": 1024
+        },
+        "preview_sha256": "d90d5a6ae24cc35dee3b9035cb850b5f7c4f8b985b9ecea6f35d7ef267f93b48",
+        "repeat_exact": true,
+        "review_note": "Class 0: rotated elbow box remains around the same supplied region; no flip.",
+        "reviewed": true,
+        "sample_id": "train/distal-humeral-fractures-2-_JPEG.rf.39ba3f53047ecb4064613850a1c76fc1"
+      },
+      {
+        "after_boxes": [
+          [
+            253.74856567382812,
+            147.05484008789062,
+            297.1225891113281,
+            211.7619171142578
+          ]
+        ],
+        "before_boxes": [
+          [
+            270.4999694824219,
+            147.75,
+            308.876708984375,
+            211.0935821533203
+          ]
+        ],
+        "image_sha256": "152203081328d4cbd26378d7cda1c3e27cdfedee7bd0da1967d1572c5bd3416c",
+        "labels": [
+          2
+        ],
+        "metadata": {
+          "affine_matrix": [
+            [
+              0.9584932923316956,
+              0.10403861105442047,
+              -20.895538330078125
+            ],
+            [
+              -0.10403861105442047,
+              0.9584932923316956,
+              37.57257080078125
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "height": 512,
+          "left": 184,
+          "ratio": [
+            1.25,
+            1.25
+          ],
+          "resized_wh": [
+            271,
+            640
+          ],
+          "scale": 0.9641231138904777,
+          "top": 0,
+          "training": true,
+          "width": 217
+        },
+        "preview_sha256": "5ad98e203e73125e020376b2145808aff1bb0ebbe950f0bdbe4ab2047b043a67",
+        "repeat_exact": true,
+        "review_note": "Class 1: finger box follows the tilted image; boundary padding is visible.",
+        "reviewed": true,
+        "sample_id": "train/image1_1036_png.rf.d815bc7f4963ed689a1bb90cc17ad13e"
+      },
+      {
+        "after_boxes": [
+          [
+            243.82220458984375,
+            233.37582397460938,
+            310.063232421875,
+            350.4900817871094
+          ],
+          [
+            246.74024963378906,
+            327.2946472167969,
+            333.044921875,
+            437.9330749511719
+          ]
+        ],
+        "before_boxes": [
+          [
+            263.7499694824219,
+            252.75,
+            314.3757629394531,
+            359.13653564453125
+          ],
+          [
+            276.3820495605469,
+            341.5,
+            347.3702392578125,
+            439.1597900390625
+          ]
+        ],
+        "image_sha256": "4fbeea6b1141efebe688670e5fb6903eb12247d8804a36ac1c7db3535b210d25",
+        "labels": [
+          3,
+          3
+        ],
+        "metadata": {
+          "affine_matrix": [
+            [
+              1.0400620698928833,
+              -0.12771423161029816,
+              15.372711181640625
+            ],
+            [
+              0.12771423161029816,
+              1.0400620698928833,
+              -63.184478759765625
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "height": 512,
+          "left": 66,
+          "ratio": [
+            1.25,
+            1.25
+          ],
+          "resized_wh": [
+            508,
+            640
+          ],
+          "scale": 1.047874074135256,
+          "top": 0,
+          "training": true,
+          "width": 406
+        },
+        "preview_sha256": "a2a02c5a0f5305f7f9fed27ddb9e1dc2bdfc52eda00fba77c7e9498191cddce2",
+        "repeat_exact": true,
+        "review_note": "Class 2: both forearm boxes follow rotation with enclosing axis-aligned extents.",
+        "reviewed": true,
+        "sample_id": "train/image1_1022_png.rf.b423a18f64684ae7c6342b0071ef46cf"
+      },
+      {
+        "after_boxes": [
+          [
+            219.34783935546875,
+            297.1141662597656,
+            340.4033203125,
+            438.9559020996094
+          ]
+        ],
+        "before_boxes": [
+          [
+            242.24996948242188,
+            310.25,
+            363.1175842285156,
+            454.16412353515625
+          ]
+        ],
+        "image_sha256": "d44591095a7304d03d9ed5c7434a53c80ddf3f4230933da69312a6d48282bdc0",
+        "labels": [
+          4
+        ],
+        "metadata": {
+          "affine_matrix": [
+            [
+              0.9474050402641296,
+              0.04547768086194992,
+              -24.27044677734375
+            ],
+            [
+              -0.04547768086194992,
+              0.9474050402641296,
+              19.69549560546875
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "height": 512,
+          "left": 57,
+          "ratio": [
+            1.25,
+            1.25
+          ],
+          "resized_wh": [
+            525,
+            640
+          ],
+          "scale": 0.9484959508367525,
+          "top": 0,
+          "training": true,
+          "width": 420
+        },
+        "preview_sha256": "3d089f3d72b1b40fdb047b7ae724347c72cdf391b16dd5eaa2cc37efa9b8e41b",
+        "repeat_exact": true,
+        "review_note": "Class 3: larger humerus box remains aligned after modest rotation and scaling.",
+        "reviewed": true,
+        "sample_id": "train/image1_1010_png.rf.65f54641e628d0952fc45df00ef5e7ff"
+      },
+      {
+        "after_boxes": [
+          [
+            218.65316772460938,
+            134.42578125,
+            317.843017578125,
+            217.72268676757812
+          ]
+        ],
+        "before_boxes": [
+          [
+            216.87498474121094,
+            166.89317321777344,
+            309.689208984375,
+            240.247802734375
+          ]
+        ],
+        "image_sha256": "b9795de22c5e341dd40d8afc73e56f4da746fbde069892c3b47e91dd0834444c",
+        "labels": [
+          5
+        ],
+        "metadata": {
+          "affine_matrix": [
+            [
+              0.9574575424194336,
+              -0.14074330031871796,
+              44.817840576171875
+            ],
+            [
+              0.14074330031871796,
+              0.9574575424194336,
+              -55.89105224609375
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "height": 406,
+          "left": 0,
+          "ratio": [
+            1.25,
+            1.25
+          ],
+          "resized_wh": [
+            640,
+            508
+          ],
+          "scale": 0.967746697398414,
+          "top": 66,
+          "training": true,
+          "width": 512
+        },
+        "preview_sha256": "2bac7a787cee2df7553aa72bb610c2870235afc2511a50e318c5a7953e78d430",
+        "repeat_exact": true,
+        "review_note": "Class 4: shoulder box shifts with the image and retains its intended supplied region.",
+        "reviewed": true,
+        "sample_id": "train/image1_0_png.rf.bc222874fa14e205b638e87ddad52b9d"
+      },
+      {
+        "after_boxes": [
+          [
+            263.5895690917969,
+            329.508056640625,
+            318.7197570800781,
+            373.035888671875
+          ],
+          [
+            262.7804870605469,
+            278.0584716796875,
+            330.3368225097656,
+            331.59063720703125
+          ]
+        ],
+        "before_boxes": [
+          [
+            293.0592956542969,
+            335.635498046875,
+            349.2664489746094,
+            379.6668701171875
+          ],
+          [
+            291.5289306640625,
+            282.54095458984375,
+            360.4018249511719,
+            336.6965026855469
+          ]
+        ],
+        "image_sha256": "adba8bc575e81dad196bd45f53d8ce87551b408ae58601500d0df17e0a578887",
+        "labels": [
+          6,
+          6
+        ],
+        "metadata": {
+          "affine_matrix": [
+            [
+              0.9685672521591187,
+              -0.015664957463741302,
+              -14.310577392578125
+            ],
+            [
+              0.015664957463741302,
+              0.9685672521591187,
+              -0.168243408203125
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "height": 512,
+          "left": 66,
+          "ratio": [
+            1.25,
+            1.25
+          ],
+          "resized_wh": [
+            508,
+            640
+          ],
+          "scale": 0.9686939481756507,
+          "top": 0,
+          "training": true,
+          "width": 406
+        },
+        "preview_sha256": "723e2f5056d3f1da07fb74a64c80b14814ebd7f3b2e1882cfe57f3b1395855d2",
+        "repeat_exact": true,
+        "review_note": "Class 5: both wrist boxes remain aligned; no unintended class change.",
+        "reviewed": true,
+        "sample_id": "train/image1_1002_png.rf.c94d11a79032d6beb4ce4d876c9f7fda"
+      },
+      {
+        "after_boxes": [],
+        "before_boxes": [],
+        "image_sha256": "0a322b183fb9eeeaeb5aefe4aac5a79dad75849f13456d4d884ad5e7118dd4f0",
+        "labels": [],
+        "metadata": {
+          "affine_matrix": [
+            [
+              1.0714445114135742,
+              0.033154938369989395,
+              -28.113067626953125
+            ],
+            [
+              -0.033154938369989395,
+              1.0714445114135742,
+              16.36810302734375
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "height": 512,
+          "left": 160,
+          "ratio": [
+            1.25,
+            1.25
+          ],
+          "resized_wh": [
+            319,
+            640
+          ],
+          "scale": 1.0719573347085523,
+          "top": 0,
+          "training": true,
+          "width": 255
+        },
+        "preview_sha256": "d3dbdf2fe90e1a8429c2b49c4aa5fab93271987d5c3baead1183d0c4940189e2",
+        "repeat_exact": true,
+        "review_note": "Empty-label example: target remains empty under geometric and intensity changes.",
+        "reviewed": true,
+        "sample_id": "train/image1_0_png.rf.c068475415ed98d36b311229ae0d3977"
+      }
+    ],
+    "review_method": "direct visual inspection at full before/after view",
+    "scope": "seven training-only before/after previews, no validation/test images"
+  },
+  "configuration": {
+    "accumulation": 64,
+    "amp": false,
+    "augmentation": {
+      "degrees": 10.0,
+      "hsv_v": 0.15,
+      "scale": 0.1,
+      "translate": 0.05
+    },
+    "batch_size": 1,
+    "betas": [
+      0.937,
+      0.999
+    ],
+    "dataset": "data/prepared/v3_detection_clahe",
+    "deterministic": true,
+    "early_stopping": false,
+    "epochs": 100,
+    "evaluation": {
+      "confidence_floor": 0.001,
+      "max_detections": 300,
+      "primary": "shared_map50_95",
+      "roi_nms": 0.5,
+      "rpn_score_threshold": 0.05
+    },
+    "experiment": "F",
+    "final_lr_factor": 0.01,
+    "image_size": 640,
+    "lr": 0.001,
+    "model": "fasterrcnn_mobilenet_v3_large_fpn",
+    "optimizer": "AdamW",
+    "protocol_version": 1,
+    "seed": 42,
+    "trainable_backbone_layers": 3,
+    "validation_batch_size": 1,
+    "warmup_epochs": 3,
+    "weight_decay": 0.0005,
+    "weights": "COCO_V1",
+    "workers": 0
+  },
+  "configuration_sha256": "f861ef14507c76e59a652a54fbd42d24a364dbe887bcce8dd3e2eafd67501fdf",
+  "created_at_utc": "2026-10-10T21:36:58.660541+00:00",
+  "cuda_memory": {
+    "preflight": {
+      "peak_allocated_bytes": 480068096,
+      "peak_reserved_bytes": 641728512
+    },
+    "smoke_after_preflight_reset": {
+      "capacity_bytes": 6438780928,
+      "peak_allocated_bytes": 595149312,
+      "peak_reserved_bytes": 620756992
+    }
+  },
+  "d_evaluation": {
+    "native": {
+      "fitness": 0.04736909409864185,
+      "metrics/mAP50(B)": 0.1485241076082241,
+      "metrics/mAP50-95(B)": 0.04736909409864185,
+      "metrics/precision(B)": 0.2191561464906279,
+      "metrics/recall(B)": 0.1868235698531384
+    },
+    "official": {
+      "epoch": 57,
+      "metrics/mAP50(B)": 0.14861,
+      "metrics/mAP50-95(B)": 0.04732,
+      "metrics/precision(B)": 0.21938,
+      "metrics/recall(B)": 0.18667
+    },
+    "official_source": "outputs/training/official/D_seed42/results.csv",
+    "original_comparison": {
+      "absolute_tolerance": 5e-05,
+      "metrics": {
+        "metrics/mAP50(B)": {
+          "absolute_difference": 8.589239177589358e-05,
+          "observed": 0.1485241076082241,
+          "official": 0.14861,
+          "passed": false,
+          "signed_difference": -8.589239177589358e-05
+        },
+        "metrics/mAP50-95(B)": {
+          "absolute_difference": 4.909409864185116e-05,
+          "observed": 0.04736909409864185,
+          "official": 0.04732,
+          "passed": true,
+          "signed_difference": 4.909409864185116e-05
+        }
+      },
+      "passed": false,
+      "tolerance_reason": "Chosen before evaluation: 5e-5 absolute AP allows the official five-decimal rounding (at most 5e-6) plus small checkpoint FP16 serialization/FP32 fusion differences. It is a tight reproduction check, not a statistical equivalence test."
+    },
+    "prediction_sha256": "8fb1b0004ecf00ece249ff46c9bc12dc0de40d876489ecf13488400794178b22",
+    "shared": {
+      "counts": {
+        "annotations": 204,
+        "empty_label_images": 175,
+        "images": 348,
+        "images_without_predictions": 75,
+        "predictions": 1755
+      },
+      "definition": {
+        "confidence": ">0.001",
+        "diagnostic_matcher_used": false,
+        "implementation": "Ultralytics 8.4.155 BaseValidator.match_predictions + compute_ap",
+        "interpolation": "precision envelope, 101 recall points, trapezoidal integration; not pycocotools COCOeval",
+        "iou_thresholds": [
+          0.5,
+          0.550000011920929,
+          0.6000000238418579,
+          0.6499999761581421,
+          0.699999988079071,
+          0.75,
+          0.800000011920929,
+          0.8500000238418579,
+          0.8999999761581421,
+          0.949999988079071
+        ],
+        "matching": "native IoU-first, prediction uniqueness then GT uniqueness",
+        "max_det": 300,
+        "numpy_version": "2.5.2",
+        "ties": "fixed image/box ID inputs; native NumPy argsort for IoU ties; stable score/image/box order for AP",
+        "unsupported_classes": "reported with zero AP, excluded from macro mean"
+      },
+      "map50": 0.1492271830679578,
+      "map50_95": 0.04743940164461522,
+      "per_class": [
+        {
+          "ap50": 0.022528158295281583,
+          "ap50_95": 0.007615939790326064,
+          "ap_by_iou": [
+            0.022528158295281583,
+            0.020094202570942025,
+            0.018256468797564686,
+            0.011866057838660578,
+            0.0021182141045154746,
+            0.0012962962962962963,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class_id": 0,
+          "predictions": 219,
+          "support": 29
+        },
+        {
+          "ap50": 0.05464644366447329,
+          "ap50_95": 0.015291744667282722,
+          "ap_by_iou": [
+            0.05464644366447329,
+            0.048661078572843276,
+            0.030043359474367395,
+            0.010801843738590727,
+            0.005669483127314453,
+            0.0027056277056277055,
+            0.0003896103896103896,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class_id": 1,
+          "predictions": 253,
+          "support": 48
+        },
+        {
+          "ap50": 0.3908675664495028,
+          "ap50_95": 0.1212627126351945,
+          "ap_by_iou": [
+            0.3908675664495028,
+            0.3276840110579903,
+            0.19554552642378809,
+            0.11727227656519942,
+            0.11586152882205514,
+            0.05039621703340921,
+            0.015,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class_id": 2,
+          "predictions": 258,
+          "support": 43
+        },
+        {
+          "ap50": 0.35934413788632036,
+          "ap50_95": 0.12722006951279458,
+          "ap_by_iou": [
+            0.35934413788632036,
+            0.34311816633092584,
+            0.2713082670809017,
+            0.15744316462439623,
+            0.09863178814182233,
+            0.02039562461873872,
+            0.01584001782531194,
+            0.006119528619528619,
+            0.0,
+            0.0
+          ],
+          "class_id": 3,
+          "predictions": 383,
+          "support": 36
+        },
+        {
+          "ap50": 0.024662459475560686,
+          "ap50_95": 0.005269454701679093,
+          "ap_by_iou": [
+            0.024662459475560686,
+            0.022504146364759663,
+            0.0035399159663865544,
+            0.001242857142857143,
+            0.0006165966386554622,
+            0.00012857142857142858,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class_id": 4,
+          "predictions": 404,
+          "support": 20
+        },
+        {
+          "ap50": 0.043314332636607944,
+          "ap50_95": 0.007976488560414361,
+          "ap_by_iou": [
+            0.043314332636607944,
+            0.016964332636607942,
+            0.013445611193871887,
+            0.004441624365482234,
+            0.001598984771573604,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class_id": 5,
+          "predictions": 238,
+          "support": 28
+        }
+      ]
+    }
+  },
+  "d_protocol_audit": {
+    "actual_args": {
+      "amp": false,
+      "batch": 8,
+      "cos_lr": false,
+      "epochs": 100,
+      "lr0": 0.001,
+      "lrf": 0.01,
+      "momentum": 0.937,
+      "nbs": 64,
+      "warmup_bias_lr": 0.1,
+      "warmup_epochs": 3.0,
+      "weight_decay": 0.0005,
+      "workers": 8
+    },
+    "batches_per_epoch": 152,
+    "manifest_sha256": "22913300a2ec457c3d4476000ab36039e496e01ac079976ead5bf65458cefbc4",
+    "nominal_accumulation_batches": 8,
+    "scaled_weight_decay": 0.0005,
+    "simulated_updates_by_epoch": [
+      83,
+      35,
+      22,
+      19
+    ],
+    "source_files": {
+      ".venv/Lib/site-packages/torchvision/models/detection/transform.py": "828bb498618fccb9dc57664c1e44d3930e943b47d4a098a2e83af63743cd03f6",
+      ".venv/Lib/site-packages/ultralytics/data/augment.py": "3631af29958e17bc442cbaa49a6bd32b660615b1bb1171a4e8e8692bace1f428",
+      ".venv/Lib/site-packages/ultralytics/engine/trainer.py": "57f7b317346c757a38096a58ab12c5dc6c005a7ef0395d20eb375ff1f3aed877",
+      ".venv/Lib/site-packages/ultralytics/utils/loss.py": "f6af7b277eb2cc939e3f4ca62fbb234742d1eb6c7607caaab06e6e026d47d45e"
+    },
+    "source_semantics": {
+      "ema": "D evaluates EMA; F evaluates direct FP32 model",
+      "epoch_boundary": "no explicit final flush; gradients and last_opt_step carry across epochs; final training remainder can be unstepped",
+      "loss": "YOLO loss multiplied by physical batch; accumulated without averaging; norm clipped at 10",
+      "lr": "epoch linear decay to lrf=.01; bias warmup from .1, other groups from 0; Adam beta1=.937"
+    },
+    "warmup_iterations": 456
+  },
+  "dataset": {
+    "canonical_train_valid_unchanged": true,
+    "identities_disjoint": true,
+    "lineage_verified": true,
+    "train_annotations": 698,
+    "train_empty": 607,
+    "train_fingerprint": "d658084e25bb3d7f19634f5328bdd6ae465dcd51f1c770df42f2589c87d2a05e",
+    "train_fingerprint_after": "d658084e25bb3d7f19634f5328bdd6ae465dcd51f1c770df42f2589c87d2a05e",
+    "train_images": 1211,
+    "valid_annotations": 204,
+    "valid_empty": 175,
+    "valid_fingerprint": "d43b38126e40e060b79b130c6475db2243f797f191d95038eee1e9d2491d7a78",
+    "valid_fingerprint_after": "d43b38126e40e060b79b130c6475db2243f797f191d95038eee1e9d2491d7a78",
+    "valid_images": 348
+  },
+  "documentation_sha256": {
+    "docs/EXPERIMENT_F_PROTOCOL.md": "37688bdbb612fa53259cc963ec568e8320ddc570401f2d89d5a47f30060f6e98",
+    "docs/evidence/experiment_f/STAGE1_REPORT.md": "b9049b9824781d38644d1bd07c4944e3b3ab449008ac72a3be38a81f44ac3e12"
+  },
+  "experiment": "F",
+  "failure_analysis": {
+    "augmented_gt_count": 0,
+    "canonical_index": 806,
+    "empty_roi_loss_reference": {
+      "classifier": "nan",
+      "regression": "nan"
+    },
+    "failing_trained_state_saved": false,
+    "image_sha256": "4b03bbaf8dbb8c8ead442ff15e6e6a54b7f47dac990fc3d84b681f8e513691b3",
+    "input_shape": [
+      3,
+      640,
+      640
+    ],
+    "label_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "metadata": {
+      "affine_matrix": [
+        [
+          1.0762290954589844,
+          0.11475637555122375,
+          -91.96804809570312
+        ],
+        [
+          -0.11475637555122375,
+          1.0762290954589844,
+          40.8590087890625
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "height": 512,
+      "left": 66,
+      "ratio": [
+        1.25,
+        1.25
+      ],
+      "resized_wh": [
+        508,
+        640
+      ],
+      "scale": 1.0823298855932286,
+      "top": 0,
+      "training": true,
+      "width": 406
+    },
+    "pixel_max": 0.8078431487083435,
+    "pixel_min": 0.007843137718737125,
+    "pixels_finite": true,
+    "position_zero_based": 401,
+    "preservation": {
+      "files": 272,
+      "unchanged": true
+    },
+    "pristine_model_forward_losses": {
+      "loss_box_reg": 0.0,
+      "loss_classifier": 2.4128620624542236,
+      "loss_objectness": 0.02952720783650875,
+      "loss_rpn_box_reg": 0.0
+    },
+    "roi_input_proposal_count": [
+      101
+    ],
+    "rpn_proposal_count": [
+      101
+    ],
+    "rpn_score_threshold": 0.05,
+    "sample_id": "train/image1_518_png.rf.317b927d25a648e43ad0f90efc74b147",
+    "scope": "one forward-only failure-sample probe with pristine pretrained model; no backward or optimizer updates",
+    "source_gt_count": 0,
+    "target_boxes": [],
+    "test_io_blocked_attempts": 0,
+    "training_runs_after_failure": 0
+  },
+  "implementation": {
+    "current_source_sha256": {
+      "configs/experiments/F.yaml": "f861ef14507c76e59a652a54fbd42d24a364dbe887bcce8dd3e2eafd67501fdf",
+      "src/bone_fracture_pipeline/detection_ap_evaluation.py": "ac99c775bcfe7be19303714d0a12da777f29bc395d743f2ca8347ca66691b36b",
+      "src/bone_fracture_pipeline/experiment_f_runner.py": "cce7b876278969f99d0ff528a0d0238c17474422c7748084ae2b2e9325be9ec5",
+      "src/bone_fracture_pipeline/faster_rcnn_dataset.py": "d06f53b55e052edbf63dec373d8de1ba1490915156d0051a986d173b8677730d",
+      "src/bone_fracture_pipeline/faster_rcnn_training.py": "59f7225c6e154e10f9576c55e79ec6789e9a41593145053d1616fdc692a8a3a8",
+      "tests/test_experiment_f.py": "14a4aa1c42e2fc36ae1862be64ea225efc8159adb335f79476bc6ea91c6ee78b"
+    },
+    "executed_commit": "169394d",
+    "executed_source_sha256": {
+      "configs/experiments/F.yaml": "f861ef14507c76e59a652a54fbd42d24a364dbe887bcce8dd3e2eafd67501fdf",
+      "src/bone_fracture_pipeline/detection_ap_evaluation.py": "ac99c775bcfe7be19303714d0a12da777f29bc395d743f2ca8347ca66691b36b",
+      "src/bone_fracture_pipeline/experiment_f_runner.py": "65128f323712f39434bf9ab49f86f89213c3d657c341d5cda6e9689975ff8781",
+      "src/bone_fracture_pipeline/faster_rcnn_dataset.py": "d06f53b55e052edbf63dec373d8de1ba1490915156d0051a986d173b8677730d",
+      "src/bone_fracture_pipeline/faster_rcnn_training.py": "751a902575411eac1b93803c5059072ecc7035175ef628540f5a3ce101f7cc2f",
+      "tests/test_experiment_f.py": "e73247a05fc37e300e07c0a776953bf83b3b89b3a69b66e7a94046786bd1af19"
+    },
+    "post_failure_repairs": "Structured component/progress/failure-state capture and required matching successful-smoke evidence for official launch; synthetic tests only, no GPU retraining."
+  },
+  "limitations": [
+    "No full F training epoch, validation inference/AP or trained checkpoint validation was completed.",
+    "The failed trained model, per-component failing loss and global finite-loss aggregates were not captured in the first implementation.",
+    "The pristine-model probe is not a replay of the failed trained state.",
+    "ROIAlign CUDA backward is nondeterministic on the installed runtime; warn-only deterministic policy was applied.",
+    "D native reproduction remains failed at its original absolute .00005 bound.",
+    "Full D-F performance interpretation and held-out evaluation remain unauthorized."
+  ],
+  "local_artifacts": {
+    "outputs\\training\\experiment_f\\audit\\failure_diagnosis.json": "83b7046693f7cd6ba93c58100894090900f28c15f12f42f26513fa7cac7ebbf9",
+    "outputs\\training\\experiment_f\\audit\\input_model_audit.json": "268f80185f192fbf3d69f34e190fd6a6f9a859573b8be3430e349afae77c94b8",
+    "outputs\\training\\experiment_f\\audit\\smoke_console.log": "f5e315144f867f2a7f7d241aeabf3bd59535de8552a3e8b8af9aa8bc43157d1f",
+    "outputs\\training\\experiment_f\\audit\\visual_review.json": "40bc76470b0e5e37a9abb412505a6fca519b11655341c991052c90b7cc466bf3",
+    "outputs\\training\\experiment_f\\smoke_stage1\\epoch_001_updates.jsonl": "07b5242a776ac12991d72ec38e8b29bedb44da65d8bbb68cd929fccc12bc253d",
+    "outputs\\training\\experiment_f\\smoke_stage1\\protection_before.json": "e358b5efddb7ba96bdcba060c2884a584e7d603aed0577db51abc854ce72b826",
+    "outputs\\training\\experiment_f\\smoke_stage1\\run_summary.json": "368b15b65a23bfdf6c4797f35fcd41f5767a8a03f89040925fea4bece90fee9b"
+  },
+  "model": {
+    "frozen_names": [
+      "backbone.body.0.0.weight",
+      "backbone.body.1.block.0.0.weight",
+      "backbone.body.1.block.1.0.weight",
+      "backbone.body.2.block.0.0.weight",
+      "backbone.body.2.block.1.0.weight",
+      "backbone.body.2.block.2.0.weight",
+      "backbone.body.3.block.0.0.weight",
+      "backbone.body.3.block.1.0.weight",
+      "backbone.body.3.block.2.0.weight",
+      "backbone.body.4.block.0.0.weight",
+      "backbone.body.4.block.1.0.weight",
+      "backbone.body.4.block.2.fc1.weight",
+      "backbone.body.4.block.2.fc1.bias",
+      "backbone.body.4.block.2.fc2.weight",
+      "backbone.body.4.block.2.fc2.bias",
+      "backbone.body.4.block.3.0.weight",
+      "backbone.body.5.block.0.0.weight",
+      "backbone.body.5.block.1.0.weight",
+      "backbone.body.5.block.2.fc1.weight",
+      "backbone.body.5.block.2.fc1.bias",
+      "backbone.body.5.block.2.fc2.weight",
+      "backbone.body.5.block.2.fc2.bias",
+      "backbone.body.5.block.3.0.weight",
+      "backbone.body.6.block.0.0.weight",
+      "backbone.body.6.block.1.0.weight",
+      "backbone.body.6.block.2.fc1.weight",
+      "backbone.body.6.block.2.fc1.bias",
+      "backbone.body.6.block.2.fc2.weight",
+      "backbone.body.6.block.2.fc2.bias",
+      "backbone.body.6.block.3.0.weight"
+    ],
+    "frozen_parameters": 58896,
+    "identifier": "fasterrcnn_mobilenet_v3_large_fpn",
+    "mapping": {
+      "background": 0,
+      "canonical_to_detector": {
+        "0": 1,
+        "1": 2,
+        "2": 3,
+        "3": 4,
+        "4": 5,
+        "5": 6
+      },
+      "detector_to_canonical": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 4,
+        "6": 5
+      }
+    },
+    "normalization_layers": [
+      "Conv2dNormActivation",
+      "FrozenBatchNorm2d"
+    ],
+    "roi": {
+      "bbox_reg_weights": [
+        10.0,
+        10.0,
+        5.0,
+        5.0
+      ],
+      "bg_iou": 0.5,
+      "fg_iou": 0.5,
+      "max_det": 300,
+      "native_default_max_det": 100,
+      "native_default_score": 0.05,
+      "nms": 0.5,
+      "positive_fraction": 0.25,
+      "sample_count": 512,
+      "score": 0.001
+    },
+    "rpn": {
+      "anchor_sizes": [
+        [
+          32,
+          64,
+          128,
+          256,
+          512
+        ],
+        [
+          32,
+          64,
+          128,
+          256,
+          512
+        ],
+        [
+          32,
+          64,
+          128,
+          256,
+          512
+        ]
+      ],
+      "aspect_ratios": [
+        [
+          0.5,
+          1.0,
+          2.0
+        ],
+        [
+          0.5,
+          1.0,
+          2.0
+        ],
+        [
+          0.5,
+          1.0,
+          2.0
+        ]
+      ],
+      "bg_iou": 0.3,
+      "fg_iou": 0.7,
+      "nms": 0.7,
+      "positive_fraction": 0.5,
+      "post_nms": {
+        "testing": 1000,
+        "training": 2000
+      },
+      "pre_nms": {
+        "testing": 1000,
+        "training": 2000
+      },
+      "sample_count": 256,
+      "score": 0.05
+    },
+    "total_parameters": 18955854,
+    "trainable_backbone_blocks": [
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "7",
+      "8",
+      "9"
+    ],
+    "trainable_backbone_layers": 3,
+    "trainable_parameters": 18896958,
+    "transform": {
+      "external": "aspect-preserving centered 640-square LetterBox, 114 padding, scaleup=True",
+      "image_mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "image_std": [
+        0.229,
+        0.224,
+        0.225
+      ],
+      "internal_resize": "identity with strict 640-square guard",
+      "native_default_max_size": 1333,
+      "native_default_min_size": 800,
+      "size_divisible": 32
+    },
+    "weights_enum": "FasterRCNN_MobileNet_V3_Large_FPN_Weights.COCO_V1",
+    "weights_sha256": "fb6a3cc702b1df54c18a44b26708cd083614211062d0c36d2ca7bf9270df3533",
+    "weights_url": "https://download.pytorch.org/models/fasterrcnn_mobilenet_v3_large_fpn-fb6a3cc7.pth"
+  },
+  "next_step": {
+    "conditional_correction": "Only if zero proposals are confirmed: consider a training-only RPN score floor 0 while retaining inference .05, subject to explicit protocol review/approval.",
+    "lr_reduction_supported_by_current_evidence": false,
+    "recommendation": "Obtain approval for an unchanged-config instrumented diagnostic retry, capture the actual failing component/proposal state, then select the smallest proven correction.",
+    "unconfirmed_candidate": "Training RPN score floor .05 can leave no proposals on an empty-target image; native empty-ROI losses are NaN. Actual failing-state proposal counts were not retained."
+  },
+  "preflight": {
+    "examples": [
+      {
+        "empty_label": false,
+        "gradient_norm": 20.42648696899414,
+        "input_shape": [
+          3,
+          640,
+          640
+        ],
+        "losses": {
+          "loss_box_reg": 0.008613782934844494,
+          "loss_classifier": 2.2974958419799805,
+          "loss_objectness": 0.10791724920272827,
+          "loss_rpn_box_reg": 0.007098414935171604
+        }
+      },
+      {
+        "empty_label": true,
+        "gradient_norm": 21.734363555908203,
+        "input_shape": [
+          3,
+          640,
+          640
+        ],
+        "losses": {
+          "loss_box_reg": 0.0,
+          "loss_classifier": 1.9565461874008179,
+          "loss_objectness": 0.02404450811445713,
+          "loss_rpn_box_reg": 0.0
+        }
+      }
+    ],
+    "model_optimizer_rng_reset_before_epoch": true,
+    "passed": true
+  },
+  "ready_for_official_training": false,
+  "runtime": {
+    "amp": false,
+    "deterministic_warn_only": true,
+    "device": "cuda:0",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "gpu_capacity_bytes": 6438780928,
+    "numpy": "2.5.2",
+    "physical_batch": 1,
+    "tf32": false,
+    "torch": "2.6.0+cu126",
+    "torchvision": "0.21.0+cu126",
+    "ultralytics": "8.4.155",
+    "workers": 0
+  },
+  "schema_version": 1,
+  "smoke": {
+    "amp_enabled": false,
+    "attempted_training_images": 402,
+    "attempts": 1,
+    "best_checkpoint_created": false,
+    "failed_trained_state_captured": false,
+    "failing_component_recorded": false,
+    "failing_position_zero_based": 401,
+    "failure": {
+      "message": "Non-finite loss at training image 401; no automatic retuning.",
+      "settings_automatically_changed": false,
+      "type": "FloatingPointError"
+    },
+    "full_training_epochs_completed": 0,
+    "global_training_loss_max": null,
+    "global_training_loss_mean": null,
+    "images_in_completed_optimizer_updates": 384,
+    "last_checkpoint_created": false,
+    "logged_window_end_losses": [
+      {
+        "completed_images": 64,
+        "window_end_total_loss": 2.199704
+      },
+      {
+        "completed_images": 128,
+        "window_end_total_loss": 2.019659
+      },
+      {
+        "completed_images": 192,
+        "window_end_total_loss": 1.626854
+      },
+      {
+        "completed_images": 256,
+        "window_end_total_loss": 0.896208
+      },
+      {
+        "completed_images": 320,
+        "window_end_total_loss": 0.958604
+      },
+      {
+        "completed_images": 384,
+        "window_end_total_loss": 0.32034
+      }
+    ],
+    "optimizer_updates": [
+      {
+        "completed_images": 64,
+        "gradient_norm_before_clip": 17.294267654418945,
+        "images": 64,
+        "lr": 1.761629507294247e-05,
+        "update": 1
+      },
+      {
+        "completed_images": 128,
+        "gradient_norm_before_clip": 15.716104507446289,
+        "images": 64,
+        "lr": 3.523259014588494e-05,
+        "update": 2
+      },
+      {
+        "completed_images": 192,
+        "gradient_norm_before_clip": 13.526473045349121,
+        "images": 64,
+        "lr": 5.284888521882741e-05,
+        "update": 3
+      },
+      {
+        "completed_images": 256,
+        "gradient_norm_before_clip": 11.839288711547852,
+        "images": 64,
+        "lr": 7.046518029176989e-05,
+        "update": 4
+      },
+      {
+        "completed_images": 320,
+        "gradient_norm_before_clip": 8.03877067565918,
+        "images": 64,
+        "lr": 8.808147536471237e-05,
+        "update": 5
+      },
+      {
+        "completed_images": 384,
+        "gradient_norm_before_clip": 1.9665720462799072,
+        "images": 64,
+        "lr": 0.00010569777043765482,
+        "update": 6
+      }
+    ],
+    "optimizer_updates_completed": 6,
+    "partial_window_backwards_before_abort": 17,
+    "shared_map50": null,
+    "shared_map50_95": null,
+    "training_positions_with_finite_loss_and_completed_backward": 401,
+    "validation_images_inferred": 0
+  },
+  "stage": 1,
+  "status": "failed_full_epoch_feasibility",
+  "timing": {
+    "complete_epoch_throughput": null,
+    "completed_training_epoch_seconds": null,
+    "partial_training_interval_approx_seconds": 28.47911529999692,
+    "prefix_only_training_projection_100_epochs_hours": 2.3890418833677103,
+    "projection_caveat": "Arithmetic from a failed prefix only; excludes unmeasured validation and checkpoint overhead, cannot establish end-to-end runtime or stable feasibility.",
+    "startup_including_preflight_seconds": 43.83440949999931,
+    "total_failed_attempt_seconds": 72.31352479999623,
+    "validation_seconds": null
+  },
+  "verification": {
+    "execution_baseline_files": 272,
+    "execution_baseline_files_unchanged": 269,
+    "intentional_post_failure_F_source_changes": [
+      "src/bone_fracture_pipeline/experiment_f_runner.py",
+      "src/bone_fracture_pipeline/faster_rcnn_training.py",
+      "tests/test_experiment_f.py"
+    ],
+    "no_official_training_run": true,
+    "no_second_gpu_training_run": true,
+    "pre_existing_protected_files": 234,
+    "pre_existing_protected_files_unchanged": true,
+    "scientific_configuration_unchanged": true,
+    "test_io_blocked_attempts": 0,
+    "tests": {
+      "focused": {
+        "count": 35,
+        "log_sha256": "8c131abc5209df5f07a2f383a147ba3b968ebfeada1ec8fc3b33ebf7e10d99eb",
+        "passed": true,
+        "seconds": 0.636
+      },
+      "regression": {
+        "count": 195,
+        "log_sha256": "9443487778db21827ecda10e7900ebc6a8cbc8f7c03e39fee66cc3e2765b0abf",
+        "passed": true,
+        "seconds": 9.597
+      }
+    }
+  }
+}

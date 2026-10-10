@@ -2,6 +2,8 @@
 
 Stage 1 authorizes implementation, synthetic tests, a two-image training-only forward/backward preflight, and **one full training epoch plus complete validation**. It does not authorize official training. The measured feasibility outcome is recorded separately in `docs/evidence/experiment_f/STAGE1_REPORT.md`.
 
+**Current gate: failed.** The first attempt stopped at zero-based training position 401 with a non-finite loss, after six optimizer updates. No complete epoch, F validation AP, best checkpoint or last checkpoint was produced. Post-failure observability and official-launch guards were added and tested without another GPU training run. The protocol is not ready to freeze or launch.
+
 ## Fixed inputs and scientific scope
 
 - Canonical `data/prepared/v3_detection_clahe`: train 1,211 images / 698 boxes / 607 empty labels; valid 348 / 204 / 175.
@@ -87,14 +89,16 @@ Run from the repository root in the pinned project environment:
 **Future command only; Stage 1 does not execute it:**
 
 ```powershell
-.venv/Scripts/python.exe -B -m bone_fracture_pipeline.experiment_f_runner --mode official --confirm-official-100-epochs --output outputs/training/experiment_f/official_seed42
+.venv/Scripts/python.exe -B -m bone_fracture_pipeline.experiment_f_runner --mode official --confirm-official-100-epochs --smoke-evidence outputs/training/experiment_f/approved_successful_smoke/run_summary.json --output outputs/training/experiment_f/official_seed42
 ```
 
-Official mode refuses to start without its explicit opt-in flag. Output paths must be fresh and inside the ignored F tree. The runner validates the entire applied YAML against the implemented contract and records its SHA-256. It captures preservation hashes before execution and verifies them afterward. When present, the Stage 1 historical protection map is also checked. External pretrained download is the only additional network requirement.
+Official mode refuses to start without its explicit opt-in flag **and a successful complete smoke summary matching the current config, source hashes and dataset fingerprints**. The example path represents a later approved successful run; the current failed attempt is rejected. Output paths must be fresh and inside the ignored F tree. The runner validates the entire applied YAML against the implemented contract and records its SHA-256. It captures preservation hashes before execution and verifies them afterward. When present, the Stage 1 historical protection map is also checked. External pretrained download is the only additional network requirement.
 
 Best selection maximizes shared validation mAP50-95; strict improvement preserves the earlier checkpoint on a tie. `last.pt` is always preserved. Atomic checkpoint writes contain FP32 model state, optimizer and image-scheduler state, epoch, best score, dataset fingerprints, model/category/input metadata, YAML/implementation hashes, seed and Python/NumPy/Torch/CUDA RNG state. Each completed checkpoint is reloaded and compared exactly to the in-memory model; optimizer/scheduler progress is checked. Prediction exports retain original coordinates and Phase 4 compatibility.
 
 Resume is allowed only in official mode, into a fresh directory, from a trusted local F checkpoint under the ignored F tree. `--resume path/to/last.pt` additionally requires the official flag. Config, implementation, data, model metadata and mode must match; RNG, model, optimizer and schedule are restored. Smoke checkpoints cannot become official runs through resume. Resume uses whole completed epoch boundaries; a mid-epoch technical failure restarts that epoch from the last completed checkpoint. Wall-clock or cross-machine equivalence is not guaranteed.
+
+After the failed attempt, non-finite-loss exceptions were extended to record per-component values, actual RPN proposal counts, image/target metadata, completed backward passes, prior optimizer updates, elapsed time and prior finite-loss summaries. The runner now saves the failing model, partial gradients and optimizer/scheduler state as a diagnostic-only `failure_capture.pt`, explicitly rejected for resume. This safeguard is covered by synthetic failure tests. It did **not** exist during the first attempt and cannot recover that discarded in-memory state retroactively. An unchanged-config diagnostic retry is needed to establish the exact failing operation before proposing a scientific correction.
 
 Preflight checks one annotated and one empty-label training image with actual forward/backward/update operations, then restores model, optimizer and RNG before the full epoch. Per-update logs record effective window size, LR and gradient norm. The run summary records maximum/representative losses, training/validation/checkpoint timings, throughput, peak allocated/reserved CUDA memory, capacity, provenance and failure status. Exactly one complete smoke epoch is permitted; no AP-driven rerun.
 
