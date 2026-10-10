@@ -39,20 +39,31 @@ def held_out_guard(project):
         state["enabled"] = False
 
 
-def load_config(project):
+def load_config(project, *, original_diagnostic=False):
     path = project / "configs/experiments/F.yaml"
     config = yaml.safe_load(path.read_text(encoding="utf-8"))
-    expected = {"experiment": "F", "protocol_version": 1, "dataset": "data/prepared/v3_detection_clahe",
+    expected = {"experiment": "F", "protocol_version": 2, "dataset": "data/prepared/v3_detection_clahe",
                 "model": "fasterrcnn_mobilenet_v3_large_fpn", "weights": "COCO_V1", "trainable_backbone_layers": 3,
                 "image_size": 640, "epochs": 100, "batch_size": 1, "validation_batch_size": 1,
                 "accumulation": 64, "optimizer": "AdamW", "lr": 0.001, "weight_decay": 0.0005,
                 "betas": [0.937, 0.999], "warmup_epochs": 3, "final_lr_factor": 0.01, "seed": 42,
                 "amp": False, "deterministic": True, "early_stopping": False, "workers": 0,
+                "training_rpn_score_threshold": 0.0,
                 "augmentation": {"degrees": 10.0, "translate": 0.05, "scale": 0.10, "hsv_v": 0.15},
                 "evaluation": {"confidence_floor": 0.001, "max_detections": 300, "primary": "shared_map50_95",
                                "roi_nms": 0.5, "rpn_score_threshold": 0.05}}
+    batch = config.get("batch_size")
+    if type(batch) is not int or batch not in (1, 2, 4):
+        raise ValueError("F supports only the approved physical batches 1, 2 and 4.")
+    expected.update(batch_size=batch, accumulation=64 // batch)
     if config != expected:
-        raise ValueError("F configuration differs from the implemented Stage 1 protocol; explicit review is required.")
+        raise ValueError("F configuration differs from the implemented Stage 1B protocol; explicit review is required.")
+    if original_diagnostic:
+        # Retain a reproducible diagnostic route after the approved protocol revision.
+        original = {**expected, "protocol_version": 1, "batch_size": 1, "accumulation": 64}
+        original.pop("training_rpn_score_threshold")
+        import hashlib
+        return original, hashlib.sha256(json.dumps(original, sort_keys=True).encode()).hexdigest()
     return config, sha256_file(path)
 
 
@@ -67,7 +78,8 @@ def fresh_output(project, output):
 def implementation_hashes(project):
     return {p.relative_to(project).as_posix(): sha256_file(p) for p in
             (Path(__file__), *(Path(__file__).parent / name for name in
-                              ("faster_rcnn_dataset.py", "faster_rcnn_training.py", "faster_rcnn_diagnostics.py", "detection_ap_evaluation.py")))}
+                              ("faster_rcnn_dataset.py", "faster_rcnn_training.py", "faster_rcnn_diagnostics.py",
+                               "experiment_f_feasibility.py", "detection_ap_evaluation.py")))}
 
 
 # An explicit official opt-in cannot bypass a failed or stale full-epoch smoke gate.
@@ -82,6 +94,21 @@ def verify_smoke_gate(project, path, config_hash, source_hashes):
             or evidence.get("completed_epochs") != 1 or evidence.get("configuration_sha256") != config_hash
             or evidence.get("implementation_hashes") != source_hashes):
         raise ValueError("Official mode is blocked by a failed, incomplete or changed-protocol smoke gate.")
+    epochs = evidence.get("epochs", [])
+    if len(epochs) != 1:
+        raise ValueError("A full training/validation record is required.")
+    epoch = epochs[0]
+    training = epoch.get("training", {})
+    checks = epoch.get("checkpoint_checks", {})
+    if (training.get("images") != 1211 or training.get("unique_images") != 1211
+            or [u.get("images") for u in training.get("optimizer_updates", [])] != [64]*18 + [59]
+            or training.get("all_losses_gradients_parameters_finite") is not True
+            or epoch.get("validation_images") != 348
+            or not all(checks.get(k, {}).get("model_tensors_exact") for k in ("best", "last"))
+            or evidence.get("canonical_data_unchanged") is not True
+            or evidence.get("protection_after", {}).get("unchanged") is not True
+            or evidence.get("test_io_blocked_attempts") != 0):
+        raise ValueError("Official mode requires all images, final optimizer window, validation and checkpoint gates.")
     return evidence
 
 
@@ -146,6 +173,8 @@ def verify_checkpoint(path, model, metadata, optimizer=None):
         raise ValueError("Checkpoint has no actual optimizer/scheduler progress.")
     if optimizer is not None:
         optimizer.load_state_dict(record["optimizer"])
+    # Exercise loading, rather than only comparing serialized tensors.
+    model.load_state_dict(record["model"])
     return {"model_tensors_exact": True, "optimizer_state_present": True, "scheduler_state_present": True,
             "rng_states_present": sorted(record["rng"]), "epoch": record["epoch"] + 1,
             "state_tensor_dtypes": sorted({str(v.dtype) for v in record["model"].values()})}
@@ -157,7 +186,7 @@ def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evi
     if resume is not None and mode != "official":
         raise ValueError("Smoke mode cannot resume or run a second epoch.")
     project = project.resolve()
-    config, config_hash = load_config(project)
+    config, config_hash = load_config(project, original_diagnostic=mode == "diagnostic")
     source_hashes = implementation_hashes(project)
     gate = verify_smoke_gate(project, smoke_evidence, config_hash, source_hashes) if mode == "official" else None
     output = fresh_output(project, output)
@@ -177,7 +206,7 @@ def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evi
             import torchvision
             import ultralytics
             from .faster_rcnn_training import (build_model, set_seed, make_optimizer, ImageSchedule, train_epoch,
-                                              checkpoint_is_better, save_checkpoint, finite_step)
+                                              checkpoint_is_better, save_checkpoint, finite_step, reset_training_state)
             from .detection_ap_evaluation import shared_ap
             from .faster_rcnn_diagnostics import NumericalProbe, save_failure
             from .error_analysis_quantitative import evaluate_rows, aggregate_evaluations, size_group
@@ -218,13 +247,13 @@ def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evi
             train = FractureDataset(train_samples, split="train")
             valid = FractureDataset(valid_samples, split="valid")
             set_seed(config["seed"])
-            model, model_report = build_model()
+            model, model_report = build_model(None if mode == "diagnostic" else config)
             summary["model"] = model_report
             summary["runtime"] = {"torch": torch.__version__, "torchvision": torchvision.__version__, "ultralytics": ultralytics.__version__,
                                   "numpy": np.__version__, "gpu": torch.cuda.get_device_name(0),
                                   "gpu_capacity_bytes": torch.cuda.get_device_properties(0).total_memory,
                                   "deterministic_warn_only": True, "amp": False, "tf32": False,
-                                  "device": "cuda:0", "physical_batch": 1, "workers": 0}
+                                  "device": "cuda:0", "physical_batch": config["batch_size"], "workers": 0}
             model.to(device)
             probe = NumericalProbe(model) if mode == "diagnostic" else None
             last_proposals = {}
@@ -276,11 +305,8 @@ def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evi
                     preflight.append({"empty_label": empty, "losses": {k: float(v.detach()) for k,v in losses.items()},
                                       "gradient_norm": norm, "input_shape": list(image.shape)})
                     del image, target, losses
-                model.load_state_dict(initial_state)
+                optimizer, scheduler = reset_training_state(model, initial_state, config, len(train))
                 del initial_state
-                optimizer = make_optimizer(model, config)
-                scheduler = ImageSchedule(optimizer, config, len(train))
-                set_seed(42)
                 summary["preflight"] = {"passed": True, "examples": preflight, "model_optimizer_rng_reset_before_epoch": True}
                 summary["preflight_cuda_memory"] = {"peak_allocated_bytes": torch.cuda.max_memory_allocated(),
                                                     "peak_reserved_bytes": torch.cuda.max_memory_reserved()}
@@ -302,6 +328,8 @@ def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evi
                 summary["last_training_statistics"] = stats
                 _write_json(output / "run_summary.json", summary)
                 model.eval()
+                if model.rpn.score_thresh != config["evaluation"]["rpn_score_threshold"]:
+                    raise ValueError("Inference RPN threshold was not restored.")
                 val_start, rows = time.perf_counter(), []
                 with torch.inference_mode():
                     for i, sample in enumerate(valid_samples):
@@ -332,12 +360,16 @@ def run(project, output, *, mode, confirm_official=False, resume=None, smoke_evi
                 last = save_checkpoint(output / "last.pt", model, optimizer, scheduler, epoch=epoch, best_score=best, metadata=metadata)
                 if better:
                     shutil.copyfile(output / "last.pt", output / "best.pt")
-                checkpoint_checks = verify_checkpoint(output / "last.pt", model, metadata, optimizer)
+                checkpoint_checks = {"last": verify_checkpoint(output / "last.pt", model, metadata, optimizer)}
+                if better:
+                    checkpoint_checks["best"] = verify_checkpoint(output / "best.pt", model, metadata)
                 checkpoint_seconds = time.perf_counter() - checkpoint_start
                 record = {"epoch": epoch + 1, "training": stats, "validation_seconds": validation_seconds,
+                          "validation_images": len(rows), "validation_rpn_threshold": model.rpn.score_thresh,
                           "ap_seconds": ap_seconds, "shared_ap": ap, "last_checkpoint": last,
                           "checkpoint_checks": checkpoint_checks, "checkpoint_seconds": checkpoint_seconds,
                           "prediction_sha256": sha256_file(export), "diagnostic_compatibility_passed": True}
+                record["best_checkpoint_sha256"] = sha256_file(output / "best.pt")
                 epochs.append(record)
                 summary["completed_epochs"] = epoch + 1
                 summary["epochs"] = epochs

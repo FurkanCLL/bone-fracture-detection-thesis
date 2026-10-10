@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import math
+import hashlib
+import json
 import random
 import time
 from pathlib import Path
@@ -13,6 +15,7 @@ from torchvision.models.detection import (
 )
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from torchvision.models.detection.transform import GeneralizedRCNNTransform
+from torchvision.models.detection.rpn import RegionProposalNetwork
 
 from bone_fracture_audit.audit import sha256_file
 from .faster_rcnn_diagnostics import parameter_status, tensor_status, rng_state
@@ -21,7 +24,7 @@ from .faster_rcnn_diagnostics import parameter_status, tensor_status, rng_state
 class NumericalTrainingError(FloatingPointError):
     def __init__(self, evidence):
         self.evidence = evidence
-        super().__init__(f"Non-finite loss at training image {evidence['position_zero_based']}; no automatic retuning.")
+        super().__init__(f"Numerical failure at training image {evidence['position_zero_based']}; no automatic retuning.")
 
 
 # Keep non-finite values as explicit strings so failure evidence remains strict JSON.
@@ -62,7 +65,23 @@ def adapt_head(model):
     return model
 
 
-def build_model():
+class PhaseAwareRPN(RegionProposalNetwork):
+    # Reuse the loaded COCO head and anchors; only phase-specific score filtering changes.
+    def __init__(self, original, training_threshold, inference_threshold):
+        super().__init__(original.anchor_generator, original.head, .7, .3, 256, .5,
+                         original._pre_nms_top_n, original._post_nms_top_n,
+                         original.nms_thresh, score_thresh=training_threshold)
+        self.training_threshold = training_threshold
+        self.inference_threshold = inference_threshold
+        self.train(original.training)
+
+    def train(self, mode=True):
+        super().train(mode)
+        self.score_thresh = self.training_threshold if mode else self.inference_threshold
+        return self
+
+
+def build_model(config=None):
     weights = FasterRCNN_MobileNet_V3_Large_FPN_Weights.COCO_V1
     # Load the complete COCO detector before replacing only the category-specific predictor.
     model = fasterrcnn_mobilenet_v3_large_fpn(
@@ -77,6 +96,9 @@ def build_model():
         box_positive_fraction=0.25, bbox_reg_weights=(10.0, 10.0, 5.0, 5.0),
     )
     adapt_head(model)
+    if config is not None:
+        model.rpn = PhaseAwareRPN(model.rpn, config["training_rpn_score_threshold"],
+                                 config["evaluation"]["rpn_score_threshold"])
     model.transform = LetterboxedTransform(640, 640, [0.485, 0.456, 0.406], [0.229, 0.224, 0.225], size_divisible=32)
     cache = Path(torch.hub.get_dir()) / "checkpoints" / weights.url.rsplit("/", 1)[-1]
     frozen = [name for name, p in model.named_parameters() if not p.requires_grad]
@@ -98,6 +120,8 @@ def build_model():
                       "native_default_min_size": 800, "native_default_max_size": 1333},
         "rpn": {"pre_nms": model.rpn._pre_nms_top_n, "post_nms": model.rpn._post_nms_top_n,
                 "nms": model.rpn.nms_thresh, "score": model.rpn.score_thresh,
+                "training_score_threshold": getattr(model.rpn, "training_threshold", .05),
+                "inference_score_threshold": getattr(model.rpn, "inference_threshold", .05),
                 "fg_iou": 0.7, "bg_iou": 0.3, "sample_count": 256, "positive_fraction": 0.5,
                 "anchor_sizes": model.rpn.anchor_generator.sizes,
                 "aspect_ratios": model.rpn.anchor_generator.aspect_ratios},
@@ -148,6 +172,16 @@ class ImageSchedule:
         self.images_seen = state["images_seen"]
 
 
+def reset_training_state(model, initial_state, config, images_per_epoch):
+    # Warmup/preflight work must not leak weights, gradients, optimizer moments, or RNG into a run.
+    model.load_state_dict(initial_state)
+    optimizer = make_optimizer(model, config)
+    optimizer.zero_grad(set_to_none=True)
+    scheduler = ImageSchedule(optimizer, config, images_per_epoch)
+    set_seed(config["seed"])
+    return optimizer, scheduler
+
+
 def accumulation_windows(length, accumulation):
     if length < 1 or accumulation < 1:
         raise ValueError("Epoch length and accumulation must be positive.")
@@ -172,66 +206,101 @@ def train_epoch(model, dataset, optimizer, scheduler, *, epoch, config, device, 
     if max_images is not None and not 1 <= max_images <= len(dataset):
         raise ValueError("Diagnostic image limit is outside the training split.")
     model.train()
+    batch_size = config["batch_size"]
+    effective_images = batch_size * config["accumulation"]
+    if type(batch_size) is not int or batch_size not in (1, 2, 4) or effective_images != 64:
+        raise ValueError("Approved microbatches must form 64-image optimization windows.")
     dataset.epoch = epoch
     order = torch.randperm(len(dataset), generator=torch.Generator().manual_seed(config["seed"] + epoch)).tolist()
     optimizer.zero_grad(set_to_none=True)
-    losses, components, updates = [], [], []
+    losses, components, updates, batch_sizes, sample_ids = [], [], [], [], []
     started = time.perf_counter()
+
+    def statistics():
+        if device.type == "cuda":
+            torch.cuda.synchronize()
+        elapsed = time.perf_counter() - started
+        return {"images": len(losses), "seconds": elapsed, "images_per_second": len(losses) / elapsed,
+                "physical_batches": len(batch_sizes), "batch_sizes": batch_sizes,
+                "training_rpn_threshold": getattr(getattr(model, "rpn", None), "score_thresh", None),
+                "average_batch_seconds": elapsed / len(batch_sizes),
+                "sample_order_sha256": hashlib.sha256(json.dumps(sample_ids).encode()).hexdigest(),
+                "unique_images": len(set(sample_ids)),
+                "loss_mean": float(np.mean(losses)), "loss_max": max(losses), "loss_min": min(losses),
+                "loss_quantiles": np.quantile(losses, [0, .25, .5, .75, 1]).tolist(),
+                "first_loss": losses[0], "last_loss": losses[-1],
+                "loss_unit": "native microbatch-reduced loss; summaries weighted by contributing images",
+                "component_means": {k: float(np.mean([c[k] for c in components])) for k in components[0]},
+                "component_maxima": {k: max(c[k] for c in components) for k in components[0]},
+                "optimizer_updates": updates, "all_losses_gradients_parameters_finite": True, "amp_enabled": False}
+
     with progress_path.open("w", encoding="utf-8") as log:
-        for start, window_size in accumulation_windows(len(dataset), config["accumulation"]):
-            for position in range(start, start + window_size):
+        for start, window_size in accumulation_windows(len(dataset), effective_images):
+            window_batches = []
+            for position in range(start, start + window_size, batch_size):
                 # A bounded diagnostic stops without stepping an unfinished 64-image window.
                 if max_images is not None and position >= max_images:
-                    return {"diagnostic_limit_reached": max_images, "images": len(losses),
-                            "optimizer_updates": updates, "seconds": time.perf_counter() - started}
-                image, target, image_metadata = dataset[order[position]]
-                image = image.to(device)
-                target = {k: v.to(device) for k, v in target.items()}
-                if torch.is_autocast_enabled() or image.dtype != torch.float32:
+                    return {**statistics(), "diagnostic_limit_reached": max_images}
+                end = min(position + batch_size, start + window_size, max_images or len(dataset))
+                items = [dataset[order[i]] for i in range(position, end)]
+                images = [item[0].to(device) for item in items]
+                targets = [{k: v.to(device) for k, v in item[1].items()} for item in items]
+                ids = [dataset.samples[order[i]].sample_id for i in range(position, end)]
+                count = len(images)
+                if torch.is_autocast_enabled() or any(image.dtype != torch.float32 for image in images):
                     raise ValueError("Experiment F must remain FP32 with AMP disabled.")
                 model._failure_forward_rng = rng_state()
-                loss_dict = model([image], [target])
+                loss_dict = model(images, targets)
                 loss = sum(loss_dict.values())
                 try:
-                    check_losses(loss_dict, position=position, sample_id=dataset.samples[order[position]].sample_id)
+                    check_losses(loss_dict, position=position, sample_id=ids[0])
+                    # Native losses average sampled anchors/ROIs across this microbatch.
+                    # Weight by b/W images, including a final batch of three in the 59-image window.
+                    (loss * (count / window_size)).backward()
+                    gradients = [torch.isfinite(p.grad).all() for p in model.parameters() if p.grad is not None]
+                    if not gradients or not bool(torch.stack(gradients).all()):
+                        raise NumericalTrainingError({"position_zero_based": position, "sample_id": ids[0],
+                                                      "stage": "backward", "total_loss": float(loss.detach()),
+                                                      "losses": {k: float(v.detach()) for k, v in loss_dict.items()}})
                 except NumericalTrainingError as error:
                     error.evidence.update({"completed_backwards": len(losses), "optimizer_updates": updates,
                                            "current_window_start": start, "current_window_size": window_size,
-                                           "input_shape": list(image.shape), "image_metadata": image_metadata,
-                                           "input_status": tensor_status(image), "ground_truth_count": len(target["boxes"]),
+                                           "input_shape": list(images[0].shape), "image_metadata": items[0][2],
+                                           "input_status": tensor_status(images[0]), "ground_truth_count": len(targets[0]["boxes"]),
+                                           "batch_sample_ids": ids, "batch_ground_truth_counts": [len(t["boxes"]) for t in targets],
+                                           "batch_input_status": [tensor_status(image) for image in images],
+                                           "batch_image_metadata": [item[2] for item in items],
                                            "current_lrs": [group["lr"] for group in optimizer.param_groups],
                                            "optimizer_update_count": len(updates), "state_status": parameter_status(model),
-                                           "target_boxes": target["boxes"].detach().cpu().tolist(),
-                                           "target_labels": target["labels"].detach().cpu().tolist(),
+                                           "target_boxes": targets[0]["boxes"].detach().cpu().tolist(),
+                                           "target_labels": targets[0]["labels"].detach().cpu().tolist(),
                                            "finite_loss_mean_before_failure": float(np.mean(losses)) if losses else None,
                                            "finite_loss_max_before_failure": max(losses) if losses else None,
                                            "seconds_before_failure": time.perf_counter() - started})
                     raise
-                # Divide by the actual window size, including the last 59-image window.
-                (loss / window_size).backward()
-                losses.append(float(loss.detach()))
-                components.append({k: float(v.detach()) for k, v in loss_dict.items()})
-                del loss, loss_dict, image, target
+                losses.extend([float(loss.detach())] * count)
+                components.extend([{k: float(v.detach()) for k, v in loss_dict.items()}] * count)
+                batch_sizes.append(count)
+                window_batches.append(count)
+                sample_ids.extend(ids)
+                del loss, loss_dict, images, targets, items
             images_seen = epoch * len(dataset) + start + window_size
             lr = scheduler.step(images_seen, epoch)
-            norm = finite_step(model, optimizer)
+            try:
+                norm = finite_step(model, optimizer)
+            except (FloatingPointError, RuntimeError) as error:
+                raise NumericalTrainingError({"position_zero_based": position, "sample_id": ids[0],
+                                              "stage": "optimizer", "message": str(error),
+                                              "completed_backwards": len(losses), "optimizer_updates": updates,
+                                              "state_status": parameter_status(model), "current_lrs": [lr]}) from error
             update = {"update": len(updates) + 1, "images": window_size, "lr": lr,
-                      "gradient_norm_before_clip": norm, "completed_images": start + window_size}
+                      "gradient_norm_before_clip": norm, "completed_images": start + window_size,
+                      "microbatch_sizes": window_batches}
             updates.append(update)
-            import json
             log.write(json.dumps(update) + "\n")
             log.flush()
             print(f"epoch={epoch+1} images={start+window_size}/{len(dataset)} loss={losses[-1]:.6f} lr={lr:.7f}", flush=True)
-    torch.cuda.synchronize() if device.type == "cuda" else None
-    elapsed = time.perf_counter() - started
-    return {"images": len(losses), "seconds": elapsed, "images_per_second": len(losses) / elapsed,
-            "loss_mean": float(np.mean(losses)), "loss_max": max(losses), "loss_min": min(losses),
-            "loss_quantiles": np.quantile(losses, [0, .25, .5, .75, 1]).tolist(),
-            "first_loss": losses[0], "last_loss": losses[-1],
-            "component_means": {k: float(np.mean([c[k] for c in components])) for k in components[0]},
-            "component_maxima": {k: max(c[k] for c in components) for k in components[0]},
-            "optimizer_updates": updates, "all_losses_gradients_parameters_finite": True,
-            "amp_enabled": False}
+    return statistics()
 
 
 def checkpoint_is_better(score, best):

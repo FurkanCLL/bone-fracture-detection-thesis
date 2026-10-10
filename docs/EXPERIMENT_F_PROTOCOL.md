@@ -1,8 +1,8 @@
 # Experiment F: Faster R-CNN protocol
 
-Stage 1 authorizes implementation, synthetic tests, a two-image training-only forward/backward preflight, and **one full training epoch plus complete validation**. It does not authorize official training. The measured feasibility outcome is recorded separately in `docs/evidence/experiment_f/STAGE1_REPORT.md`.
+Stage 1B authorizes an unchanged-protocol diagnostic, the conditionally approved training RPN correction, hardware benchmarks at physical batches 1/2/4, and **one fresh full training epoch plus complete validation**. Official 100-epoch training is not authorized. Historical failure evidence remains in `docs/evidence/experiment_f/STAGE1_REPORT.md`; follow-up evidence is recorded separately in `STAGE1B_REPORT.md`.
 
-**Current gate: failed.** The first attempt stopped at zero-based training position 401 with a non-finite loss, after six optimizer updates. No complete epoch, F validation AP, best checkpoint or last checkpoint was produced. Post-failure observability and official-launch guards were added and tested without another GPU training run. The protocol is not ready to freeze or launch.
+**Protocol revision 2, before official training:** the instrumented original-config retry reproduced the failure at position 401. Finite RPN logits/decoded proposals had maximum objectness .03055643, so score threshold .05 removed all proposals on an empty-target image. Native ROI classification and regression losses became NaN; input, parameters, pending gradients and earlier activations were finite. Replaying the exact captured state/RNG at threshold 0 retained 2,000 proposals with finite losses and gradients. Therefore training uses **RPN score threshold 0.0** and validation/inference retains **0.05**. No loss function, data, LR, precision, image size, or architecture changes. A complete new smoke gate is still required.
 
 ## Fixed inputs and scientific scope
 
@@ -31,7 +31,7 @@ Explicit model settings:
 | Component | Setting |
 |---|---|
 | RPN pre/post NMS proposals | train 2,000 / 2,000; valid 1,000 / 1,000 |
-| RPN NMS / objectness floor | .7 / .05 (high-resolution native settings) |
+| RPN NMS / objectness floor | .7 / training **0.0**, inference **.05** (revision 2) |
 | RPN positive/background IoU | .7 / .3 |
 | RPN sampler | 256 anchors/image, .5 positive fraction |
 | Anchor sizes at three levels | 32,64,128,256,512; ratios .5,1,2 |
@@ -61,7 +61,13 @@ D's preserved applied arguments and installed Ultralytics 8.4.155 trainer establ
 - AdamW beta1 is .937, beta2 .999; initial LR .001. Bias warmup starts at .1; other groups start at 0. The non-cosine scheduler linearly approaches `lrf=.01` across the 100-epoch budget.
 - YOLO multiplies its returned loss by physical batch size and accumulates without averaging by the window. It clips gradient norm to 10. Gradients and step bookkeeping carry over epoch boundaries, with no explicit end-of-training partial flush. D selects the EMA checkpoint.
 
-F uses physical train/valid batch 1, **constant accumulation 64**, AdamW LR target .001, beta1 .937, beta2 .999, epsilon 1e-8, weight decay .0005, bias/one-dimensional parameter decay exemption, and norm clip 10. Each image loss is divided by its actual window size. The epoch has **18×64 + 59** images in **19 optimizer updates**. The final window is averaged by 59 and stepped. No gradients are discarded. All losses, gradients and updated parameters must be finite before continuing.
+F supports train physical batches **1/2/4** with accumulation **64/32/16** respectively; validation stays at 1. The final batch is selected from hardware throughput and memory before the full smoke, independently of AP. AdamW retains LR target .001, beta1 .937, beta2 .999, epsilon 1e-8, weight decay .0005, bias/one-dimensional parameter decay exemption, and norm clip 10. The epoch has **18×64 + 59** images in **19 optimizer updates**. A native microbatch loss with `b` actual images contributes `b/W` times its value to a `W`-image window. For batch 4 the last window comprises 14 batches of four plus one of three, weighted 4/59 and 3/59. Every image is consumed exactly once; every final window is stepped.
+
+Torchvision reduces RPN objectness by the number of sampled anchors across a microbatch; RPN regression is a positive-anchor sum divided by total sampled anchors. ROI cross-entropy averages sampled labels across the microbatch; ROI regression sums positive terms and divides by all sampled labels. Consequently `sum_b (b/W)*L_b` averages the **native microbatch objectives with image-count weights**, not independently computed per-image losses. ROI proposal availability and positive sampling can change denominators and RNG draws; batch 4 is not numerically equivalent to four batch-1 calls. No native loss is replaced or rescaled internally. Loss summaries are explicitly native microbatch values weighted by contributing images. Hardware batching is a documented D/F and Stage1/Stage1B optimization difference.
+
+The RPN subclass reuses the loaded COCO head/anchor objects and changes only phase-specific score filtering. Recursive `train()` / `eval()` calls set the appropriate threshold immediately. Both values are present in configuration, model metadata, and checkpoint metadata; strict configuration/source/scheduler guards reject changed settings on resume. Non-finite losses, gradients, or parameters abort without skipping batches or retuning.
+
+Stage 1B selected **batch 4 / accumulation 16 before the final smoke**, independently of AP: 15.68 images/s versus 10.03 at batch 1, with 1,140 MiB peak reserved memory and 81.4% capacity headroom. Each candidate started from identical full model tensors, empty optimizer state and seed 42, after equal discarded four-image kernel warmup; initialization/warmup overhead is excluded. The common 128-image prefix covers all classes, 65 empty-label images, 75 targets and target counts 0–3. These short hardware measurements are not full-epoch guarantees.
 
 F warms all parameter groups uniformly from zero toward .001 over the first three epochs, according to images seen at each update. It does not copy D's bias-only .1 transient. For zero-based epoch `e`, update LR is `.001 * min(images_seen/(3*1211),1) * ((1-e/100)*.99+.01)`. Thus the first full smoke epoch ends at LR .000333333, while retaining the **100-epoch** scheduler budget. No one-epoch-specific LR schedule is substituted. Warmup, averaged losses, fixed accumulation, Adam implementation (unfused), FrozenBN, lack of EMA and RPN/ROI sampling are explicit optimization differences. Numerical settings alone do not establish equal dynamics.
 
@@ -83,13 +89,13 @@ Run from the repository root in the pinned project environment:
 
 ```powershell
 # Exactly one training epoch and one complete validation; choose a fresh path.
-.venv/Scripts/python.exe -B -m bone_fracture_pipeline.experiment_f_runner --mode smoke --output outputs/training/experiment_f/smoke_stage1
+.venv/Scripts/python.exe -B -m bone_fracture_pipeline.experiment_f_runner --mode smoke --output outputs/training/experiment_f/stage1b_smoke
 ```
 
-**Future command only; Stage 1 does not execute it:**
+**Future command only, requiring user authorization after review; Stage 1B does not execute it:**
 
 ```powershell
-.venv/Scripts/python.exe -B -m bone_fracture_pipeline.experiment_f_runner --mode official --confirm-official-100-epochs --smoke-evidence outputs/training/experiment_f/approved_successful_smoke/run_summary.json --output outputs/training/experiment_f/official_seed42
+.venv/Scripts/python.exe -B -m bone_fracture_pipeline.experiment_f_runner --mode official --confirm-official-100-epochs --smoke-evidence outputs/training/experiment_f/stage1b_smoke/run_summary.json --output outputs/training/experiment_f/official_seed42
 ```
 
 Official mode refuses to start without its explicit opt-in flag **and a successful complete smoke summary matching the current config, source hashes and dataset fingerprints**. The example path represents a later approved successful run; the current failed attempt is rejected. Output paths must be fresh and inside the ignored F tree. The runner validates the entire applied YAML against the implemented contract and records its SHA-256. It captures preservation hashes before execution and verifies them afterward. When present, the Stage 1 historical protection map is also checked. External pretrained download is the only additional network requirement.
@@ -98,7 +104,9 @@ Best selection maximizes shared validation mAP50-95; strict improvement preserve
 
 Resume is allowed only in official mode, into a fresh directory, from a trusted local F checkpoint under the ignored F tree. `--resume path/to/last.pt` additionally requires the official flag. Config, implementation, data, model metadata and mode must match; RNG, model, optimizer and schedule are restored. Smoke checkpoints cannot become official runs through resume. Resume uses whole completed epoch boundaries; a mid-epoch technical failure restarts that epoch from the last completed checkpoint. Wall-clock or cross-machine equivalence is not guaranteed.
 
-After the failed attempt, non-finite-loss exceptions were extended to record per-component values, actual RPN proposal counts, image/target metadata, completed backward passes, prior optimizer updates, elapsed time and prior finite-loss summaries. The runner now saves the failing model, partial gradients and optimizer/scheduler state as a diagnostic-only `failure_capture.pt`, explicitly rejected for resume. This safeguard is covered by synthetic failure tests. It did **not** exist during the first attempt and cannot recover that discarded in-memory state retroactively. An unchanged-config diagnostic retry is needed to establish the exact failing operation before proposing a scientific correction.
+After the original failed attempt, structured failure capture was added. Stage 1B extended it with total/component losses, current LR/update counts, finite input/parameter/gradient checks, CUDA memory, runtime, pending gradients and pre-forward RNG. Read-only probes inspect backbone/RPN/ROI activations and decoded/filtered proposals without modifying installed Torchvision. The unchanged-config retry then exercised the capture at the original failure and enabled the verified replay described above. Captures remain explicitly non-resumable; historical Stage 1 evidence is unchanged.
+
+Reproducible bounded diagnostics use `--mode diagnostic` (original protocol 1, maximum 500 images, no validation or final-window flush). The helper `python -m bone_fracture_pipeline.experiment_f_feasibility --action replay --capture <local failure_capture.pt> --output <fresh F directory>` verifies the authorized mechanism; `--action benchmark` compares only batches 1/2/4. Neither action authorizes or substitutes for the full smoke gate.
 
 Preflight checks one annotated and one empty-label training image with actual forward/backward/update operations, then restores model, optimizer and RNG before the full epoch. Per-update logs record effective window size, LR and gradient norm. The run summary records maximum/representative losses, training/validation/checkpoint timings, throughput, peak allocated/reserved CUDA memory, capacity, provenance and failure status. Exactly one complete smoke epoch is permitted; no AP-driven rerun.
 

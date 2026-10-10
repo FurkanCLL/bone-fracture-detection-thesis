@@ -1,14 +1,14 @@
 experiment: F
-protocol_version: 1
+protocol_version: 2
 dataset: data/prepared/v3_detection_clahe
 model: fasterrcnn_mobilenet_v3_large_fpn
 weights: COCO_V1
 trainable_backbone_layers: 3
 image_size: 640
 epochs: 100
-batch_size: 1
+batch_size: 4
 validation_batch_size: 1
-accumulation: 64
+accumulation: 16
 optimizer: AdamW
 lr: 0.001
 weight_decay: 0.0005
@@ -20,6 +20,8 @@ amp: false
 deterministic: true
 early_stopping: false
 workers: 0
+# Confirmed Stage 1B correction: retain proposals while fitting background images.
+training_rpn_score_threshold: 0.0
 augmentation:
   degrees: 10.0
   translate: 0.05

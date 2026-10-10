@@ -186,6 +186,7 @@ class ExperimentFTests(unittest.TestCase):
                 return torch.zeros(3,2,2), {"boxes":torch.zeros(0,4),"labels":torch.zeros(0,dtype=torch.int64)}, {}
         config = load_config(Path.cwd())[0]
         model = ToyModel()
+        config = {**config, "batch_size": 1, "accumulation": 64}
         optimizer = make_optimizer(model,config)
         scheduler = ImageSchedule(optimizer,config,2)
         with tempfile.TemporaryDirectory() as temp, self.assertRaises(NumericalTrainingError) as context:
@@ -328,7 +329,14 @@ class ExperimentFTests(unittest.TestCase):
             path = project/"outputs/training/experiment_f/smoke/run_summary.json"
             path.parent.mkdir(parents=True)
             evidence = {"status":"passed","mode":"smoke","completed_epochs":1,
-                        "configuration_sha256":"config","implementation_hashes":{"runner":"source"}}
+                        "configuration_sha256":"config","implementation_hashes":{"runner":"source"},
+                        "canonical_data_unchanged":True,"protection_after":{"unchanged":True},
+                        "test_io_blocked_attempts":0,
+                        "epochs":[{"training":{"images":1211,"unique_images":1211,
+                                  "optimizer_updates":[{"images":64}]*18+[{"images":59}],
+                                  "all_losses_gradients_parameters_finite":True},
+                                   "validation_images":348,"checkpoint_checks":{
+                                       "best":{"model_tensors_exact":True},"last":{"model_tensors_exact":True}}}]}
             path.write_text(json.dumps(evidence),encoding="utf-8")
             self.assertEqual(verify_smoke_gate(project,path,"config",{"runner":"source"}),evidence)
             for key,value in (("status","failed"),("completed_epochs",0),("configuration_sha256","changed")):
@@ -338,6 +346,12 @@ class ExperimentFTests(unittest.TestCase):
                     verify_smoke_gate(project,path,"config",{"runner":"source"})
             with self.assertRaises(ValueError):
                 verify_smoke_gate(project,None,"config",{})
+            for field, value in (("images", 401), ("unique_images", 1210), ("optimizer_updates", [{"images":64}]*18)):
+                invalid = json.loads(json.dumps(evidence))
+                invalid["epochs"][0]["training"][field] = value
+                path.write_text(json.dumps(invalid),encoding="utf-8")
+                with self.assertRaises(ValueError):
+                    verify_smoke_gate(project,path,"config",{"runner":"source"})
 
 
 if __name__ == "__main__":
