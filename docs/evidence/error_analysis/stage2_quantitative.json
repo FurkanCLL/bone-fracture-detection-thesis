@@ -1,0 +1,3180 @@
+{
+  "analysis": {
+    "analysis_a_iou_sensitivity": [
+      {
+        "class_aware": true,
+        "confidence": 0.05,
+        "f1": 0.314410480349345,
+        "fn": 132,
+        "fp": 182,
+        "ground_truth_count": 204,
+        "images": 348,
+        "iou": 0.1,
+        "matched_ground_truth_count": 72,
+        "precision": 0.28346456692913385,
+        "recall": 0.35294117647058826,
+        "retained_prediction_count": 254,
+        "tp": 72
+      },
+      {
+        "class_aware": true,
+        "confidence": 0.05,
+        "f1": 0.2663755458515284,
+        "fn": 143,
+        "fp": 193,
+        "ground_truth_count": 204,
+        "images": 348,
+        "iou": 0.3,
+        "matched_ground_truth_count": 61,
+        "precision": 0.24015748031496062,
+        "recall": 0.29901960784313725,
+        "retained_prediction_count": 254,
+        "tp": 61
+      },
+      {
+        "class_aware": true,
+        "confidence": 0.05,
+        "f1": 0.2183406113537118,
+        "fn": 154,
+        "fp": 204,
+        "ground_truth_count": 204,
+        "images": 348,
+        "iou": 0.5,
+        "matched_ground_truth_count": 50,
+        "precision": 0.1968503937007874,
+        "recall": 0.24509803921568626,
+        "retained_prediction_count": 254,
+        "tp": 50
+      },
+      {
+        "class_aware": true,
+        "confidence": 0.25,
+        "f1": 0.2642857142857143,
+        "fn": 167,
+        "fp": 39,
+        "ground_truth_count": 204,
+        "images": 348,
+        "iou": 0.1,
+        "matched_ground_truth_count": 37,
+        "precision": 0.4868421052631579,
+        "recall": 0.18137254901960784,
+        "retained_prediction_count": 76,
+        "tp": 37
+      },
+      {
+        "class_aware": true,
+        "confidence": 0.25,
+        "f1": 0.25,
+        "fn": 169,
+        "fp": 41,
+        "ground_truth_count": 204,
+        "images": 348,
+        "iou": 0.3,
+        "matched_ground_truth_count": 35,
+        "precision": 0.4605263157894737,
+        "recall": 0.1715686274509804,
+        "retained_prediction_count": 76,
+        "tp": 35
+      },
+      {
+        "class_aware": true,
+        "confidence": 0.25,
+        "f1": 0.21428571428571427,
+        "fn": 174,
+        "fp": 46,
+        "ground_truth_count": 204,
+        "images": 348,
+        "iou": 0.5,
+        "matched_ground_truth_count": 30,
+        "precision": 0.39473684210526316,
+        "recall": 0.14705882352941177,
+        "retained_prediction_count": 76,
+        "tp": 30
+      },
+      {
+        "class_aware": false,
+        "confidence": 0.05,
+        "f1": 0.3624454148471616,
+        "fn": 121,
+        "fp": 171,
+        "ground_truth_count": 204,
+        "images": 348,
+        "iou": 0.1,
+        "matched_ground_truth_count": 83,
+        "precision": 0.32677165354330706,
+        "recall": 0.4068627450980392,
+        "retained_prediction_count": 254,
+        "tp": 83
+      },
+      {
+        "class_aware": false,
+        "confidence": 0.05,
+        "f1": 0.29694323144104806,
+        "fn": 136,
+        "fp": 186,
+        "ground_truth_count": 204,
+        "images": 348,
+        "iou": 0.3,
+        "matched_ground_truth_count": 68,
+        "precision": 0.2677165354330709,
+        "recall": 0.3333333333333333,
+        "retained_prediction_count": 254,
+        "tp": 68
+      },
+      {
+        "class_aware": false,
+        "confidence": 0.05,
+        "f1": 0.2445414847161572,
+        "fn": 148,
+        "fp": 198,
+        "ground_truth_count": 204,
+        "images": 348,
+        "iou": 0.5,
+        "matched_ground_truth_count": 56,
+        "precision": 0.2204724409448819,
+        "recall": 0.27450980392156865,
+        "retained_prediction_count": 254,
+        "tp": 56
+      },
+      {
+        "class_aware": false,
+        "confidence": 0.25,
+        "f1": 0.32142857142857145,
+        "fn": 159,
+        "fp": 31,
+        "ground_truth_count": 204,
+        "images": 348,
+        "iou": 0.1,
+        "matched_ground_truth_count": 45,
+        "precision": 0.5921052631578947,
+        "recall": 0.22058823529411764,
+        "retained_prediction_count": 76,
+        "tp": 45
+      },
+      {
+        "class_aware": false,
+        "confidence": 0.25,
+        "f1": 0.2857142857142857,
+        "fn": 164,
+        "fp": 36,
+        "ground_truth_count": 204,
+        "images": 348,
+        "iou": 0.3,
+        "matched_ground_truth_count": 40,
+        "precision": 0.5263157894736842,
+        "recall": 0.19607843137254902,
+        "retained_prediction_count": 76,
+        "tp": 40
+      },
+      {
+        "class_aware": false,
+        "confidence": 0.25,
+        "f1": 0.22857142857142856,
+        "fn": 172,
+        "fp": 44,
+        "ground_truth_count": 204,
+        "images": 348,
+        "iou": 0.5,
+        "matched_ground_truth_count": 32,
+        "precision": 0.42105263157894735,
+        "recall": 0.1568627450980392,
+        "retained_prediction_count": 76,
+        "tp": 32
+      }
+    ],
+    "analysis_b_confidence_sensitivity": {
+      "candidate_localization": {
+        "annotated_image_candidate_count": 1314,
+        "bins": [
+          {
+            "any_class_iou_at_least_0_5_count": 146,
+            "best_any_class_iou": {
+              "count": 852,
+              "max": 0.8637522382262293,
+              "mean": 0.21817962120352138,
+              "median": 0.12578898766183133,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.0,
+              "p5": 0.0,
+              "p50": 0.12578898766183133,
+              "p75": 0.39584384554916263,
+              "p90": 0.5838290904364101,
+              "p95": 0.673824460740482,
+              "std_population": 0.23779928164884057
+            },
+            "best_correct_class_iou": {
+              "count": 852,
+              "max": 0.8216488449340172,
+              "mean": 0.12516147484554022,
+              "median": 0.0,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.0,
+              "p5": 0.0,
+              "p50": 0.0,
+              "p75": 0.20489284241582098,
+              "p90": 0.4971617720309112,
+              "p95": 0.592628013535687,
+              "std_population": 0.20814300022415666
+            },
+            "candidates": 852,
+            "confidence": {
+              "count": 852,
+              "max": 0.009954523295164108,
+              "mean": 0.0031645976545610533,
+              "median": 0.002307352959178388,
+              "min": 0.0010007208911702037,
+              "p10": 0.001200112304650247,
+              "p25": 0.0014885560958646238,
+              "p5": 0.001097627030685544,
+              "p50": 0.002307352959178388,
+              "p75": 0.004211718565784395,
+              "p90": 0.0066408664919435974,
+              "p95": 0.008010364184156054,
+              "std_population": 0.0021768840146971676
+            },
+            "confidence_lower_inclusive": 0.001,
+            "confidence_upper": 0.01,
+            "correct_class_iou_at_least_0_5_count": 82,
+            "upper_inclusive": false
+          },
+          {
+            "any_class_iou_at_least_0_5_count": 51,
+            "best_any_class_iou": {
+              "count": 243,
+              "max": 0.7734483335347736,
+              "mean": 0.25215050871343225,
+              "median": 0.20945574638685166,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.0,
+              "p5": 0.0,
+              "p50": 0.20945574638685166,
+              "p75": 0.4621330883589197,
+              "p90": 0.605926838305836,
+              "p95": 0.670204459136203,
+              "std_population": 0.23935798056994229
+            },
+            "best_correct_class_iou": {
+              "count": 243,
+              "max": 0.7734483335347736,
+              "mean": 0.17856427445787804,
+              "median": 0.0,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.0,
+              "p5": 0.0,
+              "p50": 0.0,
+              "p75": 0.36663190680992724,
+              "p90": 0.5854414094759969,
+              "p95": 0.6379999740812689,
+              "std_population": 0.23829196500269914
+            },
+            "candidates": 243,
+            "confidence": {
+              "count": 243,
+              "max": 0.04968295246362686,
+              "mean": 0.022596574905845854,
+              "median": 0.020023085176944733,
+              "min": 0.010112257674336433,
+              "p10": 0.011303918808698655,
+              "p25": 0.013590792194008827,
+              "p5": 0.010596641432493925,
+              "p50": 0.020023085176944733,
+              "p75": 0.028699267655611038,
+              "p90": 0.04062020927667618,
+              "p95": 0.044995063543319704,
+              "std_population": 0.010746294918407142
+            },
+            "confidence_lower_inclusive": 0.01,
+            "confidence_upper": 0.05,
+            "correct_class_iou_at_least_0_5_count": 38,
+            "upper_inclusive": false
+          },
+          {
+            "any_class_iou_at_least_0_5_count": 19,
+            "best_any_class_iou": {
+              "count": 81,
+              "max": 0.8501528236635759,
+              "mean": 0.27423580384194646,
+              "median": 0.2690919957836415,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.0,
+              "p5": 0.0,
+              "p50": 0.2690919957836415,
+              "p75": 0.48242409399602504,
+              "p90": 0.6528805918674468,
+              "p95": 0.7019443772511784,
+              "std_population": 0.2579826488149639
+            },
+            "best_correct_class_iou": {
+              "count": 81,
+              "max": 0.8501528236635759,
+              "mean": 0.19296071282563793,
+              "median": 0.0,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.0,
+              "p5": 0.0,
+              "p50": 0.0,
+              "p75": 0.3665026018161921,
+              "p90": 0.600159105005189,
+              "p95": 0.6528805918674468,
+              "std_population": 0.24609258388166744
+            },
+            "candidates": 81,
+            "confidence": {
+              "count": 81,
+              "max": 0.09899336099624634,
+              "mean": 0.06957063327232997,
+              "median": 0.06707466393709183,
+              "min": 0.05021084100008011,
+              "p10": 0.05474260449409485,
+              "p25": 0.0577574297785759,
+              "p5": 0.052914343774318695,
+              "p50": 0.06707466393709183,
+              "p75": 0.08004026114940643,
+              "p90": 0.0904470682144165,
+              "p95": 0.0951971486210823,
+              "std_population": 0.013366782894615665
+            },
+            "confidence_lower_inclusive": 0.05,
+            "confidence_upper": 0.1,
+            "correct_class_iou_at_least_0_5_count": 14,
+            "upper_inclusive": false
+          },
+          {
+            "any_class_iou_at_least_0_5_count": 23,
+            "best_any_class_iou": {
+              "count": 72,
+              "max": 0.8741475394107822,
+              "mean": 0.3008600975449579,
+              "median": 0.254046558980243,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.020491118236275512,
+              "p5": 0.0,
+              "p50": 0.254046558980243,
+              "p75": 0.5544039855190002,
+              "p90": 0.6486119291184976,
+              "p95": 0.7385522550402265,
+              "std_population": 0.2659999976969247
+            },
+            "best_correct_class_iou": {
+              "count": 72,
+              "max": 0.8741475394107822,
+              "mean": 0.2174466139666834,
+              "median": 0.08701912183562366,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.0,
+              "p5": 0.0,
+              "p50": 0.08701912183562366,
+              "p75": 0.4466314745342974,
+              "p90": 0.5878069389908683,
+              "p95": 0.6887657421591911,
+              "std_population": 0.2600285037110625
+            },
+            "candidates": 72,
+            "confidence": {
+              "count": 72,
+              "max": 0.24665755033493042,
+              "mean": 0.15411261179380947,
+              "median": 0.15398379415273666,
+              "min": 0.10147061198949814,
+              "p10": 0.10639194175601005,
+              "p25": 0.12016147747635841,
+              "p5": 0.10324058420956135,
+              "p50": 0.15398379415273666,
+              "p75": 0.17941469326615334,
+              "p90": 0.20694442242383956,
+              "p95": 0.22376395165920257,
+              "std_population": 0.03829065844665466
+            },
+            "confidence_lower_inclusive": 0.1,
+            "confidence_upper": 0.25,
+            "correct_class_iou_at_least_0_5_count": 15,
+            "upper_inclusive": false
+          },
+          {
+            "any_class_iou_at_least_0_5_count": 19,
+            "best_any_class_iou": {
+              "count": 39,
+              "max": 0.8637522382262293,
+              "mean": 0.376704544150583,
+              "median": 0.4680881916418924,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.0632430606986341,
+              "p5": 0.0,
+              "p50": 0.4680881916418924,
+              "p75": 0.6442659487182797,
+              "p90": 0.7278359844487767,
+              "p95": 0.7593735867694116,
+              "std_population": 0.2951255348558365
+            },
+            "best_correct_class_iou": {
+              "count": 39,
+              "max": 0.8637522382262293,
+              "mean": 0.2843759865207102,
+              "median": 0.08405715921208919,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.0,
+              "p5": 0.0,
+              "p50": 0.08405715921208919,
+              "p75": 0.5930059085457334,
+              "p90": 0.7064440864056886,
+              "p95": 0.7573008998276108,
+              "std_population": 0.3132890116249956
+            },
+            "candidates": 39,
+            "confidence": {
+              "count": 39,
+              "max": 0.4780542850494385,
+              "mean": 0.3495913155567952,
+              "median": 0.34586676955223083,
+              "min": 0.2597082853317261,
+              "p10": 0.26682956218719484,
+              "p25": 0.31499557197093964,
+              "p5": 0.2619089066982269,
+              "p50": 0.34586676955223083,
+              "p75": 0.38635869324207306,
+              "p90": 0.4336813807487488,
+              "p95": 0.4535159349441528,
+              "std_population": 0.057364934949810285
+            },
+            "confidence_lower_inclusive": 0.25,
+            "confidence_upper": 0.5,
+            "correct_class_iou_at_least_0_5_count": 15,
+            "upper_inclusive": false
+          },
+          {
+            "any_class_iou_at_least_0_5_count": 19,
+            "best_any_class_iou": {
+              "count": 27,
+              "max": 0.8476832605650273,
+              "mean": 0.570799428223589,
+              "median": 0.6195822743364909,
+              "min": 0.0,
+              "p10": 0.28458179646110565,
+              "p25": 0.4512375637748225,
+              "p5": 0.07610460333452806,
+              "p50": 0.6195822743364909,
+              "p75": 0.7208788221180212,
+              "p90": 0.8142365675098272,
+              "p95": 0.839089699233719,
+              "std_population": 0.2245854411804773
+            },
+            "best_correct_class_iou": {
+              "count": 27,
+              "max": 0.8476832605650273,
+              "mean": 0.48383102871766387,
+              "median": 0.590873534565976,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.2775881513470089,
+              "p5": 0.0,
+              "p50": 0.590873534565976,
+              "p75": 0.706961905428978,
+              "p90": 0.7974269566897141,
+              "p95": 0.8180288313859065,
+              "std_population": 0.29133049155282886
+            },
+            "candidates": 27,
+            "confidence": {
+              "count": 27,
+              "max": 0.9184269905090332,
+              "mean": 0.7006617563742178,
+              "median": 0.6866668462753296,
+              "min": 0.5000042915344238,
+              "p10": 0.5451317667961121,
+              "p25": 0.6021057069301605,
+              "p5": 0.5330817401409149,
+              "p50": 0.6866668462753296,
+              "p75": 0.8043130338191986,
+              "p90": 0.8338735342025757,
+              "p95": 0.8478358268737793,
+              "std_population": 0.11417977378625166
+            },
+            "confidence_lower_inclusive": 0.5,
+            "confidence_upper": 1.0,
+            "correct_class_iou_at_least_0_5_count": 17,
+            "upper_inclusive": true
+          }
+        ],
+        "excluded_empty_image_candidate_count": 441,
+        "interpretation": "Descriptive candidate-level association, not independent samples, probability calibration, significance, one-to-one precision, or causal evidence.",
+        "spearman_confidence_vs_best_any_class_iou": 0.13998346143414514,
+        "spearman_confidence_vs_best_correct_class_iou": 0.16462981588222236
+      },
+      "operating_points": [
+        {
+          "class_aware": true,
+          "confidence": 0.01,
+          "f1": 0.15949367088607594,
+          "fn": 141,
+          "fp": 523,
+          "ground_truth_count": 204,
+          "images": 348,
+          "iou": 0.5,
+          "matched_ground_truth_count": 63,
+          "precision": 0.1075085324232082,
+          "recall": 0.3088235294117647,
+          "retained_prediction_count": 586,
+          "tp": 63
+        },
+        {
+          "class_aware": true,
+          "confidence": 0.05,
+          "f1": 0.2183406113537118,
+          "fn": 154,
+          "fp": 204,
+          "ground_truth_count": 204,
+          "images": 348,
+          "iou": 0.5,
+          "matched_ground_truth_count": 50,
+          "precision": 0.1968503937007874,
+          "recall": 0.24509803921568626,
+          "retained_prediction_count": 254,
+          "tp": 50
+        },
+        {
+          "class_aware": true,
+          "confidence": 0.1,
+          "f1": 0.21978021978021978,
+          "fn": 164,
+          "fp": 120,
+          "ground_truth_count": 204,
+          "images": 348,
+          "iou": 0.5,
+          "matched_ground_truth_count": 40,
+          "precision": 0.25,
+          "recall": 0.19607843137254902,
+          "retained_prediction_count": 160,
+          "tp": 40
+        },
+        {
+          "class_aware": true,
+          "confidence": 0.25,
+          "f1": 0.21428571428571427,
+          "fn": 174,
+          "fp": 46,
+          "ground_truth_count": 204,
+          "images": 348,
+          "iou": 0.5,
+          "matched_ground_truth_count": 30,
+          "precision": 0.39473684210526316,
+          "recall": 0.14705882352941177,
+          "retained_prediction_count": 76,
+          "tp": 30
+        },
+        {
+          "class_aware": true,
+          "confidence": 0.5,
+          "f1": 0.14468085106382977,
+          "fn": 187,
+          "fp": 14,
+          "ground_truth_count": 204,
+          "images": 348,
+          "iou": 0.5,
+          "matched_ground_truth_count": 17,
+          "precision": 0.5483870967741935,
+          "recall": 0.08333333333333333,
+          "retained_prediction_count": 31,
+          "tp": 17
+        },
+        {
+          "class_aware": false,
+          "confidence": 0.01,
+          "f1": 0.17468354430379746,
+          "fn": 135,
+          "fp": 517,
+          "ground_truth_count": 204,
+          "images": 348,
+          "iou": 0.5,
+          "matched_ground_truth_count": 69,
+          "precision": 0.11774744027303755,
+          "recall": 0.3382352941176471,
+          "retained_prediction_count": 586,
+          "tp": 69
+        },
+        {
+          "class_aware": false,
+          "confidence": 0.05,
+          "f1": 0.2445414847161572,
+          "fn": 148,
+          "fp": 198,
+          "ground_truth_count": 204,
+          "images": 348,
+          "iou": 0.5,
+          "matched_ground_truth_count": 56,
+          "precision": 0.2204724409448819,
+          "recall": 0.27450980392156865,
+          "retained_prediction_count": 254,
+          "tp": 56
+        },
+        {
+          "class_aware": false,
+          "confidence": 0.1,
+          "f1": 0.25274725274725274,
+          "fn": 158,
+          "fp": 114,
+          "ground_truth_count": 204,
+          "images": 348,
+          "iou": 0.5,
+          "matched_ground_truth_count": 46,
+          "precision": 0.2875,
+          "recall": 0.22549019607843138,
+          "retained_prediction_count": 160,
+          "tp": 46
+        },
+        {
+          "class_aware": false,
+          "confidence": 0.25,
+          "f1": 0.22857142857142856,
+          "fn": 172,
+          "fp": 44,
+          "ground_truth_count": 204,
+          "images": 348,
+          "iou": 0.5,
+          "matched_ground_truth_count": 32,
+          "precision": 0.42105263157894735,
+          "recall": 0.1568627450980392,
+          "retained_prediction_count": 76,
+          "tp": 32
+        },
+        {
+          "class_aware": false,
+          "confidence": 0.5,
+          "f1": 0.16170212765957448,
+          "fn": 185,
+          "fp": 12,
+          "ground_truth_count": 204,
+          "images": 348,
+          "iou": 0.5,
+          "matched_ground_truth_count": 19,
+          "precision": 0.6129032258064516,
+          "recall": 0.09313725490196079,
+          "retained_prediction_count": 31,
+          "tp": 19
+        }
+      ]
+    },
+    "analysis_c_fn_taxonomy": {
+      "candidate_combination_flag_counts": {
+        "correct_class_high_confidence_poor_overlap": 9,
+        "correct_class_low_confidence_poor_overlap": 79,
+        "correct_class_low_confidence_sufficient_overlap": 56,
+        "wrong_class_high_confidence_poor_overlap": 6,
+        "wrong_class_high_confidence_sufficient_overlap": 2,
+        "wrong_class_low_confidence_poor_overlap": 55,
+        "wrong_class_low_confidence_sufficient_overlap": 27
+      },
+      "class_rows": [
+        {
+          "categories": {
+            "classification_error": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "complete_miss": {
+              "count": 12,
+              "percentage_of_class_fn": 42.857142857142854
+            },
+            "localization_failure": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "low_confidence_detection": {
+              "count": 6,
+              "percentage_of_class_fn": 21.428571428571427
+            },
+            "matching_conflict": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "mixed_or_unresolved": {
+              "count": 10,
+              "percentage_of_class_fn": 35.714285714285715
+            }
+          },
+          "class_id": 0,
+          "class_name": "elbow positive",
+          "fn": 28
+        },
+        {
+          "categories": {
+            "classification_error": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "complete_miss": {
+              "count": 21,
+              "percentage_of_class_fn": 44.680851063829785
+            },
+            "localization_failure": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "low_confidence_detection": {
+              "count": 13,
+              "percentage_of_class_fn": 27.659574468085108
+            },
+            "matching_conflict": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "mixed_or_unresolved": {
+              "count": 13,
+              "percentage_of_class_fn": 27.659574468085108
+            }
+          },
+          "class_id": 1,
+          "class_name": "fingers positive",
+          "fn": 47
+        },
+        {
+          "categories": {
+            "classification_error": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "complete_miss": {
+              "count": 8,
+              "percentage_of_class_fn": 25.806451612903224
+            },
+            "localization_failure": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "low_confidence_detection": {
+              "count": 14,
+              "percentage_of_class_fn": 45.16129032258065
+            },
+            "matching_conflict": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "mixed_or_unresolved": {
+              "count": 9,
+              "percentage_of_class_fn": 29.032258064516128
+            }
+          },
+          "class_id": 2,
+          "class_name": "forearm fracture",
+          "fn": 31
+        },
+        {
+          "categories": {
+            "classification_error": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "complete_miss": {
+              "count": 4,
+              "percentage_of_class_fn": 17.391304347826086
+            },
+            "localization_failure": {
+              "count": 2,
+              "percentage_of_class_fn": 8.695652173913043
+            },
+            "low_confidence_detection": {
+              "count": 6,
+              "percentage_of_class_fn": 26.08695652173913
+            },
+            "matching_conflict": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "mixed_or_unresolved": {
+              "count": 11,
+              "percentage_of_class_fn": 47.82608695652174
+            }
+          },
+          "class_id": 3,
+          "class_name": "humerus fracture",
+          "fn": 23
+        },
+        {
+          "categories": {
+            "classification_error": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "complete_miss": {
+              "count": 6,
+              "percentage_of_class_fn": 31.57894736842105
+            },
+            "localization_failure": {
+              "count": 1,
+              "percentage_of_class_fn": 5.2631578947368425
+            },
+            "low_confidence_detection": {
+              "count": 6,
+              "percentage_of_class_fn": 31.57894736842105
+            },
+            "matching_conflict": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "mixed_or_unresolved": {
+              "count": 6,
+              "percentage_of_class_fn": 31.57894736842105
+            }
+          },
+          "class_id": 4,
+          "class_name": "shoulder fracture",
+          "fn": 19
+        },
+        {
+          "categories": {
+            "classification_error": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "complete_miss": {
+              "count": 12,
+              "percentage_of_class_fn": 46.15384615384615
+            },
+            "localization_failure": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "low_confidence_detection": {
+              "count": 3,
+              "percentage_of_class_fn": 11.538461538461538
+            },
+            "matching_conflict": {
+              "count": 0,
+              "percentage_of_class_fn": 0.0
+            },
+            "mixed_or_unresolved": {
+              "count": 11,
+              "percentage_of_class_fn": 42.30769230769231
+            }
+          },
+          "class_id": 5,
+          "class_name": "wrist positive",
+          "fn": 26
+        }
+      ],
+      "nonexclusive_flag_counts": {
+        "classification_error": 2,
+        "jointly_imperfect_candidate": 96,
+        "localization_failure": 9,
+        "low_confidence_detection": 56,
+        "retained_nearby_candidate": 111
+      },
+      "primary_categories": {
+        "classification_error": {
+          "count": 0,
+          "percentage_of_fn": 0.0
+        },
+        "complete_miss": {
+          "count": 63,
+          "percentage_of_fn": 36.206896551724135
+        },
+        "localization_failure": {
+          "count": 3,
+          "percentage_of_fn": 1.7241379310344827
+        },
+        "low_confidence_detection": {
+          "count": 48,
+          "percentage_of_fn": 27.586206896551722
+        },
+        "matching_conflict": {
+          "count": 0,
+          "percentage_of_fn": 0.0
+        },
+        "mixed_or_unresolved": {
+          "count": 60,
+          "percentage_of_fn": 34.48275862068966
+        }
+      },
+      "primary_counts_exhaustive_and_nonoverlapping": true,
+      "total_false_negatives": 174
+    },
+    "analysis_d_classes": {
+      "class_confusion": {
+        "additional_gt_matched_when_agnostic": 2,
+        "columns": "predicted_class",
+        "correct_class_matches": 29,
+        "geometric_matches": 32,
+        "gt_lost_when_agnostic": 0,
+        "gt_matched_in_both_modes": 30,
+        "limitation": "Removing class eligibility can rearrange greedy assignments; the TP difference alone is not a pure classification-error count.",
+        "matrix": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            12,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            13,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            0,
+            0,
+            1
+          ]
+        ],
+        "rows": "ground_truth_class",
+        "wrong_class_matches": 3,
+        "wrong_class_percentage_of_geometric_matches": 9.375
+      },
+      "class_rows": [
+        {
+          "class_id": 0,
+          "class_name": "elbow positive",
+          "f1": 0.05714285714285714,
+          "fn": 28,
+          "fn_primary_counts": {
+            "classification_error": 0,
+            "complete_miss": 12,
+            "localization_failure": 0,
+            "low_confidence_detection": 6,
+            "matching_conflict": 0,
+            "mixed_or_unresolved": 10
+          },
+          "fp": 5,
+          "low_support_warning": true,
+          "matched_iou": {
+            "count": 1,
+            "max": 0.6804831379361912,
+            "mean": 0.6804831379361912,
+            "median": 0.6804831379361912,
+            "min": 0.6804831379361912,
+            "p10": 0.6804831379361912,
+            "p25": 0.6804831379361912,
+            "p5": 0.6804831379361912,
+            "p50": 0.6804831379361912,
+            "p75": 0.6804831379361912,
+            "p90": 0.6804831379361912,
+            "p95": 0.6804831379361912,
+            "std_population": 0.0
+          },
+          "matched_iou_low_support_warning": true,
+          "precision": 0.16666666666666666,
+          "recall": 0.034482758620689655,
+          "support": 29,
+          "support_percentage": 14.215686274509803,
+          "tp": 1
+        },
+        {
+          "class_id": 1,
+          "class_name": "fingers positive",
+          "f1": 0.03389830508474576,
+          "fn": 47,
+          "fn_primary_counts": {
+            "classification_error": 0,
+            "complete_miss": 21,
+            "localization_failure": 0,
+            "low_confidence_detection": 13,
+            "matching_conflict": 0,
+            "mixed_or_unresolved": 13
+          },
+          "fp": 10,
+          "low_support_warning": false,
+          "matched_iou": {
+            "count": 1,
+            "max": 0.6413362135140305,
+            "mean": 0.6413362135140305,
+            "median": 0.6413362135140305,
+            "min": 0.6413362135140305,
+            "p10": 0.6413362135140305,
+            "p25": 0.6413362135140305,
+            "p5": 0.6413362135140305,
+            "p50": 0.6413362135140305,
+            "p75": 0.6413362135140305,
+            "p90": 0.6413362135140305,
+            "p95": 0.6413362135140305,
+            "std_population": 0.0
+          },
+          "matched_iou_low_support_warning": true,
+          "precision": 0.09090909090909091,
+          "recall": 0.020833333333333332,
+          "support": 48,
+          "support_percentage": 23.529411764705884,
+          "tp": 1
+        },
+        {
+          "class_id": 2,
+          "class_name": "forearm fracture",
+          "f1": 0.4,
+          "fn": 31,
+          "fn_primary_counts": {
+            "classification_error": 0,
+            "complete_miss": 8,
+            "localization_failure": 0,
+            "low_confidence_detection": 14,
+            "matching_conflict": 0,
+            "mixed_or_unresolved": 9
+          },
+          "fp": 5,
+          "low_support_warning": false,
+          "matched_iou": {
+            "count": 12,
+            "max": 0.8476832605650273,
+            "mean": 0.6954389842739648,
+            "median": 0.7120782954372112,
+            "min": 0.5264234927063576,
+            "p10": 0.5589111259538468,
+            "p25": 0.604425100118687,
+            "p5": 0.5438549431300853,
+            "p50": 0.7120782954372112,
+            "p75": 0.7906328108464287,
+            "p90": 0.8190146748645127,
+            "p95": 0.8334590696483545,
+            "std_population": 0.10583404947244233
+          },
+          "matched_iou_low_support_warning": true,
+          "precision": 0.7058823529411765,
+          "recall": 0.27906976744186046,
+          "support": 43,
+          "support_percentage": 21.07843137254902,
+          "tp": 12
+        },
+        {
+          "class_id": 3,
+          "class_name": "humerus fracture",
+          "f1": 0.4482758620689655,
+          "fn": 23,
+          "fn_primary_counts": {
+            "classification_error": 0,
+            "complete_miss": 4,
+            "localization_failure": 2,
+            "low_confidence_detection": 6,
+            "matching_conflict": 0,
+            "mixed_or_unresolved": 11
+          },
+          "fp": 9,
+          "low_support_warning": false,
+          "matched_iou": {
+            "count": 13,
+            "max": 0.8091802156750547,
+            "mean": 0.6491754152503604,
+            "median": 0.6577304265590624,
+            "min": 0.5272251922615258,
+            "p10": 0.5573506091563106,
+            "p25": 0.590873534565976,
+            "p5": 0.54358338577403,
+            "p50": 0.6577304265590624,
+            "p75": 0.7026845024987349,
+            "p90": 0.7177788335701556,
+            "p95": 0.7551459469962621,
+            "std_population": 0.0765513891905953
+          },
+          "matched_iou_low_support_warning": true,
+          "precision": 0.5909090909090909,
+          "recall": 0.3611111111111111,
+          "support": 36,
+          "support_percentage": 17.647058823529413,
+          "tp": 13
+        },
+        {
+          "class_id": 4,
+          "class_name": "shoulder fracture",
+          "f1": 0.06060606060606061,
+          "fn": 19,
+          "fn_primary_counts": {
+            "classification_error": 0,
+            "complete_miss": 6,
+            "localization_failure": 1,
+            "low_confidence_detection": 6,
+            "matching_conflict": 0,
+            "mixed_or_unresolved": 6
+          },
+          "fp": 12,
+          "low_support_warning": true,
+          "matched_iou": {
+            "count": 1,
+            "max": 0.5669119686282685,
+            "mean": 0.5669119686282685,
+            "median": 0.5669119686282685,
+            "min": 0.5669119686282685,
+            "p10": 0.5669119686282685,
+            "p25": 0.5669119686282685,
+            "p5": 0.5669119686282685,
+            "p50": 0.5669119686282685,
+            "p75": 0.5669119686282685,
+            "p90": 0.5669119686282685,
+            "p95": 0.5669119686282685,
+            "std_population": 0.0
+          },
+          "matched_iou_low_support_warning": true,
+          "precision": 0.07692307692307693,
+          "recall": 0.05,
+          "support": 20,
+          "support_percentage": 9.803921568627452,
+          "tp": 1
+        },
+        {
+          "class_id": 5,
+          "class_name": "wrist positive",
+          "f1": 0.11428571428571428,
+          "fn": 26,
+          "fn_primary_counts": {
+            "classification_error": 0,
+            "complete_miss": 12,
+            "localization_failure": 0,
+            "low_confidence_detection": 3,
+            "matching_conflict": 0,
+            "mixed_or_unresolved": 11
+          },
+          "fp": 5,
+          "low_support_warning": true,
+          "matched_iou": {
+            "count": 2,
+            "max": 0.6287075484310921,
+            "mean": 0.5711720527145858,
+            "median": 0.5711720527145858,
+            "min": 0.5136365569980796,
+            "p10": 0.5251436561413809,
+            "p25": 0.5424043048563327,
+            "p5": 0.5193901065697303,
+            "p50": 0.5711720527145858,
+            "p75": 0.599939800572839,
+            "p90": 0.6172004492877908,
+            "p95": 0.6229539988594415,
+            "std_population": 0.057535495716506235
+          },
+          "matched_iou_low_support_warning": true,
+          "precision": 0.2857142857142857,
+          "recall": 0.07142857142857142,
+          "support": 28,
+          "support_percentage": 13.72549019607843,
+          "tp": 2
+        }
+      ],
+      "size_rows": [
+        {
+          "class_id": null,
+          "class_name": "All classes",
+          "fn": 18,
+          "low_support_warning": true,
+          "recall": 0.0,
+          "size_group": "short_side_lt32",
+          "support": 18,
+          "tp": 0
+        },
+        {
+          "class_id": null,
+          "class_name": "All classes",
+          "fn": 78,
+          "low_support_warning": false,
+          "recall": 0.060240963855421686,
+          "size_group": "short_side_32_to_lt64",
+          "support": 83,
+          "tp": 5
+        },
+        {
+          "class_id": null,
+          "class_name": "All classes",
+          "fn": 78,
+          "low_support_warning": false,
+          "recall": 0.24271844660194175,
+          "size_group": "short_side_ge64",
+          "support": 103,
+          "tp": 25
+        },
+        {
+          "class_id": 0,
+          "class_name": "elbow positive",
+          "fn": 2,
+          "low_support_warning": true,
+          "recall": 0.0,
+          "size_group": "short_side_lt32",
+          "support": 2,
+          "tp": 0
+        },
+        {
+          "class_id": 0,
+          "class_name": "elbow positive",
+          "fn": 12,
+          "low_support_warning": true,
+          "recall": 0.0,
+          "size_group": "short_side_32_to_lt64",
+          "support": 12,
+          "tp": 0
+        },
+        {
+          "class_id": 0,
+          "class_name": "elbow positive",
+          "fn": 14,
+          "low_support_warning": true,
+          "recall": 0.06666666666666667,
+          "size_group": "short_side_ge64",
+          "support": 15,
+          "tp": 1
+        },
+        {
+          "class_id": 1,
+          "class_name": "fingers positive",
+          "fn": 4,
+          "low_support_warning": true,
+          "recall": 0.0,
+          "size_group": "short_side_lt32",
+          "support": 4,
+          "tp": 0
+        },
+        {
+          "class_id": 1,
+          "class_name": "fingers positive",
+          "fn": 29,
+          "low_support_warning": true,
+          "recall": 0.0,
+          "size_group": "short_side_32_to_lt64",
+          "support": 29,
+          "tp": 0
+        },
+        {
+          "class_id": 1,
+          "class_name": "fingers positive",
+          "fn": 14,
+          "low_support_warning": true,
+          "recall": 0.06666666666666667,
+          "size_group": "short_side_ge64",
+          "support": 15,
+          "tp": 1
+        },
+        {
+          "class_id": 2,
+          "class_name": "forearm fracture",
+          "fn": 6,
+          "low_support_warning": true,
+          "recall": 0.0,
+          "size_group": "short_side_lt32",
+          "support": 6,
+          "tp": 0
+        },
+        {
+          "class_id": 2,
+          "class_name": "forearm fracture",
+          "fn": 16,
+          "low_support_warning": true,
+          "recall": 0.23809523809523808,
+          "size_group": "short_side_32_to_lt64",
+          "support": 21,
+          "tp": 5
+        },
+        {
+          "class_id": 2,
+          "class_name": "forearm fracture",
+          "fn": 9,
+          "low_support_warning": true,
+          "recall": 0.4375,
+          "size_group": "short_side_ge64",
+          "support": 16,
+          "tp": 7
+        },
+        {
+          "class_id": 3,
+          "class_name": "humerus fracture",
+          "fn": 0,
+          "low_support_warning": true,
+          "recall": null,
+          "size_group": "short_side_lt32",
+          "support": 0,
+          "tp": 0
+        },
+        {
+          "class_id": 3,
+          "class_name": "humerus fracture",
+          "fn": 3,
+          "low_support_warning": true,
+          "recall": 0.0,
+          "size_group": "short_side_32_to_lt64",
+          "support": 3,
+          "tp": 0
+        },
+        {
+          "class_id": 3,
+          "class_name": "humerus fracture",
+          "fn": 20,
+          "low_support_warning": false,
+          "recall": 0.3939393939393939,
+          "size_group": "short_side_ge64",
+          "support": 33,
+          "tp": 13
+        },
+        {
+          "class_id": 4,
+          "class_name": "shoulder fracture",
+          "fn": 0,
+          "low_support_warning": true,
+          "recall": null,
+          "size_group": "short_side_lt32",
+          "support": 0,
+          "tp": 0
+        },
+        {
+          "class_id": 4,
+          "class_name": "shoulder fracture",
+          "fn": 4,
+          "low_support_warning": true,
+          "recall": 0.0,
+          "size_group": "short_side_32_to_lt64",
+          "support": 4,
+          "tp": 0
+        },
+        {
+          "class_id": 4,
+          "class_name": "shoulder fracture",
+          "fn": 15,
+          "low_support_warning": true,
+          "recall": 0.0625,
+          "size_group": "short_side_ge64",
+          "support": 16,
+          "tp": 1
+        },
+        {
+          "class_id": 5,
+          "class_name": "wrist positive",
+          "fn": 6,
+          "low_support_warning": true,
+          "recall": 0.0,
+          "size_group": "short_side_lt32",
+          "support": 6,
+          "tp": 0
+        },
+        {
+          "class_id": 5,
+          "class_name": "wrist positive",
+          "fn": 14,
+          "low_support_warning": true,
+          "recall": 0.0,
+          "size_group": "short_side_32_to_lt64",
+          "support": 14,
+          "tp": 0
+        },
+        {
+          "class_id": 5,
+          "class_name": "wrist positive",
+          "fn": 6,
+          "low_support_warning": true,
+          "recall": 0.25,
+          "size_group": "short_side_ge64",
+          "support": 8,
+          "tp": 2
+        }
+      ]
+    },
+    "analysis_e_false_positives": {
+      "by_predicted_class": [
+        {
+          "class_id": 0,
+          "class_name": "elbow positive",
+          "confidence": {
+            "count": 5,
+            "max": 0.5397217869758606,
+            "mean": 0.3936579585075378,
+            "median": 0.3373071551322937,
+            "min": 0.31276899576187134,
+            "p10": 0.3170228600502014,
+            "p25": 0.32340365648269653,
+            "p5": 0.3148959279060364,
+            "p50": 0.3373071551322937,
+            "p75": 0.45508819818496704,
+            "p90": 0.5058683514595032,
+            "p95": 0.5227950692176818,
+            "std_population": 0.08917670169024293
+          },
+          "fp": 5,
+          "percentage_of_total_fp": 10.869565217391305
+        },
+        {
+          "class_id": 1,
+          "class_name": "fingers positive",
+          "confidence": {
+            "count": 10,
+            "max": 0.6480101346969604,
+            "mean": 0.44003966450691223,
+            "median": 0.42115433514118195,
+            "min": 0.31727975606918335,
+            "p10": 0.32284424006938933,
+            "p25": 0.34821879863739014,
+            "p5": 0.32006199806928637,
+            "p50": 0.42115433514118195,
+            "p75": 0.49772144854068756,
+            "p90": 0.5778795957565307,
+            "p95": 0.6129448652267455,
+            "std_population": 0.10441952478963323
+          },
+          "fp": 10,
+          "percentage_of_total_fp": 21.73913043478261
+        },
+        {
+          "class_id": 2,
+          "class_name": "forearm fracture",
+          "confidence": {
+            "count": 5,
+            "max": 0.7977538108825684,
+            "mean": 0.5274582028388977,
+            "median": 0.4592568278312683,
+            "min": 0.26196637749671936,
+            "p10": 0.31328700184822084,
+            "p25": 0.390267938375473,
+            "p5": 0.28762668967247007,
+            "p50": 0.4592568278312683,
+            "p75": 0.7280460596084595,
+            "p90": 0.7698707103729248,
+            "p95": 0.7838122606277466,
+            "std_population": 0.20359455275183633
+          },
+          "fp": 5,
+          "percentage_of_total_fp": 10.869565217391305
+        },
+        {
+          "class_id": 3,
+          "class_name": "humerus fracture",
+          "confidence": {
+            "count": 9,
+            "max": 0.8122262954711914,
+            "mean": 0.4524094892872704,
+            "median": 0.3661768138408661,
+            "min": 0.26139166951179504,
+            "p10": 0.31191561818122865,
+            "p25": 0.361054927110672,
+            "p5": 0.2866536438465118,
+            "p50": 0.3661768138408661,
+            "p75": 0.4780542850494385,
+            "p90": 0.7334737300872803,
+            "p95": 0.7728500127792358,
+            "std_population": 0.17598487473683536
+          },
+          "fp": 9,
+          "percentage_of_total_fp": 19.565217391304348
+        },
+        {
+          "class_id": 4,
+          "class_name": "shoulder fracture",
+          "confidence": {
+            "count": 12,
+            "max": 0.838226318359375,
+            "mean": 0.5008896887302399,
+            "median": 0.44587212800979614,
+            "min": 0.2629697322845459,
+            "p10": 0.27508228421211245,
+            "p25": 0.34530843049287796,
+            "p5": 0.26562336534261705,
+            "p50": 0.44587212800979614,
+            "p75": 0.6541361510753632,
+            "p90": 0.7680461525917054,
+            "p95": 0.8058830827474593,
+            "std_population": 0.19077825929821324
+          },
+          "fp": 12,
+          "percentage_of_total_fp": 26.08695652173913
+        },
+        {
+          "class_id": 5,
+          "class_name": "wrist positive",
+          "confidence": {
+            "count": 5,
+            "max": 0.5826827883720398,
+            "mean": 0.3586334943771362,
+            "median": 0.281588077545166,
+            "min": 0.2597082853317261,
+            "p10": 0.2651524066925049,
+            "p25": 0.2733185887336731,
+            "p5": 0.26243034601211546,
+            "p50": 0.281588077545166,
+            "p75": 0.39586973190307617,
+            "p90": 0.5079575657844544,
+            "p95": 0.545320177078247,
+            "std_population": 0.12213553937257256
+          },
+          "fp": 5,
+          "percentage_of_total_fp": 10.869565217391305
+        }
+      ],
+      "confidence": {
+        "count": 46,
+        "max": 0.838226318359375,
+        "mean": 0.45394579547902814,
+        "median": 0.39333726465702057,
+        "min": 0.2597082853317261,
+        "p10": 0.2705565541982651,
+        "p25": 0.3273392990231514,
+        "p5": 0.262217216193676,
+        "p50": 0.39333726465702057,
+        "p75": 0.5624959319829941,
+        "p90": 0.720915824174881,
+        "p95": 0.7931704670190811,
+        "std_population": 0.1658406532284776
+      },
+      "duplicate_like_fp_count": 2,
+      "fp_with_cross_class_overlap_count": 7,
+      "fp_with_same_class_overlap_count": 4,
+      "groups": {
+        "annotated": {
+          "by_predicted_class": [
+            {
+              "class_id": 0,
+              "class_name": "elbow positive",
+              "fp": 3,
+              "percentage_of_group_fp": 8.333333333333334
+            },
+            {
+              "class_id": 1,
+              "class_name": "fingers positive",
+              "fp": 6,
+              "percentage_of_group_fp": 16.666666666666668
+            },
+            {
+              "class_id": 2,
+              "class_name": "forearm fracture",
+              "fp": 5,
+              "percentage_of_group_fp": 13.88888888888889
+            },
+            {
+              "class_id": 3,
+              "class_name": "humerus fracture",
+              "fp": 8,
+              "percentage_of_group_fp": 22.22222222222222
+            },
+            {
+              "class_id": 4,
+              "class_name": "shoulder fracture",
+              "fp": 10,
+              "percentage_of_group_fp": 27.77777777777778
+            },
+            {
+              "class_id": 5,
+              "class_name": "wrist positive",
+              "fp": 4,
+              "percentage_of_group_fp": 11.11111111111111
+            }
+          ],
+          "confidence": {
+            "count": 36,
+            "max": 0.8122262954711914,
+            "mean": 0.4416143116023805,
+            "median": 0.3759499341249466,
+            "min": 0.2597082853317261,
+            "p10": 0.2653821259737015,
+            "p25": 0.321916826069355,
+            "p5": 0.2618227005004883,
+            "p50": 0.3759499341249466,
+            "p75": 0.5504620373249054,
+            "p90": 0.720915824174881,
+            "p95": 0.7840037792921066,
+            "std_population": 0.16774656884482064
+          },
+          "fp": 36,
+          "fp_per_image": 0.20809248554913296,
+          "fp_per_image_with_fp": 1.2,
+          "images": 173,
+          "images_with_fp": 30,
+          "percentage_images_with_fp": 17.341040462427745,
+          "percentage_of_total_fp": 78.26086956521739
+        },
+        "empty_label": {
+          "by_predicted_class": [
+            {
+              "class_id": 0,
+              "class_name": "elbow positive",
+              "fp": 2,
+              "percentage_of_group_fp": 20.0
+            },
+            {
+              "class_id": 1,
+              "class_name": "fingers positive",
+              "fp": 4,
+              "percentage_of_group_fp": 40.0
+            },
+            {
+              "class_id": 2,
+              "class_name": "forearm fracture",
+              "fp": 0,
+              "percentage_of_group_fp": 0.0
+            },
+            {
+              "class_id": 3,
+              "class_name": "humerus fracture",
+              "fp": 1,
+              "percentage_of_group_fp": 10.0
+            },
+            {
+              "class_id": 4,
+              "class_name": "shoulder fracture",
+              "fp": 2,
+              "percentage_of_group_fp": 20.0
+            },
+            {
+              "class_id": 5,
+              "class_name": "wrist positive",
+              "fp": 1,
+              "percentage_of_group_fp": 10.0
+            }
+          ],
+          "confidence": {
+            "count": 10,
+            "max": 0.838226318359375,
+            "mean": 0.4983391374349594,
+            "median": 0.46317851543426514,
+            "min": 0.32340365648269653,
+            "p10": 0.324432310461998,
+            "p25": 0.4050733298063278,
+            "p5": 0.32391798347234724,
+            "p50": 0.46317851543426514,
+            "p75": 0.5542002320289612,
+            "p90": 0.6829324781894683,
+            "p95": 0.7605793982744216,
+            "std_population": 0.15065217199631945
+          },
+          "fp": 10,
+          "fp_per_image": 0.05714285714285714,
+          "fp_per_image_with_fp": 1.1111111111111112,
+          "images": 175,
+          "images_with_fp": 9,
+          "percentage_images_with_fp": 5.142857142857143,
+          "percentage_of_total_fp": 21.73913043478261
+        }
+      },
+      "interpretation": "Annotation-based FP; empty-label images are not medically verified negative images.",
+      "overlap_iou_at_least": 0.5,
+      "total_fp": 46,
+      "unique_overlapping_pairs_involving_fp": {
+        "different_class": 5,
+        "same_class": 3
+      }
+    },
+    "analysis_f_generalization": {
+      "class_agnostic_comparison": [
+        {
+          "agnostic": {
+            "class_aware": false,
+            "confidence": 0.01,
+            "f1": 0.17468354430379746,
+            "fn": 135,
+            "fp": 517,
+            "ground_truth_count": 204,
+            "images": 348,
+            "iou": 0.5,
+            "matched_ground_truth_count": 69,
+            "precision": 0.11774744027303755,
+            "recall": 0.3382352941176471,
+            "retained_prediction_count": 586,
+            "tp": 69
+          },
+          "aware": {
+            "class_aware": true,
+            "confidence": 0.01,
+            "f1": 0.15949367088607594,
+            "fn": 141,
+            "fp": 523,
+            "ground_truth_count": 204,
+            "images": 348,
+            "iou": 0.5,
+            "matched_ground_truth_count": 63,
+            "precision": 0.1075085324232082,
+            "recall": 0.3088235294117647,
+            "retained_prediction_count": 586,
+            "tp": 63
+          },
+          "confidence": 0.01,
+          "iou": 0.5,
+          "recall_difference_percentage_points": 2.941176470588236,
+          "tp_difference": 6
+        },
+        {
+          "agnostic": {
+            "class_aware": false,
+            "confidence": 0.05,
+            "f1": 0.2445414847161572,
+            "fn": 148,
+            "fp": 198,
+            "ground_truth_count": 204,
+            "images": 348,
+            "iou": 0.5,
+            "matched_ground_truth_count": 56,
+            "precision": 0.2204724409448819,
+            "recall": 0.27450980392156865,
+            "retained_prediction_count": 254,
+            "tp": 56
+          },
+          "aware": {
+            "class_aware": true,
+            "confidence": 0.05,
+            "f1": 0.2183406113537118,
+            "fn": 154,
+            "fp": 204,
+            "ground_truth_count": 204,
+            "images": 348,
+            "iou": 0.5,
+            "matched_ground_truth_count": 50,
+            "precision": 0.1968503937007874,
+            "recall": 0.24509803921568626,
+            "retained_prediction_count": 254,
+            "tp": 50
+          },
+          "confidence": 0.05,
+          "iou": 0.5,
+          "recall_difference_percentage_points": 2.9411764705882386,
+          "tp_difference": 6
+        },
+        {
+          "agnostic": {
+            "class_aware": false,
+            "confidence": 0.1,
+            "f1": 0.25274725274725274,
+            "fn": 158,
+            "fp": 114,
+            "ground_truth_count": 204,
+            "images": 348,
+            "iou": 0.5,
+            "matched_ground_truth_count": 46,
+            "precision": 0.2875,
+            "recall": 0.22549019607843138,
+            "retained_prediction_count": 160,
+            "tp": 46
+          },
+          "aware": {
+            "class_aware": true,
+            "confidence": 0.1,
+            "f1": 0.21978021978021978,
+            "fn": 164,
+            "fp": 120,
+            "ground_truth_count": 204,
+            "images": 348,
+            "iou": 0.5,
+            "matched_ground_truth_count": 40,
+            "precision": 0.25,
+            "recall": 0.19607843137254902,
+            "retained_prediction_count": 160,
+            "tp": 40
+          },
+          "confidence": 0.1,
+          "iou": 0.5,
+          "recall_difference_percentage_points": 2.941176470588236,
+          "tp_difference": 6
+        },
+        {
+          "agnostic": {
+            "class_aware": false,
+            "confidence": 0.25,
+            "f1": 0.22857142857142856,
+            "fn": 172,
+            "fp": 44,
+            "ground_truth_count": 204,
+            "images": 348,
+            "iou": 0.5,
+            "matched_ground_truth_count": 32,
+            "precision": 0.42105263157894735,
+            "recall": 0.1568627450980392,
+            "retained_prediction_count": 76,
+            "tp": 32
+          },
+          "aware": {
+            "class_aware": true,
+            "confidence": 0.25,
+            "f1": 0.21428571428571427,
+            "fn": 174,
+            "fp": 46,
+            "ground_truth_count": 204,
+            "images": 348,
+            "iou": 0.5,
+            "matched_ground_truth_count": 30,
+            "precision": 0.39473684210526316,
+            "recall": 0.14705882352941177,
+            "retained_prediction_count": 76,
+            "tp": 30
+          },
+          "confidence": 0.25,
+          "iou": 0.5,
+          "recall_difference_percentage_points": 0.9803921568627444,
+          "tp_difference": 2
+        },
+        {
+          "agnostic": {
+            "class_aware": false,
+            "confidence": 0.5,
+            "f1": 0.16170212765957448,
+            "fn": 185,
+            "fp": 12,
+            "ground_truth_count": 204,
+            "images": 348,
+            "iou": 0.5,
+            "matched_ground_truth_count": 19,
+            "precision": 0.6129032258064516,
+            "recall": 0.09313725490196079,
+            "retained_prediction_count": 31,
+            "tp": 19
+          },
+          "aware": {
+            "class_aware": true,
+            "confidence": 0.5,
+            "f1": 0.14468085106382977,
+            "fn": 187,
+            "fp": 14,
+            "ground_truth_count": 204,
+            "images": 348,
+            "iou": 0.5,
+            "matched_ground_truth_count": 17,
+            "precision": 0.5483870967741935,
+            "recall": 0.08333333333333333,
+            "retained_prediction_count": 31,
+            "tp": 17
+          },
+          "confidence": 0.5,
+          "iou": 0.5,
+          "recall_difference_percentage_points": 0.9803921568627458,
+          "tp_difference": 2
+        }
+      ],
+      "operating_points": [
+        {
+          "class_aware": true,
+          "confidence": 0.05,
+          "f1": 0.6644198363023591,
+          "fn": 8,
+          "fp": 689,
+          "ground_truth_count": 698,
+          "images": 1211,
+          "iou": 0.5,
+          "matched_ground_truth_count": 690,
+          "precision": 0.5003625815808557,
+          "recall": 0.9885386819484241,
+          "retained_prediction_count": 1379,
+          "split": "train",
+          "tp": 690
+        },
+        {
+          "class_aware": true,
+          "confidence": 0.25,
+          "f1": 0.8887390424814565,
+          "fn": 39,
+          "fp": 126,
+          "ground_truth_count": 698,
+          "images": 1211,
+          "iou": 0.5,
+          "matched_ground_truth_count": 659,
+          "precision": 0.8394904458598726,
+          "recall": 0.9441260744985673,
+          "retained_prediction_count": 785,
+          "split": "train",
+          "tp": 659
+        },
+        {
+          "class_aware": true,
+          "confidence": 0.05,
+          "f1": 0.2183406113537118,
+          "fn": 154,
+          "fp": 204,
+          "ground_truth_count": 204,
+          "images": 348,
+          "iou": 0.5,
+          "matched_ground_truth_count": 50,
+          "precision": 0.1968503937007874,
+          "recall": 0.24509803921568626,
+          "retained_prediction_count": 254,
+          "split": "valid",
+          "tp": 50
+        },
+        {
+          "class_aware": true,
+          "confidence": 0.25,
+          "f1": 0.21428571428571427,
+          "fn": 174,
+          "fp": 46,
+          "ground_truth_count": 204,
+          "images": 348,
+          "iou": 0.5,
+          "matched_ground_truth_count": 30,
+          "precision": 0.39473684210526316,
+          "recall": 0.14705882352941177,
+          "retained_prediction_count": 76,
+          "split": "valid",
+          "tp": 30
+        }
+      ],
+      "train_candidate_localization": {
+        "annotated_image_candidate_count": 6100,
+        "bins": [
+          {
+            "any_class_iou_at_least_0_5_count": 1357,
+            "best_any_class_iou": {
+              "count": 3599,
+              "max": 0.961864954418871,
+              "mean": 0.3623701432298822,
+              "median": 0.35594529767590655,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.004455789202487723,
+              "p5": 0.0,
+              "p50": 0.35594529767590655,
+              "p75": 0.6314955736170402,
+              "p90": 0.796753066331735,
+              "p95": 0.853745714159668,
+              "std_population": 0.3068391519130373
+            },
+            "best_correct_class_iou": {
+              "count": 3599,
+              "max": 0.9148491415059015,
+              "mean": 0.15761104417210678,
+              "median": 0.0,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.0,
+              "p5": 0.0,
+              "p50": 0.0,
+              "p75": 0.32034224610889495,
+              "p90": 0.5719975946141354,
+              "p95": 0.6514611406111188,
+              "std_population": 0.23690814815401368
+            },
+            "candidates": 3599,
+            "confidence": {
+              "count": 3599,
+              "max": 0.009995667263865471,
+              "mean": 0.003277132505993223,
+              "median": 0.0024033330846577883,
+              "min": 0.0010000079637393355,
+              "p10": 0.0011637712828814983,
+              "p25": 0.0015115879941731691,
+              "p5": 0.0010767968837171794,
+              "p50": 0.0024033330846577883,
+              "p75": 0.00443766824901104,
+              "p90": 0.006997390277683735,
+              "p95": 0.008443690557032823,
+              "std_population": 0.002284401395670045
+            },
+            "confidence_lower_inclusive": 0.001,
+            "confidence_upper": 0.01,
+            "correct_class_iou_at_least_0_5_count": 533,
+            "upper_inclusive": false
+          },
+          {
+            "any_class_iou_at_least_0_5_count": 585,
+            "best_any_class_iou": {
+              "count": 1160,
+              "max": 0.9539113488685464,
+              "mean": 0.45145141328725347,
+              "median": 0.5029277529321378,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.18248398998731627,
+              "p5": 0.0,
+              "p50": 0.5029277529321378,
+              "p75": 0.6925363378145302,
+              "p90": 0.8208716963483369,
+              "p95": 0.872536212411455,
+              "std_population": 0.2943543129651986
+            },
+            "best_correct_class_iou": {
+              "count": 1160,
+              "max": 0.8990425267875626,
+              "mean": 0.2390111764498816,
+              "median": 0.039394176756842855,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.0,
+              "p5": 0.0,
+              "p50": 0.039394176756842855,
+              "p75": 0.5126582325069308,
+              "p90": 0.660112185990919,
+              "p95": 0.7134224134749149,
+              "std_population": 0.2791632850077884
+            },
+            "candidates": 1160,
+            "confidence": {
+              "count": 1160,
+              "max": 0.04996010661125183,
+              "mean": 0.023047557095836464,
+              "median": 0.02032614406198263,
+              "min": 0.01001903135329485,
+              "p10": 0.011637345235794783,
+              "p25": 0.014063396025449038,
+              "p5": 0.01084718955680728,
+              "p50": 0.02032614406198263,
+              "p75": 0.029808058869093657,
+              "p90": 0.039622044935822505,
+              "p95": 0.044391168653964974,
+              "std_population": 0.010524721442504981
+            },
+            "confidence_lower_inclusive": 0.01,
+            "confidence_upper": 0.05,
+            "correct_class_iou_at_least_0_5_count": 302,
+            "upper_inclusive": false
+          },
+          {
+            "any_class_iou_at_least_0_5_count": 191,
+            "best_any_class_iou": {
+              "count": 300,
+              "max": 0.9508872552028002,
+              "mean": 0.5164454567331258,
+              "median": 0.59067975391543,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.353737520825503,
+              "p5": 0.0,
+              "p50": 0.59067975391543,
+              "p75": 0.7257960579700518,
+              "p90": 0.8301158754579573,
+              "p95": 0.862230547604317,
+              "std_population": 0.28060591758433673
+            },
+            "best_correct_class_iou": {
+              "count": 300,
+              "max": 0.9379963628474155,
+              "mean": 0.3071984095330951,
+              "median": 0.25725375699074543,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.0,
+              "p5": 0.0,
+              "p50": 0.25725375699074543,
+              "p75": 0.6221816320111321,
+              "p90": 0.7237705433282965,
+              "p95": 0.7635695794670806,
+              "std_population": 0.3106713041540676
+            },
+            "candidates": 300,
+            "confidence": {
+              "count": 300,
+              "max": 0.09953007102012634,
+              "mean": 0.07044735206911962,
+              "median": 0.06897521391510963,
+              "min": 0.0501396618783474,
+              "p10": 0.05354504473507404,
+              "p25": 0.05832964368164539,
+              "p5": 0.052291934564709666,
+              "p50": 0.06897521391510963,
+              "p75": 0.08058122359216213,
+              "p90": 0.0904684565961361,
+              "p95": 0.09584217853844165,
+              "std_population": 0.013724200642599884
+            },
+            "confidence_lower_inclusive": 0.05,
+            "confidence_upper": 0.1,
+            "correct_class_iou_at_least_0_5_count": 116,
+            "upper_inclusive": false
+          },
+          {
+            "any_class_iou_at_least_0_5_count": 172,
+            "best_any_class_iou": {
+              "count": 262,
+              "max": 0.9364993819706976,
+              "mean": 0.5450460763382912,
+              "median": 0.594896653317055,
+              "min": 0.0,
+              "p10": 0.05833997465140462,
+              "p25": 0.40653997274849046,
+              "p5": 0.0,
+              "p50": 0.594896653317055,
+              "p75": 0.7462731611459976,
+              "p90": 0.8502896753597883,
+              "p95": 0.8833688427495483,
+              "std_population": 0.2613861311819058
+            },
+            "best_correct_class_iou": {
+              "count": 262,
+              "max": 0.911472499228898,
+              "mean": 0.35825446431398333,
+              "median": 0.43225821101725703,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.0,
+              "p5": 0.0,
+              "p50": 0.43225821101725703,
+              "p75": 0.6317400457301217,
+              "p90": 0.7464088943336791,
+              "p95": 0.8124246361191628,
+              "std_population": 0.3090491945125034
+            },
+            "candidates": 262,
+            "confidence": {
+              "count": 262,
+              "max": 0.24735093116760254,
+              "mean": 0.15787651429649527,
+              "median": 0.15018170326948166,
+              "min": 0.10026130825281143,
+              "p10": 0.1047673061490059,
+              "p25": 0.12036470137536526,
+              "p5": 0.10341350622475147,
+              "p50": 0.15018170326948166,
+              "p75": 0.19116821512579918,
+              "p90": 0.22805865257978442,
+              "p95": 0.23514502346515656,
+              "std_population": 0.04326480535566792
+            },
+            "confidence_lower_inclusive": 0.1,
+            "confidence_upper": 0.25,
+            "correct_class_iou_at_least_0_5_count": 115,
+            "upper_inclusive": false
+          },
+          {
+            "any_class_iou_at_least_0_5_count": 132,
+            "best_any_class_iou": {
+              "count": 162,
+              "max": 0.9539834539980836,
+              "mean": 0.6512811158484481,
+              "median": 0.7097786313209216,
+              "min": 0.0,
+              "p10": 0.31621404187043983,
+              "p25": 0.5699045146544339,
+              "p5": 0.062280322980374246,
+              "p50": 0.7097786313209216,
+              "p75": 0.8197589636332214,
+              "p90": 0.8724273994350189,
+              "p95": 0.8977381329015249,
+              "std_population": 0.23376920821066577
+            },
+            "best_correct_class_iou": {
+              "count": 162,
+              "max": 0.9539834539980836,
+              "mean": 0.5391481941792766,
+              "median": 0.630965165088953,
+              "min": 0.0,
+              "p10": 0.0,
+              "p25": 0.32742169342358013,
+              "p5": 0.0,
+              "p50": 0.630965165088953,
+              "p75": 0.7921025443657888,
+              "p90": 0.861052531174509,
+              "p95": 0.8853330387006861,
+              "std_population": 0.3119024258915287
+            },
+            "candidates": 162,
+            "confidence": {
+              "count": 162,
+              "max": 0.4930586516857147,
+              "mean": 0.3568611455920302,
+              "median": 0.3500491827726364,
+              "min": 0.25178512930870056,
+              "p10": 0.2675555646419525,
+              "p25": 0.2938052862882614,
+              "p5": 0.25822722166776657,
+              "p50": 0.3500491827726364,
+              "p75": 0.41021910309791565,
+              "p90": 0.4662357032299042,
+              "p95": 0.4821397617459297,
+              "std_population": 0.07178764279253197
+            },
+            "confidence_lower_inclusive": 0.25,
+            "confidence_upper": 0.5,
+            "correct_class_iou_at_least_0_5_count": 111,
+            "upper_inclusive": false
+          },
+          {
+            "any_class_iou_at_least_0_5_count": 609,
+            "best_any_class_iou": {
+              "count": 617,
+              "max": 0.9729688038106662,
+              "mean": 0.8109508260283587,
+              "median": 0.8274433993330741,
+              "min": 0.0,
+              "p10": 0.7183975885047313,
+              "p25": 0.7692978048335619,
+              "p5": 0.6471744050561017,
+              "p50": 0.8274433993330741,
+              "p75": 0.871678501988619,
+              "p90": 0.904944371140158,
+              "p95": 0.9232803766343188,
+              "std_population": 0.09415152273589944
+            },
+            "best_correct_class_iou": {
+              "count": 617,
+              "max": 0.9729688038106662,
+              "mean": 0.8070977099193096,
+              "median": 0.8272065908154513,
+              "min": 0.0,
+              "p10": 0.7130455147453738,
+              "p25": 0.7682933415508237,
+              "p5": 0.6391416043059971,
+              "p50": 0.8272065908154513,
+              "p75": 0.871678501988619,
+              "p90": 0.904944371140158,
+              "p95": 0.9232803766343188,
+              "std_population": 0.10973174133500138
+            },
+            "candidates": 617,
+            "confidence": {
+              "count": 617,
+              "max": 0.996512234210968,
+              "mean": 0.8021086467916034,
+              "median": 0.827366054058075,
+              "min": 0.503131091594696,
+              "p10": 0.607183039188385,
+              "p25": 0.7090976238250732,
+              "p5": 0.5426205277442933,
+              "p50": 0.827366054058075,
+              "p75": 0.9072129726409912,
+              "p90": 0.950272512435913,
+              "p95": 0.9686261534690856,
+              "std_population": 0.12927106013355888
+            },
+            "confidence_lower_inclusive": 0.5,
+            "confidence_upper": 1.0,
+            "correct_class_iou_at_least_0_5_count": 606,
+            "upper_inclusive": true
+          }
+        ],
+        "excluded_empty_image_candidate_count": 912,
+        "interpretation": "Descriptive candidate-level association, not independent samples, probability calibration, significance, one-to-one precision, or causal evidence.",
+        "spearman_confidence_vs_best_any_class_iou": 0.3858319853637188,
+        "spearman_confidence_vs_best_correct_class_iou": 0.456324273159949
+      },
+      "train_class_rows": [
+        {
+          "class_id": 0,
+          "class_name": "elbow positive",
+          "f1": 0.933920704845815,
+          "fn": 7,
+          "fn_primary_counts": null,
+          "fp": 8,
+          "low_support_warning": false,
+          "matched_iou": {
+            "count": 106,
+            "max": 0.953242686312405,
+            "mean": 0.8390269940962628,
+            "median": 0.8485106859378875,
+            "min": 0.6081735017576279,
+            "p10": 0.7582175831029287,
+            "p25": 0.8088019973018523,
+            "p5": 0.7465415010378198,
+            "p50": 0.8485106859378875,
+            "p75": 0.8814992908549264,
+            "p90": 0.9123021368160693,
+            "p95": 0.9256041753074746,
+            "std_population": 0.06414664102084572
+          },
+          "matched_iou_low_support_warning": false,
+          "precision": 0.9298245614035088,
+          "recall": 0.9380530973451328,
+          "support": 113,
+          "support_percentage": 16.189111747851,
+          "tp": 106
+        },
+        {
+          "class_id": 1,
+          "class_name": "fingers positive",
+          "f1": 0.9090909090909091,
+          "fn": 23,
+          "fn_primary_counts": null,
+          "fp": 8,
+          "low_support_warning": false,
+          "matched_iou": {
+            "count": 155,
+            "max": 0.9583272586813771,
+            "mean": 0.8107489829897451,
+            "median": 0.8186499239416056,
+            "min": 0.5178221814980268,
+            "p10": 0.7132321515196282,
+            "p25": 0.7679241448088019,
+            "p5": 0.6722773093128374,
+            "p50": 0.8186499239416056,
+            "p75": 0.867153264982456,
+            "p90": 0.8981622953141174,
+            "p95": 0.9191314749887202,
+            "std_population": 0.08066343273984647
+          },
+          "matched_iou_low_support_warning": false,
+          "precision": 0.950920245398773,
+          "recall": 0.8707865168539326,
+          "support": 178,
+          "support_percentage": 25.501432664756447,
+          "tp": 155
+        },
+        {
+          "class_id": 2,
+          "class_name": "forearm fracture",
+          "f1": 0.9315068493150684,
+          "fn": 5,
+          "fn_primary_counts": null,
+          "fp": 10,
+          "low_support_warning": false,
+          "matched_iou": {
+            "count": 102,
+            "max": 0.9545811207253811,
+            "mean": 0.7911724321595524,
+            "median": 0.7914432417421239,
+            "min": 0.5366390712117145,
+            "p10": 0.7031536377064593,
+            "p25": 0.7433569926970444,
+            "p5": 0.6792004599744076,
+            "p50": 0.7914432417421239,
+            "p75": 0.8488684907123445,
+            "p90": 0.8828624405225864,
+            "p95": 0.9245649259950882,
+            "std_population": 0.07719498550546054
+          },
+          "matched_iou_low_support_warning": false,
+          "precision": 0.9107142857142857,
+          "recall": 0.9532710280373832,
+          "support": 107,
+          "support_percentage": 15.329512893982807,
+          "tp": 102
+        },
+        {
+          "class_id": 3,
+          "class_name": "humerus fracture",
+          "f1": 0.8879310344827587,
+          "fn": 1,
+          "fn_primary_counts": null,
+          "fp": 25,
+          "low_support_warning": false,
+          "matched_iou": {
+            "count": 103,
+            "max": 0.9729688038106662,
+            "mean": 0.8303468671083325,
+            "median": 0.8409102384108337,
+            "min": 0.5641033161788499,
+            "p10": 0.7494281086131283,
+            "p25": 0.7946286704488812,
+            "p5": 0.6973503506722816,
+            "p50": 0.8409102384108337,
+            "p75": 0.8769456155037739,
+            "p90": 0.9066450097573909,
+            "p95": 0.9161008952808202,
+            "std_population": 0.07032792892431514
+          },
+          "matched_iou_low_support_warning": false,
+          "precision": 0.8046875,
+          "recall": 0.9903846153846154,
+          "support": 104,
+          "support_percentage": 14.899713467048711,
+          "tp": 103
+        },
+        {
+          "class_id": 4,
+          "class_name": "shoulder fracture",
+          "f1": 0.8067796610169492,
+          "fn": 1,
+          "fn_primary_counts": null,
+          "fp": 56,
+          "low_support_warning": false,
+          "matched_iou": {
+            "count": 119,
+            "max": 0.9645339518129963,
+            "mean": 0.8247085752440623,
+            "median": 0.8317770732496378,
+            "min": 0.5972630852563351,
+            "p10": 0.7349657187363232,
+            "p25": 0.7819402107181068,
+            "p5": 0.7173932139637405,
+            "p50": 0.8317770732496378,
+            "p75": 0.8739916877514655,
+            "p90": 0.9137133376814399,
+            "p95": 0.9211069462672106,
+            "std_population": 0.0693756634187346
+          },
+          "matched_iou_low_support_warning": false,
+          "precision": 0.68,
+          "recall": 0.9916666666666667,
+          "support": 120,
+          "support_percentage": 17.191977077363898,
+          "tp": 119
+        },
+        {
+          "class_id": 5,
+          "class_name": "wrist positive",
+          "f1": 0.8757396449704142,
+          "fn": 2,
+          "fn_primary_counts": null,
+          "fp": 19,
+          "low_support_warning": false,
+          "matched_iou": {
+            "count": 74,
+            "max": 0.9520532658657165,
+            "mean": 0.8068889181880061,
+            "median": 0.8208638681912601,
+            "min": 0.5448966165706444,
+            "p10": 0.6798668061590319,
+            "p25": 0.7652839715980813,
+            "p5": 0.6215159954502926,
+            "p50": 0.8208638681912601,
+            "p75": 0.8737831855051508,
+            "p90": 0.9148566019046792,
+            "p95": 0.9270953973200855,
+            "std_population": 0.09046831526110148
+          },
+          "matched_iou_low_support_warning": false,
+          "precision": 0.7956989247311828,
+          "recall": 0.9736842105263158,
+          "support": 76,
+          "support_percentage": 10.888252148997134,
+          "tp": 74
+        }
+      ],
+      "train_reference_distributions": {
+        "false_positive_confidence": {
+          "count": 126,
+          "max": 0.8162227869033813,
+          "mean": 0.3907186703549491,
+          "median": 0.3505593538284302,
+          "min": 0.25178512930870056,
+          "p10": 0.265206053853035,
+          "p25": 0.29182329028844833,
+          "p5": 0.25718487054109573,
+          "p50": 0.3505593538284302,
+          "p75": 0.44789019227027893,
+          "p90": 0.6133263409137726,
+          "p95": 0.6679046601057053,
+          "std_population": 0.1318117598181165
+        },
+        "matched_iou": {
+          "count": 659,
+          "max": 0.9729688038106662,
+          "mean": 0.8174178596813396,
+          "median": 0.828940579061614,
+          "min": 0.5178221814980268,
+          "p10": 0.7250687946630965,
+          "p25": 0.7710738058691387,
+          "p5": 0.6786270552588433,
+          "p50": 0.828940579061614,
+          "p75": 0.8719955512586959,
+          "p90": 0.9056296495746271,
+          "p95": 0.9245527783337566,
+          "std_population": 0.07691658155110652
+        },
+        "matched_prediction_confidence": {
+          "count": 659,
+          "max": 0.996512234210968,
+          "mean": 0.7672554055548221,
+          "median": 0.8176034092903137,
+          "min": 0.25818294286727905,
+          "p10": 0.5011166036128998,
+          "p25": 0.6684427261352539,
+          "p5": 0.395024710893631,
+          "p50": 0.8176034092903137,
+          "p75": 0.9030808210372925,
+          "p90": 0.947706663608551,
+          "p95": 0.9665887832641602,
+          "std_population": 0.17491510285120246
+        },
+        "selection_note": "TP IoU and confidence distributions are conditional on meeting the reference thresholds."
+      },
+      "train_size_rows": [
+        {
+          "class_id": null,
+          "class_name": "All classes",
+          "fn": 10,
+          "low_support_warning": false,
+          "recall": 0.8245614035087719,
+          "size_group": "short_side_lt32",
+          "support": 57,
+          "tp": 47
+        },
+        {
+          "class_id": null,
+          "class_name": "All classes",
+          "fn": 20,
+          "low_support_warning": false,
+          "recall": 0.9322033898305084,
+          "size_group": "short_side_32_to_lt64",
+          "support": 295,
+          "tp": 275
+        },
+        {
+          "class_id": null,
+          "class_name": "All classes",
+          "fn": 9,
+          "low_support_warning": false,
+          "recall": 0.9739884393063584,
+          "size_group": "short_side_ge64",
+          "support": 346,
+          "tp": 337
+        },
+        {
+          "class_id": 0,
+          "class_name": "elbow positive",
+          "fn": 0,
+          "low_support_warning": true,
+          "recall": 1.0,
+          "size_group": "short_side_lt32",
+          "support": 3,
+          "tp": 3
+        },
+        {
+          "class_id": 0,
+          "class_name": "elbow positive",
+          "fn": 2,
+          "low_support_warning": false,
+          "recall": 0.9574468085106383,
+          "size_group": "short_side_32_to_lt64",
+          "support": 47,
+          "tp": 45
+        },
+        {
+          "class_id": 0,
+          "class_name": "elbow positive",
+          "fn": 5,
+          "low_support_warning": false,
+          "recall": 0.9206349206349206,
+          "size_group": "short_side_ge64",
+          "support": 63,
+          "tp": 58
+        },
+        {
+          "class_id": 1,
+          "class_name": "fingers positive",
+          "fn": 6,
+          "low_support_warning": false,
+          "recall": 0.8235294117647058,
+          "size_group": "short_side_lt32",
+          "support": 34,
+          "tp": 28
+        },
+        {
+          "class_id": 1,
+          "class_name": "fingers positive",
+          "fn": 14,
+          "low_support_warning": false,
+          "recall": 0.8541666666666666,
+          "size_group": "short_side_32_to_lt64",
+          "support": 96,
+          "tp": 82
+        },
+        {
+          "class_id": 1,
+          "class_name": "fingers positive",
+          "fn": 3,
+          "low_support_warning": false,
+          "recall": 0.9375,
+          "size_group": "short_side_ge64",
+          "support": 48,
+          "tp": 45
+        },
+        {
+          "class_id": 2,
+          "class_name": "forearm fracture",
+          "fn": 3,
+          "low_support_warning": true,
+          "recall": 0.5714285714285714,
+          "size_group": "short_side_lt32",
+          "support": 7,
+          "tp": 4
+        },
+        {
+          "class_id": 2,
+          "class_name": "forearm fracture",
+          "fn": 2,
+          "low_support_warning": false,
+          "recall": 0.9629629629629629,
+          "size_group": "short_side_32_to_lt64",
+          "support": 54,
+          "tp": 52
+        },
+        {
+          "class_id": 2,
+          "class_name": "forearm fracture",
+          "fn": 0,
+          "low_support_warning": false,
+          "recall": 1.0,
+          "size_group": "short_side_ge64",
+          "support": 46,
+          "tp": 46
+        },
+        {
+          "class_id": 3,
+          "class_name": "humerus fracture",
+          "fn": 0,
+          "low_support_warning": true,
+          "recall": 1.0,
+          "size_group": "short_side_lt32",
+          "support": 3,
+          "tp": 3
+        },
+        {
+          "class_id": 3,
+          "class_name": "humerus fracture",
+          "fn": 1,
+          "low_support_warning": true,
+          "recall": 0.9166666666666666,
+          "size_group": "short_side_32_to_lt64",
+          "support": 12,
+          "tp": 11
+        },
+        {
+          "class_id": 3,
+          "class_name": "humerus fracture",
+          "fn": 0,
+          "low_support_warning": false,
+          "recall": 1.0,
+          "size_group": "short_side_ge64",
+          "support": 89,
+          "tp": 89
+        },
+        {
+          "class_id": 4,
+          "class_name": "shoulder fracture",
+          "fn": 0,
+          "low_support_warning": true,
+          "recall": null,
+          "size_group": "short_side_lt32",
+          "support": 0,
+          "tp": 0
+        },
+        {
+          "class_id": 4,
+          "class_name": "shoulder fracture",
+          "fn": 0,
+          "low_support_warning": false,
+          "recall": 1.0,
+          "size_group": "short_side_32_to_lt64",
+          "support": 41,
+          "tp": 41
+        },
+        {
+          "class_id": 4,
+          "class_name": "shoulder fracture",
+          "fn": 1,
+          "low_support_warning": false,
+          "recall": 0.9873417721518988,
+          "size_group": "short_side_ge64",
+          "support": 79,
+          "tp": 78
+        },
+        {
+          "class_id": 5,
+          "class_name": "wrist positive",
+          "fn": 1,
+          "low_support_warning": true,
+          "recall": 0.9,
+          "size_group": "short_side_lt32",
+          "support": 10,
+          "tp": 9
+        },
+        {
+          "class_id": 5,
+          "class_name": "wrist positive",
+          "fn": 1,
+          "low_support_warning": false,
+          "recall": 0.9777777777777777,
+          "size_group": "short_side_32_to_lt64",
+          "support": 45,
+          "tp": 44
+        },
+        {
+          "class_id": 5,
+          "class_name": "wrist positive",
+          "fn": 0,
+          "low_support_warning": true,
+          "recall": 1.0,
+          "size_group": "short_side_ge64",
+          "support": 21,
+          "tp": 21
+        }
+      ],
+      "validation_reference_distributions": {
+        "false_positive_confidence": {
+          "count": 46,
+          "max": 0.838226318359375,
+          "mean": 0.45394579547902814,
+          "median": 0.39333726465702057,
+          "min": 0.2597082853317261,
+          "p10": 0.2705565541982651,
+          "p25": 0.3273392990231514,
+          "p5": 0.262217216193676,
+          "p50": 0.39333726465702057,
+          "p75": 0.5624959319829941,
+          "p90": 0.720915824174881,
+          "p95": 0.7931704670190811,
+          "std_population": 0.1658406532284776
+        },
+        "matched_iou": {
+          "count": 30,
+          "max": 0.8476832605650273,
+          "mean": 0.6605207878349975,
+          "median": 0.6524630552407957,
+          "min": 0.5136365569980796,
+          "p10": 0.551762482530282,
+          "p25": 0.5743166236305606,
+          "p5": 0.5267842575061833,
+          "p50": 0.6524630552407957,
+          "p75": 0.7174427666600943,
+          "p90": 0.795299223726034,
+          "p95": 0.8161326994478668,
+          "std_population": 0.09291798464583229
+        },
+        "matched_prediction_confidence": {
+          "count": 30,
+          "max": 0.9184269905090332,
+          "mean": 0.5551271170377732,
+          "median": 0.539487212896347,
+          "min": 0.2959270775318146,
+          "p10": 0.3201571822166443,
+          "p25": 0.3524235039949417,
+          "p5": 0.3106032028794289,
+          "p50": 0.539487212896347,
+          "p75": 0.7488455027341843,
+          "p90": 0.8299088537693023,
+          "p95": 0.8465430557727813,
+          "std_population": 0.2018988525209214
+        },
+        "selection_note": "TP IoU and confidence distributions are conditional on meeting the reference thresholds."
+      }
+    },
+    "method": {
+      "class_confusion": "Rows=GT class, columns=predicted class, using one-to-one class-agnostic reference matches only.",
+      "confidence_quality": "Per-candidate maximum GT IoU on annotated images; no one-to-one constraint, so these rates are not precision/AP.",
+      "confidence_sensitivity": {
+        "confidence": [
+          0.01,
+          0.05,
+          0.1,
+          0.25,
+          0.5
+        ],
+        "iou": 0.5
+      },
+      "empty_distributions": "No observations -> count 0 and null descriptive statistics; zero metric denominators follow Stage 1's zero convention.",
+      "fn_taxonomy": {
+        "candidate_scope": "All retained post-NMS predictions above the original strict 0.001 export floor.",
+        "causal_status": "Operational candidate evidence, not a unique causal diagnosis or proof of a recoverable TP.",
+        "nearby_iou_at_least": 0.1,
+        "nonexclusive_flags": "Preserve all strong mechanisms plus all eight class x confidence x overlap combinations for nearby candidates.",
+        "primary_precedence": [
+          "Matching conflict takes precedence when an otherwise reference-eligible candidate is already claimed.",
+          "Two or more remaining strong mechanisms produce mixed_or_unresolved.",
+          "Exactly one remaining strong mechanism determines the primary category.",
+          "No candidate at IoU >= 0.10 produces complete_miss within the retained export only.",
+          "Otherwise use mixed_or_unresolved: nearby candidates require multiple corrections or have weak evidence."
+        ],
+        "strong_signals": {
+          "classification_error": "Wrong-class candidate has conf >= 0.25 and IoU >= 0.50.",
+          "localization_failure": "Same-class candidate has conf >= 0.25 and 0.10 <= IoU < 0.50.",
+          "low_confidence_detection": "Same-class candidate has conf < 0.25 and IoU >= 0.50.",
+          "matching_conflict": "Same-class candidate has conf >= 0.25 and IoU >= 0.50, but is assigned to another GT."
+        },
+        "sufficient_iou_at_least": 0.5
+      },
+      "fp_overlap": "Each FP once for same-class overlap >= 0.50 with a matched TP; unique unordered retained-prediction pairs for overlap counts.",
+      "interpretation_limits": [
+        "IoU 0.10 represents permissive approximate overlap, not clinically adequate localization.",
+        "Native AP and fixed-threshold diagnostic metrics have different assignment/aggregation semantics.",
+        "Class-agnostic matching retains candidates generated with class-aware NMS; it is not class-agnostic AP.",
+        "Empty labels mean no annotated region, not clinically confirmed fracture absence.",
+        "No deployment threshold is selected and no model or hyperparameter is tuned."
+      ],
+      "iou_sensitivity": {
+        "confidence": [
+          0.05,
+          0.25
+        ],
+        "iou": [
+          0.1,
+          0.3,
+          0.5
+        ],
+        "matching_modes": [
+          "class_aware",
+          "class_agnostic"
+        ]
+      },
+      "low_support_warning": "Flag descriptive groups with fewer than 30 observations; this is a caution marker, not a statistical power test.",
+      "matching": "Stage 1 confidence-first one-to-one greedy; score/IoU ties use stable box IDs; thresholds are inclusive.",
+      "percentages": "All-FN percentages divide by reference FN; class taxonomy percentages divide by class FN; empty-image rates divide by all empty images.",
+      "reference": {
+        "class_aware": true,
+        "confidence_at_least": 0.25,
+        "iou_at_least": 0.5
+      },
+      "size_groups": {
+        "boundaries_px": [
+          32,
+          64
+        ],
+        "interpretation": "Nominal 640-pixel letterbox scale; descriptive groups, not a tuned cutoff.",
+        "intervals": [
+          "[0,32)",
+          "[32,64)",
+          "[64,infinity)"
+        ],
+        "measure": "Original box shorter side * min(640/image_width, 640/image_height)"
+      }
+    },
+    "split_counts": {
+      "train": {
+        "annotations": 698,
+        "empty_label_images": 607,
+        "images": 1211,
+        "images_without_predictions": 272,
+        "predictions": 7012
+      },
+      "valid": {
+        "annotations": 204,
+        "empty_label_images": 175,
+        "images": 348,
+        "images_without_predictions": 75,
+        "predictions": 1755
+      }
+    },
+    "split_identity_checks": {
+      "note": "Fixed split membership is preserved; exact encoded-byte intersection is not a patient/study or near-duplicate audit.",
+      "shared_encoded_image_hashes": 0,
+      "shared_image_filenames": 0,
+      "stable_sample_ids_disjoint": true
+    },
+    "training_reference": {
+      "f1": 0.8887390424814565,
+      "fn": 39,
+      "fp": 126,
+      "ground_truth_count": 698,
+      "images": 1211,
+      "matched_ground_truth_count": 659,
+      "precision": 0.8394904458598726,
+      "recall": 0.9441260744985673,
+      "retained_prediction_count": 785,
+      "tp": 659
+    },
+    "validation_reference": {
+      "f1": 0.21428571428571427,
+      "fn": 174,
+      "fp": 46,
+      "ground_truth_count": 204,
+      "images": 348,
+      "matched_ground_truth_count": 30,
+      "precision": 0.39473684210526316,
+      "recall": 0.14705882352941177,
+      "retained_prediction_count": 76,
+      "tp": 30
+    }
+  },
+  "analysis_results_path": "outputs/error_analysis/stage2/D_seed42_verified/analysis_results.json",
+  "analysis_results_sha256": "97e75805897c373e1d4b944c712a4c818b5169fc984baa6871829c9754213156",
+  "checkpoint": {
+    "best_epoch_from_csv": 57,
+    "epoch_note": "Optimizer stripping removes epoch; saved train_metrics corroborate CSV epoch 57.",
+    "model_definition": {
+      "depth_multiple": 0.33,
+      "nc": 6,
+      "training_model": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\yolov8s.pt",
+      "width_multiple": 0.5
+    },
+    "path": "outputs/training/official/D_seed42/weights/best.pt",
+    "serialized_parameter_dtypes": [
+      "torch.float16"
+    ],
+    "sha256": "498e265f90bbf07fc5112b7153a7a11ac09ac819f8b7689e9e832ac302ef2e8a",
+    "stored_epoch": -1
+  },
+  "created_at_utc": "2026-10-10T19:20:42.776265+00:00",
+  "dataset": {
+    "class_names": [
+      "elbow positive",
+      "fingers positive",
+      "forearm fracture",
+      "humerus fracture",
+      "shoulder fracture",
+      "wrist positive"
+    ],
+    "fingerprint_scope": "data.yaml plus valid images/labels",
+    "full_fingerprint_recomputed": false,
+    "historical_full_fingerprint": "ca8286b35d3d31f0b8074aa387a44ca6392178926c23bde61ea6d99be70aba5f",
+    "root": "data/prepared/v3_detection_clahe",
+    "source_unchanged": true,
+    "test_files_opened": 0,
+    "validation_files_matched_original_clahe_manifest": true,
+    "validation_fingerprint_after": "d43b38126e40e060b79b130c6475db2243f797f191d95038eee1e9d2491d7a78",
+    "validation_fingerprint_before": "d43b38126e40e060b79b130c6475db2243f797f191d95038eee1e9d2491d7a78"
+  },
+  "experiment": "D",
+  "experiment_f_started": false,
+  "figures": [
+    {
+      "path": "docs/figures/error_analysis/iou_recall.png",
+      "sha256": "0d415073086935e5214e84dcb07f868377e7bc7d4c84949c9e3d2002dd4ee250"
+    },
+    {
+      "path": "docs/figures/error_analysis/confidence_sensitivity.png",
+      "sha256": "b37e5d85e85dfa6a08e5151c9988c7301e1cb44180267d7775ca3ff258e79379"
+    },
+    {
+      "path": "docs/figures/error_analysis/fn_categories.png",
+      "sha256": "247a02cd08280807309f2faa213e548bc5f3a37058ec8c827dcd4f8b450b8b5e"
+    },
+    {
+      "path": "docs/figures/error_analysis/class_confusion.png",
+      "sha256": "b3b51d98a27db3af29d29b39d4f7dd20408ee0535a33dd647c5cef1a96af54ed"
+    },
+    {
+      "path": "docs/figures/error_analysis/false_positives.png",
+      "sha256": "8968ffc235cce0eb29f9e377dbf59c52d4d74d414789d9719f179eba85080eca"
+    },
+    {
+      "path": "docs/figures/error_analysis/train_validation.png",
+      "sha256": "0c6a0ce4e83ad0c1e3caeced01982cbf22af87557d4b22db15e86931c1de32c5"
+    }
+  ],
+  "limitations": [
+    "IoU 0.10 represents permissive approximate overlap, not clinically adequate localization.",
+    "Native AP and fixed-threshold diagnostic metrics have different assignment/aggregation semantics.",
+    "Class-agnostic matching retains candidates generated with class-aware NMS; it is not class-agnostic AP.",
+    "Empty labels mean no annotated region, not clinically confirmed fracture absence.",
+    "No deployment threshold is selected and no model or hyperparameter is tuned.",
+    "Stage 1 mAP50 reproduction remains failed at the unchanged 0.00005 bound; official and diagnostic results remain separate.",
+    "FP16 serialization is a plausible explanation for the small discrepancy, not a proven cause.",
+    "No response below confidence 0.001 or suppressed by NMS/max_det is observable in these exports.",
+    "Complete miss means no retained candidate at IoU >= 0.10, not true absence of model-head response.",
+    "FN primary categories describe candidate evidence; nonexclusive signals can coexist and low-confidence candidates may compete.",
+    "One seed, limited class support, unadjudicated annotations, and unknown patient/study independence restrict inference.",
+    "Confidence/localization associations and train/validation differences do not isolate a unique causal mechanism.",
+    "The optional D-versus-E comparison is omitted because E requires separate prediction preparation and a different target definition."
+  ],
+  "method_pre_execution_record": {
+    "path": "outputs/error_analysis/stage2/method_pre_execution.json",
+    "recorded_at_utc": "2026-10-10T18:55:57.822372+00:00",
+    "sha256": "f05046f169b073c65da05614b6de62f55c0d25f32aca62faa02a7a3b60a3048d"
+  },
+  "preservation": {
+    "all_hashes_unchanged": true,
+    "baseline_path": "outputs/error_analysis/stage2/protection_before.json",
+    "baseline_sha256": "0f16a8948ce909093eebaf9045f719c14d884baf1bcee4803b2dee1fce2239f8",
+    "protected_file_count": 157
+  },
+  "proceeding_despite_discrepancy_explicitly_authorized": true,
+  "schema_version": 1,
+  "source_sha256": {
+    "src/bone_fracture_pipeline/detection_evaluation.py": "bdcad2a2ffdf97e91c3b7e6785b5a65e24098ca46615a8cff3e81a6997e63973",
+    "src/bone_fracture_pipeline/error_analysis.py": "bf44668659b79dce078be49c73142137fc3d93bbbc9a9f356890308359cb147b",
+    "src/bone_fracture_pipeline/error_analysis_figures.py": "6674e0e7038b718ac952685849dacfe15b0179e3682de134adce83c59fa7c3a4",
+    "src/bone_fracture_pipeline/error_analysis_quantitative.py": "3c94e4a58a9d1f5bd23accdeb81c333685a7db1c2c57c218400375efb31a7534",
+    "src/bone_fracture_pipeline/error_analysis_report.py": "2da453364cc9bf44ab2c069f5062f760ffdda1bc6678d357292973a369163cb9",
+    "src/bone_fracture_pipeline/error_analysis_training.py": "6426eb278e02481749054e0a9d8b997113bbc540dcb2b492d7e44ed8a2e68cb9",
+    "tests/test_error_analysis_quantitative.py": "82001f4e4b5b3609a88ab76accf405efdc63c4170ce32db497d19783643eb2ae"
+  },
+  "stage": 2,
+  "stage1_official_reproduction": {
+    "best_row": {
+      "epoch": 57,
+      "metrics/mAP50(B)": 0.14861,
+      "metrics/mAP50-95(B)": 0.04732,
+      "metrics/precision(B)": 0.21938,
+      "metrics/recall(B)": 0.18667
+    },
+    "comparison": {
+      "absolute_tolerance": 5e-05,
+      "metrics": {
+        "metrics/mAP50(B)": {
+          "absolute_difference": 8.589239177589358e-05,
+          "observed": 0.1485241076082241,
+          "official": 0.14861,
+          "passed": false,
+          "signed_difference": -8.589239177589358e-05
+        },
+        "metrics/mAP50-95(B)": {
+          "absolute_difference": 4.909409864185116e-05,
+          "observed": 0.04736909409864185,
+          "official": 0.04732,
+          "passed": true,
+          "signed_difference": 4.909409864185116e-05
+        }
+      },
+      "passed": false,
+      "tolerance_reason": "Chosen before evaluation: 5e-5 absolute AP allows the official five-decimal rounding (at most 5e-6) plus small checkpoint FP16 serialization/FP32 fusion differences. It is a tight reproduction check, not a statistical equivalence test."
+    },
+    "observed": {
+      "fitness": 0.04736909409864185,
+      "metrics/mAP50(B)": 0.1485241076082241,
+      "metrics/mAP50-95(B)": 0.04736909409864185,
+      "metrics/precision(B)": 0.2191561464906279,
+      "metrics/recall(B)": 0.1868235698531384
+    },
+    "reference": "outputs/training/official/D_seed42/results.csv"
+  },
+  "stage1_validation_passed": false,
+  "stage3_started": false,
+  "status": "quantitative_checks_passed_with_documented_stage1_discrepancy",
+  "training_export": {
+    "checkpoint": {
+      "best_epoch_from_csv": 57,
+      "epoch_note": "Optimizer stripping removes epoch; saved train_metrics corroborate CSV epoch 57.",
+      "model_definition": {
+        "depth_multiple": 0.33,
+        "nc": 6,
+        "training_model": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\yolov8s.pt",
+        "width_multiple": 0.5
+      },
+      "path": "outputs/training/official/D_seed42/weights/best.pt",
+      "serialized_parameter_dtypes": [
+        "torch.float16"
+      ],
+      "sha256": "498e265f90bbf07fc5112b7153a7a11ac09ac819f8b7689e9e832ac302ef2e8a",
+      "stored_epoch": -1
+    },
+    "counts": {
+      "annotations": 698,
+      "empty_label_images": 607,
+      "images": 1211,
+      "images_without_predictions": 272,
+      "predictions": 7012
+    },
+    "dataset_root": "data/prepared/v3_detection_clahe",
+    "fingerprint_scope": "data.yaml plus train images and labels only",
+    "framework": {
+      "deterministic": true,
+      "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "model_fusion": true,
+      "precision": "FP32",
+      "seed": 42,
+      "torch": "2.6.0+cu126",
+      "ultralytics": "8.4.155"
+    },
+    "loader_checks": {
+      "augmentation": false,
+      "backend_fp16": false,
+      "batch": 16,
+      "batch_norm_layers": 0,
+      "gradient_tracking_enabled": false,
+      "maximum_ground_truth_roundtrip_error_px": 0.00025167156240968325,
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "per_class_ap": [
+        {
+          "ap50": 0.9822530540579436,
+          "ap50_95": 0.6648655835645985,
+          "class_id": 0
+        },
+        {
+          "ap50": 0.9627558702015768,
+          "ap50_95": 0.585466528818975,
+          "class_id": 1
+        },
+        {
+          "ap50": 0.979521461031885,
+          "ap50_95": 0.5580857647621678,
+          "class_id": 2
+        },
+        {
+          "ap50": 0.9857472767223789,
+          "ap50_95": 0.6541619373182294,
+          "class_id": 3
+        },
+        {
+          "ap50": 0.9800720845135523,
+          "ap50_95": 0.6106212751335285,
+          "class_id": 4
+        },
+        {
+          "ap50": 0.972164884488111,
+          "ap50_95": 0.5909905473384856,
+          "class_id": 5
+        }
+      ],
+      "rectangular_batches": true,
+      "source_split": "train",
+      "test_images_loaded": 0,
+      "train_images_loaded": 1211,
+      "validation_images_loaded": 0
+    },
+    "official_results_replaced": false,
+    "path": "outputs/error_analysis/stage2/D_seed42_train_export/training_predictions.jsonl",
+    "settings": {
+      "agnostic_nms": false,
+      "amp": false,
+      "augment": false,
+      "batch": 16,
+      "cache": false,
+      "classes": null,
+      "conf": 0.001,
+      "device": "0",
+      "exist_ok": false,
+      "imgsz": 640,
+      "iou": 0.7,
+      "max_det": 300,
+      "name": "framework_evaluation",
+      "plots": false,
+      "project": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\outputs\\error_analysis\\stage2\\D_seed42_train_export",
+      "quantize": null,
+      "rect": true,
+      "save": false,
+      "save_json": false,
+      "save_txt": false,
+      "single_cls": false,
+      "split": "val",
+      "verbose": false,
+      "workers": 0
+    },
+    "sha256": "c381b93442b894fdf27112082796ff578ca07472235f7cc6f11a40633eb01d5b",
+    "source_unchanged": true,
+    "split": "train",
+    "test_files_opened": 0,
+    "training_fingerprint_after": "d658084e25bb3d7f19634f5328bdd6ae465dcd51f1c770df42f2589c87d2a05e",
+    "training_fingerprint_before": "d658084e25bb3d7f19634f5328bdd6ae465dcd51f1c770df42f2589c87d2a05e",
+    "training_or_gradient_updates_performed": false
+  },
+  "validation_export": {
+    "annotations": 204,
+    "ap_relation": "Captured from the same framework validation pass; fixed-threshold matching is separate from AP.",
+    "class_ids_preserved": true,
+    "coordinate_space": "original-image pixels, xyxy",
+    "empty_label_images": 175,
+    "images": 348,
+    "images_at_max_det": 0,
+    "images_without_predictions": 75,
+    "nms_multi_label": true,
+    "path": "outputs/error_analysis/stage1/D_seed42_repeat_verified/validation_predictions.jsonl",
+    "predictions": 1755,
+    "purpose": "Low-confidence post-NMS candidates for later error analysis",
+    "settings": {
+      "agnostic_nms": false,
+      "amp": false,
+      "augment": false,
+      "batch": 16,
+      "cache": false,
+      "classes": null,
+      "conf": 0.001,
+      "device": "0",
+      "exist_ok": false,
+      "imgsz": 640,
+      "iou": 0.7,
+      "max_det": 300,
+      "name": "framework_validation",
+      "plots": false,
+      "project": "C:\\Users\\furka\\PycharmProjects\\bone-fracture-detection-thesis\\outputs\\error_analysis\\stage1\\D_seed42_repeat_verified",
+      "quantize": null,
+      "rect": true,
+      "save": false,
+      "save_json": false,
+      "save_txt": false,
+      "single_cls": false,
+      "split": "val",
+      "verbose": false,
+      "workers": 0
+    },
+    "sha256": "8fb1b0004ecf00ece249ff46c9bc12dc0de40d876489ecf13488400794178b22"
+  },
+  "verification_record": "docs/evidence/error_analysis/stage2_verification.json"
+}

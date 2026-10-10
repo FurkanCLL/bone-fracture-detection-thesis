@@ -1,0 +1,227 @@
+{
+  "analysis_results_sha256": "97e75805897c373e1d4b944c712a4c818b5169fc984baa6871829c9754213156",
+  "check_count": 3778,
+  "check_types": {
+    "143 regression tests passed": 1,
+    "A official configuration digest": 1,
+    "B official configuration digest": 1,
+    "C official configuration digest": 1,
+    "Candidate confidence-bin support and independent IoU median": 6,
+    "Class-wise FN taxonomy": 6,
+    "Confusion matches reconcile": 1,
+    "D official configuration digest": 1,
+    "E official configuration digest": 1,
+    "Existing matrix validator passes without evidence writes": 1,
+    "Explicit train/validation identity isolation": 1,
+    "FN identities exhaustive and unique": 1,
+    "FN primary categories recomputed": 1,
+    "FN shares total 100 percent": 1,
+    "FP group confidence median": 2,
+    "FP identities exhaustive and unique": 1,
+    "FP image-group aggregation": 2,
+    "FP image-group denominator": 2,
+    "Match eligibility": 689,
+    "Matched GT equals TP": 26,
+    "Matched geometry independently recomputed": 689,
+    "Operating-point F1 formula": 26,
+    "Operating-point denominators": 26,
+    "Operating-point precision/recall formulas": 26,
+    "Original tolerance unchanged": 1,
+    "Published analysis hash": 1,
+    "Published source hash": 7,
+    "Repeated figure PNG identical": 6,
+    "Repeated numeric artifact identical: analysis_results.json": 1,
+    "Repeated numeric artifact identical: false_negatives.jsonl": 1,
+    "Repeated numeric artifact identical: false_positives.jsonl": 1,
+    "Repeated numeric artifact identical: reference_images.jsonl": 1,
+    "Repeated numeric artifact identical: tables\\confidence_sensitivity.csv": 1,
+    "Repeated numeric artifact identical: tables\\fn_categories.csv": 1,
+    "Repeated numeric artifact identical: tables\\fp_classes.csv": 1,
+    "Repeated numeric artifact identical: tables\\generalization.csv": 1,
+    "Repeated numeric artifact identical: tables\\iou_sensitivity.csv": 1,
+    "Repeated numeric artifact identical: tables\\training_classes.csv": 1,
+    "Repeated numeric artifact identical: tables\\validation_classes.csv": 1,
+    "Repeated numeric artifact identical: tables\\validation_sizes.csv": 1,
+    "Report artifact link exists": 7,
+    "Size groups partition reference counts": 2,
+    "Stage 1 failed status preserved": 1,
+    "finite numeric value": 1912,
+    "metric within [0,1]": 231,
+    "percentage within [0,100]": 77,
+    "train class aggregation": 1,
+    "train exact source counts": 1,
+    "train global aggregation": 1,
+    "train six GT classes intact": 1,
+    "valid class aggregation": 1,
+    "valid exact source counts": 1,
+    "valid global aggregation": 1,
+    "valid six GT classes intact": 1
+  },
+  "compilation": {
+    "bytecode_written": false,
+    "passed": true,
+    "source_and_test_files": 44
+  },
+  "experiment_f_started": false,
+  "figures": [
+    {
+      "axes_counts_labels_and_legends_checked": true,
+      "height": 1041,
+      "mode": "RGBA",
+      "path": "docs/figures/error_analysis/iou_recall.png",
+      "sha256": "0d415073086935e5214e84dcb07f868377e7bc7d4c84949c9e3d2002dd4ee250",
+      "visually_inspected": true,
+      "width": 2514
+    },
+    {
+      "axes_counts_labels_and_legends_checked": true,
+      "height": 1063,
+      "mode": "RGBA",
+      "path": "docs/figures/error_analysis/confidence_sensitivity.png",
+      "sha256": "b37e5d85e85dfa6a08e5151c9988c7301e1cb44180267d7775ca3ff258e79379",
+      "visually_inspected": true,
+      "width": 2840
+    },
+    {
+      "axes_counts_labels_and_legends_checked": true,
+      "height": 1190,
+      "mode": "RGBA",
+      "path": "docs/figures/error_analysis/fn_categories.png",
+      "sha256": "247a02cd08280807309f2faa213e548bc5f3a37058ec8c827dcd4f8b450b8b5e",
+      "visually_inspected": true,
+      "width": 2361
+    },
+    {
+      "axes_counts_labels_and_legends_checked": true,
+      "height": 1466,
+      "mode": "RGBA",
+      "path": "docs/figures/error_analysis/class_confusion.png",
+      "sha256": "b3b51d98a27db3af29d29b39d4f7dd20408ee0535a33dd647c5cef1a96af54ed",
+      "visually_inspected": true,
+      "width": 2102
+    },
+    {
+      "axes_counts_labels_and_legends_checked": true,
+      "height": 1275,
+      "mode": "RGBA",
+      "path": "docs/figures/error_analysis/false_positives.png",
+      "sha256": "8968ffc235cce0eb29f9e377dbf59c52d4d74d414789d9719f179eba85080eca",
+      "visually_inspected": true,
+      "width": 2405
+    },
+    {
+      "axes_counts_labels_and_legends_checked": true,
+      "height": 1360,
+      "mode": "RGBA",
+      "path": "docs/figures/error_analysis/train_validation.png",
+      "sha256": "0c6a0ce4e83ad0c1e3caeced01982cbf22af87557d4b22db15e86931c1de32c5",
+      "visually_inspected": true,
+      "width": 2842
+    }
+  ],
+  "limits": [
+    "Numeric repeatability reuses verified exports; it is not an additional GPU inference repeat.",
+    "Stage 1 validation inference already repeated byte-for-byte; Stage 2 performs one training inference export.",
+    "Test isolation is established by explicit routing, guarded verification and loader records, not system-wide file telemetry."
+  ],
+  "no_dependency_changes": true,
+  "no_training_or_gradient_updates": true,
+  "numeric_repeatability": {
+    "all_byte_identical": true,
+    "artifacts": [
+      {
+        "path": "analysis_results.json",
+        "sha256": "97e75805897c373e1d4b944c712a4c818b5169fc984baa6871829c9754213156"
+      },
+      {
+        "path": "false_negatives.jsonl",
+        "sha256": "377b42cb8c23be09e8c4c3acbc72c078a8640abf1d522ffb6d3e0c4179b1c554"
+      },
+      {
+        "path": "false_positives.jsonl",
+        "sha256": "2b9f8733569a88de5ff37ca50de9d0b3c1be82563406a172117e3e64a16d6122"
+      },
+      {
+        "path": "reference_images.jsonl",
+        "sha256": "164d0ea0df655090bfc23e79f9407c23803f0d1974031998bfc7224cd131f7e0"
+      },
+      {
+        "path": "tables/confidence_sensitivity.csv",
+        "sha256": "88c53b8a6e6dd5efbb3912f5188669c316820cf90279e1929ee04dfc2ee6ce19"
+      },
+      {
+        "path": "tables/fn_categories.csv",
+        "sha256": "11f372769b2b2645e2a89005ba94be33936c3a8c8514bbda88db96bf207fa901"
+      },
+      {
+        "path": "tables/fp_classes.csv",
+        "sha256": "e59bd93c30a26010f29c31bf773f7abb5171431ad635bc4a6911561cbccfd29f"
+      },
+      {
+        "path": "tables/generalization.csv",
+        "sha256": "ed3b2f92cd3d7739d6f00cf377c949e274a71bd184e08f598b20a144e415a911"
+      },
+      {
+        "path": "tables/iou_sensitivity.csv",
+        "sha256": "05abd2e69d5b5dede494332cbd6525a8094e9d2c535c8047bc401b61336864b1"
+      },
+      {
+        "path": "tables/training_classes.csv",
+        "sha256": "ea69ec7034cebeeb94b26f6fb5dffcbe7efc107968ad48405b56628c26934a7b"
+      },
+      {
+        "path": "tables/validation_classes.csv",
+        "sha256": "520f2202182e0ab55bb8ce2018c4aaa83efa37966f0f338b07d5d9e044536f1a"
+      },
+      {
+        "path": "tables/validation_sizes.csv",
+        "sha256": "5b66437b5c3f377ce3648f0cb6ef16115085c9b00b8bbed0ff3376a0f1393610"
+      }
+    ],
+    "first": "outputs/error_analysis/stage2/D_seed42_numeric",
+    "verified": "outputs/error_analysis/stage2/D_seed42_verified"
+  },
+  "official_configuration_digests": {
+    "A": "3c6deeb9fb4c7472ee32deb2dcd7ddc2d9484d12a21bf00d1e45ed653290ab1a",
+    "B": "658930f0776c628105214927d8cedd917facb996ffc2e456515b900b82a4e927",
+    "C": "808b78a1349c785945d88f19e4f60a4a96f3186ced8dfe7c528d0821aa19c7e0",
+    "D": "965eb0f987328b0f145e632198e74c5be2f1ab5cb10e31c0b19d644f2b493d34",
+    "E": "0bd47e0fb57e49f6d7c0feb0182ed1c85f0b0270fda6d29c6e7496cfed0093a6"
+  },
+  "original_stage1_absolute_tolerance": 5e-05,
+  "original_stage1_status": "failed",
+  "passed": true,
+  "preservation": {
+    "all_hashes_unchanged": true,
+    "baseline_path": "outputs/error_analysis/stage2/protection_before.json",
+    "baseline_sha256": "0f16a8948ce909093eebaf9045f719c14d884baf1bcee4803b2dee1fce2239f8",
+    "protected_file_count": 157
+  },
+  "quantitative_evidence_sha256": "d4fab369f9ca8bb50af9d789a20808013fc452b9d4e5f772c8951c587336e725",
+  "report_sha256": "0cf21f78a0b71d0cf93dce5b52a843e9cc8c412a5dbcd7f76a843ae93588fb22",
+  "schema_version": 1,
+  "split_source_fingerprints": {
+    "train": "d658084e25bb3d7f19634f5328bdd6ae465dcd51f1c770df42f2589c87d2a05e",
+    "valid": "d43b38126e40e060b79b130c6475db2243f797f191d95038eee1e9d2491d7a78"
+  },
+  "stage": 2,
+  "stage3_started": false,
+  "test_access_guard": {
+    "file_and_directory_access_blocked": true,
+    "test_files_opened": 0,
+    "test_inference": false
+  },
+  "tests": {
+    "command": ".venv/Scripts/python.exe -B -m unittest discover -s tests -q",
+    "log": "outputs/error_analysis/stage2/regression_tests.log",
+    "log_sha256": "089179f0631ad1fbdf3d4770a96729aa78ceae80b25a27b9d77fae3c27d3e289",
+    "passed": true,
+    "stage2_new_tests": 30,
+    "tests": 143
+  },
+  "verification_script": {
+    "path": "outputs/error_analysis/stage2/verify_stage2.py",
+    "sha256": "ef02df8a6a464ab7c8e5a03db8c891090f01ac7877ea8abb5b1513026fe624ad"
+  },
+  "verified_at_utc": "2026-10-10T19:24:08.679382+00:00"
+}

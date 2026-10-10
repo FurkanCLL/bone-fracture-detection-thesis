@@ -57,6 +57,8 @@ For methods and evidence, start with the [v3–v4 comparison](docs/DATASET_V3_V4
 
 ## Status and limitations
 
-Dataset preparation, protocol checks, A–E official training, and the train/validation difficulty analysis are complete. [Error analysis Stage 1](docs/evidence/error_analysis/README.md) adds a reproducible validation-only prediction export and tested diagnostic matching utilities. Its official metric reproduction check fails the fixed mAP50 tolerance, so equivalent reproduction is not claimed. Quantitative error analysis and the reserved final test evaluation remain separate work.
+Dataset preparation, protocol checks, A–E official training, and the train/validation difficulty analysis are complete. [Error analysis Stage 1](docs/evidence/error_analysis/README.md) adds a reproducible validation-only prediction export and tested diagnostic matching utilities. Its official metric reproduction check fails the fixed mAP50 tolerance, so equivalent reproduction is not claimed.
+
+[Stage 2 quantitative error analysis](docs/evidence/error_analysis/STAGE2_REPORT.md) is complete under explicit authorization to proceed with that discrepancy preserved. At confidence 0.25 and IoU 0.50, class-aware training recall is 94.4% versus 14.7% on validation; ignoring class equality raises validation recall to 15.7%. The report includes all six analysis groups, candidate-based FN categories, annotation-based FP analysis, reproducible train inference, and six numerical figures. These fixed-threshold diagnostics are separate from native AP. Stage 3 qualitative review, Experiment F, and final held-out evaluation remain pending.
 
 Source-class semantics, empty-label meaning, annotation quality, and patient or study independence are not fully established. This detector is an experimental research prototype, **not a clinically validated diagnostic system**.

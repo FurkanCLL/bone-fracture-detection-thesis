@@ -46,21 +46,34 @@ def load_validation_samples(
 ) -> tuple[ValidationSample, ...]:
     if split != "valid":
         raise ErrorAnalysisError("Stage 1 accepts only the validation split 'valid'.")
+    return _load_diagnostic_samples(root, split="valid", expected_counts=expected_counts)
+
+
+def _check_diagnostic_split(split: str) -> None:
+    if split not in ("train", "valid"):
+        raise ErrorAnalysisError("Diagnostics accept only train or valid; held-out access is prohibited.")
+
+
+# Stage 2 adds explicit train routing while the public Stage 1 wrapper stays validation-only.
+def _load_diagnostic_samples(
+    root: Path, *, split: str, expected_counts: tuple[int, int, int]
+) -> tuple[ValidationSample, ...]:
+    _check_diagnostic_split(split)
     root = root.resolve()
     if _read_dataset_config(root / "data.yaml") != CLASS_NAMES:
         raise ErrorAnalysisError("Stage 1 requires the six original class IDs in canonical order.")
-    for directory in (root / "valid", root / "valid/images", root / "valid/labels"):
+    for directory in (root / split, root / split / "images", root / split / "labels"):
         if directory.resolve() != directory or not directory.is_dir():
             raise ErrorAnalysisError("Validation directories must be real directories inside the dataset.")
-    matching = match_images_and_labels(root / "valid/images", root / "valid/labels")
+    matching = match_images_and_labels(root / split / "images", root / split / "labels")
     if any(matching[key] for key in (
         "images_without_labels", "labels_without_images", "ambiguous_image_stems", "ambiguous_label_stems"
     )):
         raise ErrorAnalysisError("Validation images and labels must have unique one-to-one identities.")
     samples = []
     for image_path, label_path in matching["pairs"]:
-        validate_image_paths([image_path], root / "valid/images")
-        validate_image_paths([label_path], root / "valid/labels")
+        validate_image_paths([image_path], root / split / "images")
+        validate_image_paths([label_path], root / split / "labels")
         parsed = parse_yolo_label(label_path, set(range(len(CLASS_NAMES))))
         if parsed.issues or any(box.annotation_type != "box" for box in parsed.annotations):
             raise ErrorAnalysisError(f"Invalid validation detection label: {label_path}")
@@ -78,7 +91,7 @@ def load_validation_samples(
             for box in parsed.annotations
         )
         samples.append(ValidationSample(
-            f"valid/{image_path.stem}", image_path, label_path, width, height, targets,
+            f"{split}/{image_path.stem}", image_path, label_path, width, height, targets,
             sha256_file(image_path), sha256_file(label_path),
         ))
     counts = (len(samples), sum(len(sample.ground_truth) for sample in samples),
@@ -97,9 +110,14 @@ def validate_image_paths(paths: Sequence[Path], allowed_directory: Path) -> None
 
 
 def validation_fingerprint(root: Path, samples: Sequence[ValidationSample]) -> str:
+    return _diagnostic_fingerprint(root, samples, split="valid")
+
+
+def _diagnostic_fingerprint(root: Path, samples: Sequence[ValidationSample], *, split: str) -> str:
+    _check_diagnostic_split(split)
     for sample in samples:
-        validate_image_paths([sample.image_path], root / "valid/images")
-        validate_image_paths([sample.label_path], root / "valid/labels")
+        validate_image_paths([sample.image_path], root / split / "images")
+        validate_image_paths([sample.label_path], root / split / "labels")
     paths = [root / "data.yaml", *(path for sample in samples for path in (sample.image_path, sample.label_path))]
     digest = hashlib.sha256()
     for path in sorted(paths, key=lambda path: (path.relative_to(root).as_posix().casefold(), path.as_posix())):
@@ -109,8 +127,13 @@ def validation_fingerprint(root: Path, samples: Sequence[ValidationSample]) -> s
 
 # Compare validation hashes with the original CLAHE build without opening any test file.
 def verify_preprocessing_lineage(manifest_path: Path, samples: Sequence[ValidationSample]) -> None:
+    _verify_diagnostic_lineage(manifest_path, samples, split="valid")
+
+
+def _verify_diagnostic_lineage(manifest_path: Path, samples: Sequence[ValidationSample], *, split: str) -> None:
+    _check_diagnostic_split(split)
     with manifest_path.open(encoding="utf-8", newline="") as handle:
-        rows = [row for row in csv.DictReader(handle) if row["split"] == "valid"]
+        rows = [row for row in csv.DictReader(handle) if row["split"] == split]
     by_name = {row["processed_filename"]: row for row in rows}
     if len(by_name) != len(rows) or set(by_name) != {sample.image_path.name for sample in samples}:
         raise ErrorAnalysisError("Validation identities differ from the original CLAHE manifest.")
@@ -124,29 +147,34 @@ def verify_preprocessing_lineage(manifest_path: Path, samples: Sequence[Validati
 
 # Use copies so Ultralytics can create its cache without changing the canonical dataset.
 def write_validation_snapshot(samples: Sequence[ValidationSample], destination: Path) -> Path:
+    return _write_diagnostic_snapshot(samples, destination, split="valid")
+
+
+def _write_diagnostic_snapshot(samples: Sequence[ValidationSample], destination: Path, *, split: str) -> Path:
+    _check_diagnostic_split(split)
     if destination.exists():
         raise ErrorAnalysisError("A validation snapshot already exists and will not be overwritten.")
     for sample in samples:
         source_root = sample.image_path.parent.parent.parent
-        if sample.image_path.parent.parent.name != "valid":
-            raise ErrorAnalysisError("A snapshot source must belong to the validation split.")
-        validate_image_paths([sample.image_path], source_root / "valid/images")
-        validate_image_paths([sample.label_path], source_root / "valid/labels")
+        if sample.image_path.parent.parent.name != split or not sample.sample_id.startswith(f"{split}/"):
+            raise ErrorAnalysisError("A snapshot source must belong to its explicit diagnostic split.")
+        validate_image_paths([sample.image_path], source_root / split / "images")
+        validate_image_paths([sample.label_path], source_root / split / "labels")
         if destination.resolve().is_relative_to(source_root):
             raise ErrorAnalysisError("The evaluation snapshot must be outside the source dataset.")
-    (destination / "valid/images").mkdir(parents=True)
-    (destination / "valid/labels").mkdir()
+    (destination / split / "images").mkdir(parents=True)
+    (destination / split / "labels").mkdir()
     for sample in samples:
-        image = destination / "valid/images" / sample.image_path.name
-        label = destination / "valid/labels" / sample.label_path.name
+        image = destination / split / "images" / sample.image_path.name
+        label = destination / split / "labels" / sample.label_path.name
         shutil.copyfile(sample.image_path, image)
         shutil.copyfile(sample.label_path, label)
         if (sha256_file(image), sha256_file(label)) != (sample.image_sha256, sample.label_sha256):
             raise ErrorAnalysisError("A validation snapshot copy failed its hash check.")
-    # The parser requires a train key. It aliases validation copies; no training is invoked.
+    # Both framework keys route to this one evaluation-only copy; no training is invoked.
     dataset_yaml = destination / "data.yaml"
     dataset_yaml.write_text(yaml.safe_dump({
-        "path": str(destination.resolve()), "train": "valid/images", "val": "valid/images",
+        "path": str(destination.resolve()), "train": f"{split}/images", "val": f"{split}/images",
         "names": dict(enumerate(CLASS_NAMES)),
     }, sort_keys=False), encoding="utf-8")
     return dataset_yaml
@@ -189,10 +217,15 @@ def compare_official_metrics(expected: Mapping[str, float | int], observed: Mapp
 
 
 def validate_export_rows(rows: Sequence[Mapping[str, object]]) -> dict[str, int]:
+    return _validate_diagnostic_rows(rows, split="valid")
+
+
+def _validate_diagnostic_rows(rows: Sequence[Mapping[str, object]], *, split: str) -> dict[str, int]:
+    _check_diagnostic_split(split)
     sample_ids = set()
     total_predictions = total_targets = empty_labels = zero_predictions = 0
     for row in rows:
-        if row["split"] != "valid" or not str(row["sample_id"]).startswith("valid/"):
+        if row["split"] != split or not str(row["sample_id"]).startswith(f"{split}/"):
             raise ErrorAnalysisError("Prediction exports must contain validation samples only.")
         if row["sample_id"] in sample_ids:
             raise ErrorAnalysisError("An exported sample appears more than once.")
@@ -235,8 +268,11 @@ def _keep_unfused(model, verbose=True):
 
 
 def _capture_validation(checkpoint: Path, dataset_yaml: Path, samples: Sequence[ValidationSample],
-                        settings: Mapping[str, object], *, fuse_model: bool = True
+                        settings: Mapping[str, object], *, fuse_model: bool = True, source_split: str = "valid"
                         ) -> tuple[dict[str, float], list[dict[str, object]], dict[str, object]]:
+    _check_diagnostic_split(source_split)
+    if any(not sample.sample_id.startswith(f"{source_split}/") for sample in samples):
+        raise ErrorAnalysisError("Capture sample IDs disagree with their explicit source split.")
     import torch
     from ultralytics import YOLO
     from ultralytics.models.yolo.detect.val import DetectionValidator
@@ -256,11 +292,13 @@ def _capture_validation(checkpoint: Path, dataset_yaml: Path, samples: Sequence[
                 raise ErrorAnalysisError("The evaluation backend did not preserve FP32 inference.")
             if (batch_norm_layers == 0) != fuse_model:
                 raise ErrorAnalysisError("The evaluation backend did not preserve the requested fusion behavior.")
+            if torch.is_grad_enabled():
+                raise ErrorAnalysisError("Diagnostic capture must run without gradient tracking.")
             checks.update({"parameter_dtypes": parameter_dtypes, "batch_norm_layers": batch_norm_layers,
-                           "backend_fp16": bool(model.fp16)})
+                           "backend_fp16": bool(model.fp16), "gradient_tracking_enabled": torch.is_grad_enabled()})
 
         def get_dataloader(self, dataset_path, batch_size):
-            allowed = dataset_yaml.parent / "valid/images"
+            allowed = dataset_yaml.parent / source_split / "images"
             if Path(dataset_path).resolve() != allowed.resolve() or self.args.split != "val":
                 raise ErrorAnalysisError("Framework evaluation attempted a non-validation route.")
             loader = super().get_dataloader(dataset_path, batch_size)
@@ -270,7 +308,9 @@ def _capture_validation(checkpoint: Path, dataset_yaml: Path, samples: Sequence[
                 raise ErrorAnalysisError("The framework loader did not preserve all validation identities.")
             if loader.dataset.augment or not loader.dataset.rect or batch_size != settings["batch"]:
                 raise ErrorAnalysisError("The framework validation transform or batching contract changed.")
-            checks.update({"validation_images_loaded": len(paths), "test_images_loaded": 0,
+            checks.update({"validation_images_loaded": len(paths) if source_split == "valid" else 0,
+                           "train_images_loaded": len(paths) if source_split == "train" else 0,
+                           "source_split": source_split, "test_images_loaded": 0,
                            "rectangular_batches": bool(loader.dataset.rect), "augmentation": False,
                            "batch": batch_size, "maximum_ground_truth_roundtrip_error_px": 0.0})
             return loader
@@ -303,7 +343,8 @@ def _capture_validation(checkpoint: Path, dataset_yaml: Path, samples: Sequence[
                     checks["maximum_ground_truth_roundtrip_error_px"] = max(
                         checks["maximum_ground_truth_roundtrip_error_px"], error)
                 captured[sample.sample_id] = {
-                    "sample_id": sample.sample_id, "split": "valid", "image": f"valid/images/{sample.image_path.name}",
+                    "sample_id": sample.sample_id, "split": source_split,
+                    "image": f"{source_split}/images/{sample.image_path.name}",
                     "width": sample.width, "height": sample.height,
                     "image_sha256": sample.image_sha256, "label_sha256": sample.label_sha256,
                     "predictions": predictions, "ground_truth": [asdict(box) for box in sample.ground_truth],
