@@ -1,0 +1,33 @@
+experiment: F
+protocol_version: 1
+dataset: data/prepared/v3_detection_clahe
+model: fasterrcnn_mobilenet_v3_large_fpn
+weights: COCO_V1
+trainable_backbone_layers: 3
+image_size: 640
+epochs: 100
+batch_size: 1
+validation_batch_size: 1
+accumulation: 64
+optimizer: AdamW
+lr: 0.001
+weight_decay: 0.0005
+betas: [0.937, 0.999]
+warmup_epochs: 3
+final_lr_factor: 0.01
+seed: 42
+amp: false
+deterministic: true
+early_stopping: false
+workers: 0
+augmentation:
+  degrees: 10.0
+  translate: 0.05
+  scale: 0.10
+  hsv_v: 0.15
+evaluation:
+  confidence_floor: 0.001
+  max_detections: 300
+  primary: shared_map50_95
+  roi_nms: 0.5
+  rpn_score_threshold: 0.05
