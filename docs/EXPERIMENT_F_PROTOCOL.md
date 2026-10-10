@@ -2,7 +2,9 @@
 
 Stage 1B authorizes an unchanged-protocol diagnostic, the conditionally approved training RPN correction, hardware benchmarks at physical batches 1/2/4, and **one fresh full training epoch plus complete validation**. Official 100-epoch training is not authorized. Historical failure evidence remains in `docs/evidence/experiment_f/STAGE1_REPORT.md`; follow-up evidence is recorded separately in `STAGE1B_REPORT.md`.
 
-**Protocol revision 2, before official training:** the instrumented original-config retry reproduced the failure at position 401. Finite RPN logits/decoded proposals had maximum objectness .03055643, so score threshold .05 removed all proposals on an empty-target image. Native ROI classification and regression losses became NaN; input, parameters, pending gradients and earlier activations were finite. Replaying the exact captured state/RNG at threshold 0 retained 2,000 proposals with finite losses and gradients. Therefore training uses **RPN score threshold 0.0** and validation/inference retains **0.05**. No loss function, data, LR, precision, image size, or architecture changes. A complete new smoke gate is still required.
+**Protocol revision 2, before official training:** the instrumented original-config retry reproduced the failure at position 401. Finite RPN logits/decoded proposals had maximum objectness .03055643, so score threshold .05 removed all proposals on an empty-target image. Native ROI classification and regression losses became NaN; input, parameters, pending gradients and earlier activations were finite. Replaying the exact captured state/RNG at threshold 0 retained 2,000 proposals with finite losses and gradients. Therefore training uses **RPN score threshold 0.0** and validation/inference retains **0.05**. No loss function, data, LR, precision, image size, or architecture changes. This revision required a new complete smoke gate before readiness.
+
+**Current gate: PASS**, recorded in `docs/evidence/experiment_f/STAGE1B_REPORT.md`. The completed `stage1b_smoke_retry` used batch 4 / accumulation 16 and processed 1,211 training images, 19 updates and 348 validation images, with AP/diagnostics and both checkpoint reloads. The first Stage 1B full attempt passed numerical training but failed an in-memory tuple/list export check; the user explicitly authorized one additional fresh attempt after the serialization fix. Both attempts remain in the evidence. Official training is unstarted and requires separate user launch.
 
 ## Fixed inputs and scientific scope
 
@@ -89,16 +91,16 @@ Run from the repository root in the pinned project environment:
 
 ```powershell
 # Exactly one training epoch and one complete validation; choose a fresh path.
-.venv/Scripts/python.exe -B -m bone_fracture_pipeline.experiment_f_runner --mode smoke --output outputs/training/experiment_f/stage1b_smoke
+.venv/Scripts/python.exe -B -m bone_fracture_pipeline.experiment_f_runner --mode smoke --output outputs/training/experiment_f/new_smoke_directory
 ```
 
 **Future command only, requiring user authorization after review; Stage 1B does not execute it:**
 
 ```powershell
-.venv/Scripts/python.exe -B -m bone_fracture_pipeline.experiment_f_runner --mode official --confirm-official-100-epochs --smoke-evidence outputs/training/experiment_f/stage1b_smoke/run_summary.json --output outputs/training/experiment_f/official_seed42
+.venv/Scripts/python.exe -B -m bone_fracture_pipeline.experiment_f_runner --mode official --confirm-official-100-epochs --smoke-evidence outputs/training/experiment_f/stage1b_smoke_retry/run_summary.json --output outputs/training/experiment_f/official_seed42
 ```
 
-Official mode refuses to start without its explicit opt-in flag **and a successful complete smoke summary matching the current config, source hashes and dataset fingerprints**. The example path represents a later approved successful run; the current failed attempt is rejected. Output paths must be fresh and inside the ignored F tree. The runner validates the entire applied YAML against the implemented contract and records its SHA-256. It captures preservation hashes before execution and verifies them afterward. When present, the Stage 1 historical protection map is also checked. External pretrained download is the only additional network requirement.
+Official mode refuses to start without its explicit opt-in flag **and a successful complete smoke summary matching the current config, source hashes and dataset fingerprints**. The command references the verified Stage 1B success; original numerical and export-failure attempts are rejected. The guard additionally requires exact training/validation counts, the final 59-image optimizer window, finite results, both checkpoint checks, data/preservation checks and zero test-IO attempts. Output paths must be fresh and inside the ignored F tree. The runner validates the entire applied YAML against the implemented contract and records its SHA-256. It captures preservation hashes before execution and verifies them afterward. When present, the Stage 1 historical protection map is also checked. Pretrained weights are cached locally; an uncached setup requires their original download.
 
 Best selection maximizes shared validation mAP50-95; strict improvement preserves the earlier checkpoint on a tie. `last.pt` is always preserved. Atomic checkpoint writes contain FP32 model state, optimizer and image-scheduler state, epoch, best score, dataset fingerprints, model/category/input metadata, YAML/implementation hashes, seed and Python/NumPy/Torch/CUDA RNG state. Each completed checkpoint is reloaded and compared exactly to the in-memory model; optimizer/scheduler progress is checked. Prediction exports retain original coordinates and Phase 4 compatibility.
 
