@@ -1,0 +1,73 @@
+{
+  "all_numeric_values_finite": true,
+  "category_counts": {
+    "complete_miss": 8,
+    "fp_annotated": 4,
+    "fp_empty_label": 2,
+    "localization_failure": 3,
+    "low_confidence_detection": 6,
+    "mixed_or_unresolved": 8,
+    "successful_detection": 2,
+    "wrong_class_geometric_match": 3
+  },
+  "contact_sheets_inspected": 8,
+  "deterministic_selection_reversed_input": true,
+  "distinct_images": 36,
+  "experiment_f_started": false,
+  "focused_tests": {
+    "command": ".venv/Scripts/python.exe -B -m unittest discover -s tests -p test_error_analysis_visual.py -q",
+    "log": "outputs/error_analysis/stage3/unit_tests_final.log",
+    "log_sha256": "34d4f1cd5e12f285ba1ba1600aa4c91a574120ee3700ceaf7264c9788aa684b6",
+    "passed": true,
+    "test_count": 17
+  },
+  "image_dimensions": [
+    1840,
+    1320
+  ],
+  "inspected_cases": 36,
+  "local_notes_sha256": "e8660233d9af95474f5cc1aad572b925ac3d996f685527695424b20087f72439",
+  "new_inference_performed": false,
+  "new_source_has_no_training_validation_or_prediction_calls": true,
+  "passed": true,
+  "preservation": {
+    "all_hashes_unchanged": true,
+    "baseline_path": "outputs/error_analysis/stage3/protection_before.json",
+    "baseline_sha256": "7439b8ac624b14dc88bf15a24eba2607e31998b6c715a604317e65e3b8f32721",
+    "protected_file_count": 187
+  },
+  "public_medical_images_added": 0,
+  "qualitative_evidence_sha256": "93ef7537db3f554400c00da93252a8a6ffe3bdd755763f57bcd1533dd392853b",
+  "regression_tests": {
+    "command": ".venv/Scripts/python.exe -B -m unittest discover -s tests -q",
+    "log": "outputs/error_analysis/stage3/regression_tests.log",
+    "log_sha256": "30311a9385ae2b4bbf84435f482b201bd4de2cf1b22447199a3efa2b474fa362",
+    "passed": true,
+    "test_count": 160
+  },
+  "repeat_contact_sheets_byte_identical": 8,
+  "repeat_overlays_byte_identical": 36,
+  "report_review": "Checked quantitative definitions, case references, separate evidence levels, clinical uncertainty, local image restriction, and alternative-detector F scope.",
+  "report_sha256": "e3fb5fb0880036a4bab54a041af24844dbed214a624d265373c105f16ce55752",
+  "reviewed_manifest": {
+    "path": "outputs/error_analysis/stage3/D_seed42_verified/visual_manifest.json",
+    "sha256": "0f7f1c3fa88c92eccceed0c556133e0f5a36de10b8d6ff81e886deda519309dd"
+  },
+  "sampling_shortfalls": {},
+  "scope": "Executed Stage 3 checks; Stage 1 AP reproduction remains failed.",
+  "selected_cases": 36,
+  "source_record_and_geometry_checks": "passed for all selected cases and all displayed boxes",
+  "source_sha256": {
+    "src/bone_fracture_pipeline/error_analysis_visual.py": "cfcc447b196503f2aee4b1a7299541e96e56cd63da6cd47e24bef3b13a3dd6b3",
+    "tests/test_error_analysis_visual.py": "27e010f48ef19614587e84500b6e843e2efb38d92278e6d52a76ef60f62fa9ab"
+  },
+  "syntax_verification": {
+    "bytecode_written": false,
+    "passed": true,
+    "python_files_compiled_in_memory": 46
+  },
+  "test_access_guard": "Path.open and Path.iterdir reject data paths containing a test split; no attempts recorded.",
+  "test_files_opened": 0,
+  "training_performed": false,
+  "validation_files_opened_during_guarded_revalidation": 698
+}
